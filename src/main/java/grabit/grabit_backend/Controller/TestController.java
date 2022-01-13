@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("test")
@@ -17,13 +19,9 @@ public class TestController {
 	ChallengeService challengeService;
 
 	@GetMapping(value = "/save")
-	public Challenge save(){
-		Challenge challenge = new Challenge();
-		challenge.setName("테스트");
-		challenge.setUser_id("test");
-		challenge.setCreatedAt(LocalDateTime.now());
-		challengeService.save(challenge);
-		return challenge;
+	public Long save(){
+		Challenge challenge = new Challenge("testId", "test");
+		return challengeService.makeChallenge(challenge);
 	}
 
 }

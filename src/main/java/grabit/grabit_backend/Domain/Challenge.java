@@ -1,5 +1,6 @@
 package grabit.grabit_backend.Domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,13 +9,20 @@ import java.time.LocalDateTime;
 @Entity(name = "challenge")
 public class Challenge {
 
-	@Id
-	@GeneratedValue
+	@Id @GeneratedValue
+	@Column(name = "GROUP_ID")
 	private Long id;
 
-	private String user_id;
+	@Column(name = "LEADER_ID")
+	private String leaderId;
 	private String name;
 	private LocalDateTime createdAt;
+
+	public Challenge(String leaderId, String name) {
+		this.leaderId = leaderId;
+		this.name = name;
+		this.createdAt = LocalDateTime.now();
+	}
 
 	public Long getId() {
 		return id;
@@ -24,12 +32,12 @@ public class Challenge {
 		this.id = id;
 	}
 
-	public String getUser_id() {
-		return user_id;
+	public String getLeaderId() {
+		return leaderId;
 	}
 
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
+	public void setLeaderId(String leaderId) {
+		this.leaderId = leaderId;
 	}
 
 	public String getName() {
