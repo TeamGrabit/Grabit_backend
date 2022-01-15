@@ -38,3 +38,4 @@ out/
 
 ### enviorment value ###
 application-DATABASE.properties
+application.yml
