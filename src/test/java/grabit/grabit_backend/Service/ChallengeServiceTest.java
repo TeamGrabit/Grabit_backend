@@ -9,33 +9,99 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @Transactional
 class ChallengeServiceTest {
-	@Autowired
+	@InjectMocks
 	ChallengeService challengeService;
-	@Autowired
+	@Mock
 	ChallengeRepository challengeRepository;
 
 	@Test
-	void save() {
+	void 챌린지_생성() {
 		//given
 		Challenge challenge = new Challenge("testId", "test");
+		when(challengeRepository.save(challenge)).thenReturn(challenge);
 
 		//when
 		Long id = challengeService.makeChallenge(challenge);
 
 		//then
-		Optional<Challenge> findChallenge = challengeRepository.findById(id);
-		assertEquals(id, findChallenge.get().getId());
+		assertEquals(id, challenge.getId());
+	}
+
+	@Test
+	void 챌린지_삭제_id(){
+		//given
+		Challenge challenge = new Challenge("testId", "test");
+		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(challenge));
+
+		//when
+		challengeService.deleteChallengeById(challenge.getId());
+
+		//then
+		verify(challengeRepository).deleteById(challenge.getId());
+	}
+
+	@Test
+	void 챌린지_삭제_아이디없음_에러(){
+		//given
+		Challenge challenge = new Challenge("testId", "test");
+		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(null));
+
+		//when
+		Throwable exception = assertThrows(IllegalStateException.class, () -> {
+			challengeService.deleteChallengeById(challenge.getId());
+		});
+
+		//then
+		assertEquals("존재하지 않는 챌린지입니다..", exception.getMessage());
+	}
+
+	@Test
+	void 챌린지_검색_id(){
+		//given
+		Challenge challenge = new Challenge("testId", "test");
+		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(challenge));
+
+		//when
+		Optional<Challenge> findChallenge = challengeService.findChallengeById(challenge.getId());
+
+		//then
+		assertEquals(findChallenge.get().getId(), challenge.getId());
+	}
+
+	@Test
+	void 챌린지_검색_name(){
+		//given
+		Challenge challenge1 = new Challenge("testId1", "test");
+		Challenge challenge2 = new Challenge("testId2", "test");
+		when(challengeRepository.findByName(challenge1.getName())).thenReturn(new ArrayList<Challenge>(Arrays.asList(challenge1, challenge2)));
+
+		//when
+		List<Challenge> findChallenge = challengeService.findChallengeByName(challenge1.getName());
+
+		//then
+		assertEquals(Arrays.asList(challenge1, challenge2), findChallenge);
+	}
+
+	@Test
+	void 챌린지_수정(){
+		//given
+
+		//when
+
+		//then
 	}
 }

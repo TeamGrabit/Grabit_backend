@@ -24,4 +24,11 @@ public class TestController {
 		return challengeService.makeChallenge(challenge);
 	}
 
+	@GetMapping(value = "/del")
+	public Long delete(){
+		Challenge challenge = new Challenge("testId", "test");
+		challengeService.deleteChallengeById(challenge.getId());
+		return challenge.getId();
+	}
+
 }
