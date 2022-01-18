@@ -99,9 +99,33 @@ class ChallengeServiceTest {
 	@Test
 	void 챌린지_수정(){
 		//given
+		Challenge challenge = new Challenge("testId", "test");
+		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(challenge));
+		when(challengeRepository.save(challenge)).thenReturn(challenge);
 
 		//when
+		challenge.setName("changeName");
+		challenge.setLeaderId("changeLeader");
+		Optional<Challenge> changeChallenge = challengeService.updateChallenge(challenge.getId(), challenge);
 
 		//then
+		assertEquals(challenge, changeChallenge.get());
+	}
+
+	@Test
+	void 챌린지_수정_아이디없음_에러(){
+		//given
+		Challenge challenge = new Challenge("testId", "test");
+		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(null));
+
+		//when
+		challenge.setName("이름 바꾸기 테스트");
+		Throwable exception = assertThrows(IllegalStateException.class, () -> {
+			challengeService.updateChallenge(challenge.getId(), challenge);
+		});
+
+		//then
+		assertEquals("존재하지 않는 챌린지입니다..", exception.getMessage());
+
 	}
 }

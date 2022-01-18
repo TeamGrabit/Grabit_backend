@@ -50,10 +50,26 @@ public class ChallengeService {
 	 */
 	public void deleteChallengeById(Long id){
 		Optional<Challenge> findChallenge = challengeRepository.findById(id);
-		if(!findChallenge.isPresent()){
+		if(findChallenge.isEmpty()){
 			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
 		}
 		challengeRepository.deleteById(id);
+	}
+
+	/**
+	 * 챌린지 수정
+	 * @param id
+	 * @param afterChallenge
+	 * @return
+	 */
+	public Optional<Challenge> updateChallenge(Long id, Challenge afterChallenge){
+		Optional<Challenge> findChallenge = challengeRepository.findById(id);
+		if(findChallenge.isEmpty()){
+			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
+		}
+		findChallenge.get().setName(afterChallenge.getName());
+		findChallenge.get().setLeaderId(afterChallenge.getLeaderId());
+		return Optional.ofNullable(challengeRepository.save(findChallenge.get()));
 	}
 
 }
