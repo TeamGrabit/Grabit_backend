@@ -1,30 +1,15 @@
-package grabit.grabit_backend.Domain;
+package grabit.grabit_backend.DTO;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
-@Entity(name = "challenge")
-public class Challenge {
-
-	@Id @GeneratedValue
-	@Column(name = "CHALLENGE_ID")
+public class ChallengeDTO {
 	private Long id;
-
-	@Column(name = "LEADER_ID")
 	private String leaderId;
 	private String name;
 	private LocalDateTime createdAt;
-
-	public Challenge(){}
-
-	public Challenge(String leaderId, String name) {
-		this.leaderId = leaderId;
-		this.name = name;
-		this.createdAt = LocalDateTime.now();
-	}
 
 	public Long getId() {
 		return id;

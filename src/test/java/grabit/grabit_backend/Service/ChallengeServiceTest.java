@@ -23,10 +23,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @Transactional
 class ChallengeServiceTest {
-	@InjectMocks
-	ChallengeService challengeService;
 	@Mock
 	ChallengeRepository challengeRepository;
+	@InjectMocks
+	ChallengeService challengeService;
 
 	@Test
 	void 챌린지_생성() {
@@ -35,7 +35,7 @@ class ChallengeServiceTest {
 		when(challengeRepository.save(challenge)).thenReturn(challenge);
 
 		//when
-		Long id = challengeService.makeChallenge(challenge);
+		Long id = challengeService.createChallenge(challenge);
 
 		//then
 		assertEquals(id, challenge.getId());
@@ -76,10 +76,10 @@ class ChallengeServiceTest {
 		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(challenge));
 
 		//when
-		Optional<Challenge> findChallenge = challengeService.findChallengeById(challenge.getId());
+		Challenge findChallenge = challengeService.findChallengeById(challenge.getId());
 
 		//then
-		assertEquals(findChallenge.get().getId(), challenge.getId());
+		assertEquals(findChallenge.getId(), challenge.getId());
 	}
 
 	@Test
@@ -106,10 +106,10 @@ class ChallengeServiceTest {
 		//when
 		challenge.setName("changeName");
 		challenge.setLeaderId("changeLeader");
-		Optional<Challenge> changeChallenge = challengeService.updateChallenge(challenge.getId(), challenge);
+		Challenge changeChallenge = challengeService.updateChallenge(challenge.getId(), challenge);
 
 		//then
-		assertEquals(challenge, changeChallenge.get());
+		assertEquals(challenge, changeChallenge);
 	}
 
 	@Test

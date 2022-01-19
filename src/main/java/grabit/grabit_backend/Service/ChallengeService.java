@@ -5,34 +5,40 @@ import grabit.grabit_backend.Repository.ChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ChallengeService {
 
+	private final ChallengeRepository challengeRepository;
+
 	@Autowired
-	private ChallengeRepository challengeRepository;
+	public ChallengeService(ChallengeRepository challengeRepository){
+		this.challengeRepository = challengeRepository;
+	}
 
 	/**
 	 * 챌린지 생성
 	 * @param challenge
 	 * @return id
 	 */
-	public Long makeChallenge(Challenge challenge){
+	public Long createChallenge(Challenge challenge){
+		// 유저 아이디 정보 확인.
 		return challengeRepository.save(challenge).getId();
 	}
 
 	/**
 	 * 챌린지 검색 (id)
 	 * @param id
-	 * @return Optional Challenge
+	 * @return Challenge
 	 */
-	public Optional<Challenge> findChallengeById(Long id){
-		return challengeRepository.findById(id);
+	public Challenge findChallengeById(Long id){
+		Optional<Challenge> findChallenge = challengeRepository.findById(id);
+		if(findChallenge.isEmpty()){
+			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
+		}
+		return findChallenge.get();
 	}
 
 	/**
@@ -49,6 +55,7 @@ public class ChallengeService {
 	 * @param id
 	 */
 	public void deleteChallengeById(Long id){
+		// 유저 아이디 정보 확인.
 		Optional<Challenge> findChallenge = challengeRepository.findById(id);
 		if(findChallenge.isEmpty()){
 			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
@@ -60,16 +67,25 @@ public class ChallengeService {
 	 * 챌린지 수정
 	 * @param id
 	 * @param afterChallenge
-	 * @return
+	 * @return Challenge
 	 */
-	public Optional<Challenge> updateChallenge(Long id, Challenge afterChallenge){
+	public Challenge updateChallenge(Long id, Challenge afterChallenge){
+		// 유저 아이디 정보 확인.
 		Optional<Challenge> findChallenge = challengeRepository.findById(id);
 		if(findChallenge.isEmpty()){
 			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
 		}
 		findChallenge.get().setName(afterChallenge.getName());
 		findChallenge.get().setLeaderId(afterChallenge.getLeaderId());
-		return Optional.ofNullable(challengeRepository.save(findChallenge.get()));
+		return challengeRepository.save(findChallenge.get());
+	}
+
+	/**
+	 * 모든 챌린지 검색
+	 * @return List of Challenge
+	 */
+	public List<Challenge> findAllChallenge(){
+		return challengeRepository.findAll();
 	}
 
 }
