@@ -70,7 +70,13 @@ public class ChallengeController {
 		challengeService.deleteChallengeById(id);
 	}
 
-
-
-
+	/**
+	 * 챌린지 검색 API
+	 * @param id
+	 * @return Challenge
+	 */
+	@GetMapping(value = "/{id}")
+	public Challenge findChallengeAPI(@PathVariable(value = "id") Long id){
+		return challengeService.findChallengeById(id);
+	}
 }

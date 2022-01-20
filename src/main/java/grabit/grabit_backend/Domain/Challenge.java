@@ -1,5 +1,7 @@
 package grabit.grabit_backend.Domain;
 
+import org.apache.tomcat.jni.Local;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +19,7 @@ public class Challenge {
 	private String leaderId;
 	private String name;
 	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
 
 	public Challenge(){}
 
@@ -24,6 +27,7 @@ public class Challenge {
 		this.leaderId = leaderId;
 		this.name = name;
 		this.createdAt = LocalDateTime.now();
+		this.modifiedAt = LocalDateTime.now();
 	}
 
 	public Long getId() {
@@ -56,5 +60,13 @@ public class Challenge {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getModifiedAt() {
+		return modifiedAt;
+	}
+
+	public void setModifiedAt(LocalDateTime modifiedAt) {
+		this.modifiedAt = modifiedAt;
 	}
 }
