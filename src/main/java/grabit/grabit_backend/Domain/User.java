@@ -1,39 +1,62 @@
 package grabit.grabit_backend.Domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 public class User {
-
 	@Id
-	@GeneratedValue
-	private Long id;
-	private String name;
-	private String password;
+	private Integer unique_id;
+	private String user_id;
+	private String user_name;
+	private String user_email;
 
-	public Long getId() {
-		return id;
+	@Enumerated(EnumType.STRING) // (1)
+	@Column(nullable = false)
+	private Role role;
+
+	public User(Integer unique_id, String user_id, String user_name, String user_email,Role role) {
+		this.unique_id = unique_id;
+		this.user_name = user_name;
+		this.user_id = user_id;
+		this.user_email = user_email;
+		this.role = role;
+
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public User() {
 	}
 
-	public String getName() {
-		return name;
+
+	public Integer getUnique_id() {
+		return unique_id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getUser_id() {
+		return user_id;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getUser_name() {
+		return user_name;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public String getUser_email() {
+		return user_email;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public String getRoleKey(){
+		return this.role.getKey();
+	}
+
+	public User update(String user_id, String user_name, String user_email) {
+		this.user_id = user_id;
+		this.user_name = user_name;
+		this.user_email = user_email;
+		return this;
 	}
 }
