@@ -36,6 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-### enviorment value ###
-application-DATABASE.properties
-persistence.xml
+### prod configuration ###
+resources-prod/
