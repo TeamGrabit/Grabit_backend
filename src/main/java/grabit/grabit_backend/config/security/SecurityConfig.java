@@ -3,6 +3,7 @@ package grabit.grabit_backend.config.security;
 import grabit.grabit_backend.Oauth2.handler.CustomOAuth2UserService;
 import grabit.grabit_backend.Oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import grabit.grabit_backend.Oauth2.repository.CustomAuthorizationRequestRepository;
+import grabit.grabit_backend.auth.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,12 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final JwtProvider jwtProvider;
     @Autowired
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService,
+                          JwtProvider jwtProvider) {
         this.customOAuth2UserService = customOAuth2UserService;
+        this.jwtProvider = jwtProvider;
     }
 
     /**
@@ -26,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler();
+        return new OAuth2AuthenticationSuccessHandler(jwtProvider);
     }
 
     public CustomAuthorizationRequestRepository customAuthorizationRequestRepository() {
