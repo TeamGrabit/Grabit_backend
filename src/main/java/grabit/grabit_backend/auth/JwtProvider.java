@@ -11,10 +11,11 @@ import java.util.Date;
 @Component
 public class JwtProvider {
     @Value("${jwt.secret.key}")
-    private static String jwtSecret;
-    private static long tokenValidTime = 30 * 60 * 1000; // ms
+    private String jwtSecret;
+    private long tokenValidTime = 30 * 60 * 1000; // ms
 
-    public String issueJwt(String user_email, String user_id) {
+    public String issueJwt(String user_email, String user_id, boolean isRefresh) {
+        System.out.println("jwtSecret = " + jwtSecret);
         Date now = new Date();
 
         return Jwts.builder()

@@ -3,6 +3,7 @@ package grabit.grabit_backend.config.security;
 import grabit.grabit_backend.Oauth2.handler.CustomOAuth2UserService;
 import grabit.grabit_backend.Oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import grabit.grabit_backend.Oauth2.repository.CustomAuthorizationRequestRepository;
+import grabit.grabit_backend.Repository.UserRefreshTokenRepository;
 import grabit.grabit_backend.auth.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,11 +19,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtProvider jwtProvider;
+    private final UserRefreshTokenRepository userRefreshTokenRepository;
+
     @Autowired
     public SecurityConfig(CustomOAuth2UserService customOAuth2UserService,
-                          JwtProvider jwtProvider) {
+                          JwtProvider jwtProvider,
+                          UserRefreshTokenRepository userRefreshTokenRepository
+    ) {
         this.customOAuth2UserService = customOAuth2UserService;
         this.jwtProvider = jwtProvider;
+        this.userRefreshTokenRepository = userRefreshTokenRepository;
     }
 
     /**
@@ -30,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler(jwtProvider);
+        return new OAuth2AuthenticationSuccessHandler(jwtProvider, userRefreshTokenRepository);
     }
 
     public CustomAuthorizationRequestRepository customAuthorizationRequestRepository() {
