@@ -37,6 +37,5 @@ out/
 .vscode/
 
 ### enviorment value ###
-application.properties
 application-DATABASE.properties
 application.yml
