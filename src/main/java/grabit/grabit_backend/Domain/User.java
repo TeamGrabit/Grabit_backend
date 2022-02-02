@@ -1,62 +1,62 @@
 package grabit.grabit_backend.Domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 
 @Entity
 public class User {
-	@Id
-	private Integer unique_id;
-	private String user_id;
-	private String user_name;
-	private String user_email;
 
-	@Enumerated(EnumType.STRING) // (1)
-	@Column(nullable = false)
+	@Id
+	@Column(name="uniqueId")
+	private Integer uniqueId;
+
+	@NotNull
+	@Column(name="userId")
+	private String userId;
+
+	@Column(name="userName")
+	private String userName;
+	@NotNull
+	@Column(name="userEmail")
+	private String userEmail;
+
+	@Enumerated(EnumType.STRING)
+	@NotNull
 	private Role role;
 
-	public User(Integer unique_id, String user_id, String user_name, String user_email,Role role) {
-		this.unique_id = unique_id;
-		this.user_name = user_name;
-		this.user_id = user_id;
-		this.user_email = user_email;
+	public User(Integer uniqueId, String userId, String userName, String userEmail,Role role) {
+		this.uniqueId = uniqueId;
+		this.userName = userName;
+		this.userId = userId;
+		this.userEmail = userEmail;
 		this.role = role;
-
 	}
 
-	public User() {
+	public User() { }
+
+	public Integer getUniqueId() {
+		return uniqueId;
 	}
-
-
-	public Integer getUnique_id() {
-		return unique_id;
+	public String getUserId() {
+		return userId;
 	}
-
-	public String getUser_id() {
-		return user_id;
+	public String getUserName() {
+		return userName;
 	}
-
-	public String getUser_name() {
-		return user_name;
+	public String getUserEmail() {
+		return userEmail;
 	}
-
-	public String getUser_email() {
-		return user_email;
-	}
-
 	public Role getRole() {
 		return role;
 	}
-
 	public String getRoleKey(){
 		return this.role.getKey();
 	}
-
-	public User update(String user_id, String user_name, String user_email) {
-		this.user_id = user_id;
-		this.user_name = user_name;
-		this.user_email = user_email;
+	public User update(String userId, String userName, String userEmail) {
+		this.userId = userId;
+		this.userName = userName;
+		this.userEmail = userEmail;
 		return this;
 	}
 }

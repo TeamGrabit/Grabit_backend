@@ -5,9 +5,7 @@ import grabit.grabit_backend.DTO.SessionUser;
 import grabit.grabit_backend.Domain.User;
 import grabit.grabit_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -18,8 +16,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Collections;
 
 @Service
@@ -40,27 +36,23 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         String registrationId = userRequest
                 .getClientRegistration()
-                .getRegistrationId(); // (1)
+                .getRegistrationId();
         String userNameAttributeName = userRequest
                 .getClientRegistration()
                 .getProviderDetails()
                 .getUserInfoEndpoint()
-                .getUserNameAttributeName(); // (2)
+                .getUserNameAttributeName();
 
         OAuthAttributes attributes = OAuthAttributes
-                .of(registrationId, userNameAttributeName, oAuth2User.getAttributes()); // (3)
+                .of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         User user = saveOrUpdate(attributes);
-        httpSession.setAttribute("user", new SessionUser(user)); // (4)
+        httpSession.setAttribute("user", new SessionUser(user));
 
         OAuth2AccessToken accessToken = userRequest.getAccessToken();
-        // TODO : access_token 필요하면 DB에 저장하기
-//        System.out.println("accessToken = " + accessToken.getTokenValue());
-//
-        // TODO : access_token 만료시간 찾기.. 왜 발행시간과 만료시간이 같을까??
-//        System.out.println("accessToken = " + accessToken.getIssuedAt());
-//        System.out.println("accessToken = " + accessToken.getExpiresAt());
 
+        // TODO : access_token 필요하면 DB에 저장하기
+        // TODO : access_token 만료시간 찾기.. 왜 발행시간과 만료시간이 같을까??
 
         return new DefaultOAuth2User(
             Collections.singleton(

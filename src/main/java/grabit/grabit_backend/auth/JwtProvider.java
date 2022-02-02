@@ -12,17 +12,15 @@ import java.util.Date;
 public class JwtProvider {
     @Value("${jwt.secret.key}")
     private String jwtSecret;
-    private long tokenValidTime = 30 * 60 * 1000; // ms
 
-    public String issueJwt(String user_email, String user_id, boolean isRefresh) {
-        System.out.println("jwtSecret = " + jwtSecret);
+    public String issueJwt(String user_email, String user_id, long expiry) {
         Date now = new Date();
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuer("grabit")
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime))
+                .setExpiration(new Date(now.getTime() + expiry))
                 .claim("user_email", user_email)
                 .claim("user_id", user_id)
                 .signWith(SignatureAlgorithm.HS256, jwtSecret)

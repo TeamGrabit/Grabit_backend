@@ -10,8 +10,8 @@ public class SessionUser implements Serializable {
     private String email;
 
     public SessionUser(User user) {
-        this.uniqueId = user.getUnique_id();
-        this.name = user.getUser_name();
-        this.email = user.getUser_email();
+        this.uniqueId = user.getUniqueId();
+        this.name = user.getUserName();
+        this.email = user.getUserEmail();
     }
 }
