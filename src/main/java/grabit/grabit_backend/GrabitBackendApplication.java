@@ -20,6 +20,8 @@ public class GrabitBackendApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/api/**").allowedOrigins("*");
+				registry.addMapping("/oauth2/authorization/**").allowedOrigins("*");
+
 			}
 		};
 	}

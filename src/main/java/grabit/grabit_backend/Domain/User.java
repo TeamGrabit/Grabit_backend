@@ -8,21 +8,22 @@ import javax.persistence.*;
 public class User {
 
 	@Id
-	@Column(name="uniqueId")
+	@Column(name="UNIQUE_ID")
 	private Integer uniqueId;
 
 	@NotNull
-	@Column(name="userId")
+	@Column(name="USER_ID")
 	private String userId;
 
-	@Column(name="userName")
+	@Column(name="USER_NAME")
 	private String userName;
 	@NotNull
-	@Column(name="userEmail")
+	@Column(name="USER_EMAIL")
 	private String userEmail;
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Column(name="ROLE")
 	private Role role;
 
 	public User(Integer uniqueId, String userId, String userName, String userEmail,Role role) {

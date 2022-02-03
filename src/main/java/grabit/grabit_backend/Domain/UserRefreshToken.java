@@ -12,11 +12,11 @@ public class UserRefreshToken {
     private Long refreshTokenSeq;
 
     @NotNull
-    @Column(name = "user_id")
+    @Column(name = "USER_ID")
     private String userId;
 
     @NotNull
-    @Column(name = "refresh_token")
+    @Column(name = "REFRESH_TOKEN")
     private String refreshToken;
 
     public UserRefreshToken(String userId, String refreshToken) {
