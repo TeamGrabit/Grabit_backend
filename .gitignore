@@ -38,3 +38,10 @@ out/
 
 ### prod configuration ###
 resources-prod/
+
+### dev configuration ###
+resources-dev/
+
+### enviorment value ###
+application-DATABASE.properties
+application.yml
