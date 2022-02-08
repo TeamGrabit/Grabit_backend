@@ -37,7 +37,6 @@ out/
 .vscode/
 
 ### enviorment value ###
-application.properties
 application.yml
 
 ### dev configuration ###
