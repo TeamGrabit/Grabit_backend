@@ -36,10 +36,11 @@ out/
 ### VS Code ###
 .vscode/
 
-
 ### enviorment value ###
-application-DATABASE.properties
 application.yml
+
+### dev configuration ###
+resources-dev/
 
 ### prod configuration ###
 resources-prod/
