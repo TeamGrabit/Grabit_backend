@@ -1,6 +1,7 @@
 package grabit.grabit_backend.AOP;
 
 import grabit.grabit_backend.Domain.RequestLog;
+import grabit.grabit_backend.Domain.ResponseLog;
 import grabit.grabit_backend.Repository.RequestLogRepository;
 import grabit.grabit_backend.Repository.ResponseLogRepository;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -9,6 +10,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -32,7 +34,7 @@ public class APILoggingAspect {
 	public void controllerLog(){}
 
 	@Around(value = "controllerLog()")
-	public void aroundControllerLog(ProceedingJoinPoint pjp) throws Throwable{
+	public Object aroundControllerLog(ProceedingJoinPoint pjp) throws Throwable{
 		LocalDateTime currentTime = LocalDateTime.now();
 		String currentMethod = pjp.getSignature().toString();
 		logger.info("## Current LocalDataTime ## : " + currentTime);
@@ -50,14 +52,21 @@ public class APILoggingAspect {
 		stopWatch.start();
 
 		// API 수행
-		Object obj = pjp.proceed();
+		ResponseEntity obj = (ResponseEntity)pjp.proceed();
 
 		// API 시간 측정 끝
 		stopWatch.stop();
 		logger.info("## API 수행 시간 ## : " + stopWatch.getTotalTimeMillis() + " (ms)초");
 
 		// response Log 저장.
-		// logger.info("## Return Value ## : " + obj);
-		
+		ResponseLog responseLog = new ResponseLog();
+		responseLog.setResponseAt(LocalDateTime.now());
+		responseLog.setRequestLog(requestLog);
+		responseLog.setResponseBody(obj.getBody().toString());
+		responseLog.setProcessTime(stopWatch.getTotalTimeMillis());
+		responseLog.setHttpStatus(obj.getStatusCode().toString());
+		responseLogRepository.save(responseLog);
+
+		return obj;
 	}
 }

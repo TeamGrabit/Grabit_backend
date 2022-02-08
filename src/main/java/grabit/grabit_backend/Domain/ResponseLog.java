@@ -28,6 +28,9 @@ public class ResponseLog {
 	@JoinColumn(name = "REQUEST_ID")
 	private RequestLog requestLog;
 
+	@Column(name = "RESPONSE_BODY")
+	private String responseBody;
+
 	public Long getId() {
 		return id;
 	}
@@ -66,5 +69,13 @@ public class ResponseLog {
 
 	public void setRequestLog(RequestLog requestLog) {
 		this.requestLog = requestLog;
+	}
+
+	public String getResponseBody() {
+		return responseBody;
+	}
+
+	public void setResponseBody(String responseBody) {
+		this.responseBody = responseBody;
 	}
 }
