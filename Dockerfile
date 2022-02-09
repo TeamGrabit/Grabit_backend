@@ -1,9 +1,14 @@
-FROM openjdk:11-jdk
+FROM openjdk:16-jdk-alpine AS builder
+WORKDIR application
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} application.jar
+RUN java -Djarmode=layertools -jar application.jar extract
 
-WORKDIR /home/spring
+FROM openjdk:16-jdk-alpine
+WORKDIR application
+COPY --from=builder application/dependencies/ ./
+COPY --from=builder application/spring-boot-loader/ ./
+COPY --from=builder application/snapshot-dependencies/ ./
+COPY --from=builder application/application/ ./
 
-CMD ["./gradlew","build","-Pprofile=prod","-x","test"]
-
-COPY build/libs/*SNAPSHOT.jar /home/spring/grabit_backend.jar
-
-CMD ["java", "-jar", "grabit_backend.jar"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
