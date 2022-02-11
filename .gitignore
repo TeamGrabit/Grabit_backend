@@ -45,3 +45,5 @@ resources-dev/
 ### prod configuration ###
 resources-prod/
 
+### dev configuration ###
+resources-dev/

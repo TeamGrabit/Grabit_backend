@@ -28,6 +28,12 @@ test {
     useJUnitPlatform()
 }
 
+bootJar {
+    layered {
+        enabled = true
+    }
+}
+
 ext.profile = (!project.hasProperty('profile') || !profile) ? 'dev' : profile
 
 sourceSets {
