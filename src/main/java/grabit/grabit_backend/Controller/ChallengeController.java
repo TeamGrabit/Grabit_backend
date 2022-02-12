@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/challenges")
+@RequestMapping("/api/challenges")
 public class ChallengeController {
 
 	private final ChallengeService challengeService;

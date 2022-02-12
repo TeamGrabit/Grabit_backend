@@ -8,20 +8,20 @@ import java.util.Map;
 public class OAuthAttributes {
     private Map<String, Object> attributes;
     private String nameAttributeKey;
-    private Integer unique_id;
-    private String user_id;
-    private String user_name;
-    private String user_email;
+    private Integer id;
+    private String userId;
+    private String username;
+    private String userEmail;
 
     public OAuthAttributes(Map<String, Object> attributes,
-                           String nameAttributeKey, Integer unique_id, String user_id, String user_name,
-                           String user_email) {
+                           String nameAttributeKey, Integer id, String userId, String username,
+                           String userEmail) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
-        this.unique_id = unique_id;
-        this.user_id = user_id;
-        this.user_name = user_name;
-        this.user_email = user_email;
+        this.id = id;
+        this.userId = userId;
+        this.username = username;
+        this.userEmail = userEmail;
     }
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if("github".equals(registrationId)) {
@@ -41,29 +41,28 @@ public class OAuthAttributes {
                 (String) attributes.get("email"));
     }
 
-    // (2)
     public User toEntity() {
-        return new User(unique_id, user_id, user_name, user_email, Role.GUEST);
+        return new User(id, userId, username, userEmail, "BADA");
     }
 
     public Map<String, Object> getAttributes() {
         return attributes;
     }
 
-    public Integer getUnique_id() {
-        return unique_id;
+    public Integer getId() {
+        return id;
     }
 
-    public String getUser_email() {
-        return user_email;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUsername() {
+        return username;
     }
 
     public String getNameAttributeKey() {

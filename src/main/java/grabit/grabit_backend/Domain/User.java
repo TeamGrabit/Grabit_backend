@@ -1,63 +1,123 @@
 package grabit.grabit_backend.Domain;
 
 import com.sun.istack.NotNull;
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
-public class User {
+@Data
+public class User implements UserDetails {
 
 	@Id
-	@Column(name="UNIQUE_ID")
-	private Integer uniqueId;
+	@Column(name="ID")
+	private Integer Id;
 
 	@NotNull
 	@Column(name="USER_ID")
 	private String userId;
 
 	@Column(name="USER_NAME")
-	private String userName;
+	private String username;
 	@NotNull
 	@Column(name="USER_EMAIL")
 	private String userEmail;
 
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	@Column(name="ROLE")
-	private Role role;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<String> roles = new ArrayList<>();
 
-	public User(Integer uniqueId, String userId, String userName, String userEmail,Role role) {
-		this.uniqueId = uniqueId;
-		this.userName = userName;
+
+	@CreatedDate
+	private LocalDateTime createdAt;
+	@LastModifiedDate
+	private LocalDateTime modifiedAt;
+
+	private boolean enabled = true;
+
+	public User(Integer Id, String userId, String userName, String userEmail, String r) {
+		this.Id = Id;
+		this.username = userName;
 		this.userId = userId;
 		this.userEmail = userEmail;
-		this.role = role;
+		this.enabled = true;
+		this.roles = new ArrayList<>();
+		this.roles.add(r);
 	}
 
 	public User() { }
 
-	public Integer getUniqueId() {
-		return uniqueId;
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	public Integer getId() {
+		return Id;
 	}
 	public String getUserId() {
 		return userId;
 	}
-	public String getUserName() {
-		return userName;
-	}
+
 	public String getUserEmail() {
 		return userEmail;
 	}
-	public Role getRole() {
-		return role;
+
+	public List<String> getRoles() {
+		return roles;
 	}
-	public String getRoleKey(){
-		return this.role.getKey();
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.roles.stream()
+				.map(SimpleGrantedAuthority::new)
+				.collect(Collectors.toList());
 	}
-	public User update(String userId, String userName, String userEmail) {
+
+	@Override
+	public String getPassword() {
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	public User update(String userId, String userName, String userEmail, String r) {
 		this.userId = userId;
-		this.userName = userName;
+		this.username = userName;
 		this.userEmail = userEmail;
+		this.roles = new ArrayList<>();
+		this.roles.add(r);
 		return this;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return enabled;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return enabled;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return enabled;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
 	}
 }
