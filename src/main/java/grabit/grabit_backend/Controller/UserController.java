@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<UserResDTO> user(@AuthenticationPrincipal User user) {
         if (user == null) {
           throw new UnauthorizedException();
