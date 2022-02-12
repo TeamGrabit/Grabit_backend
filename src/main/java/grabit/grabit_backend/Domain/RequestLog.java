@@ -6,8 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
-@Entity(name = "GrabitLog")
-public class GrabitLog {
+@Entity(name = "RequestLog")
+public class RequestLog {
 
 	@Id @GeneratedValue
 	@Column(name = "LOG_ID")

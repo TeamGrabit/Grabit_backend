@@ -1,5 +1,7 @@
 package grabit.grabit_backend.DTO;
 
+import grabit.grabit_backend.Domain.Challenge;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -10,6 +12,23 @@ public class ChallengeDTO {
 	private String leaderId;
 	private String name;
 	private LocalDateTime createdAt;
+
+	public ChallengeDTO(Challenge challenge) {
+		this.id = challenge.getId();
+		this.leaderId = challenge.getLeaderId();
+		this.name = challenge.getName();
+		this.createdAt = challenge.getCreatedAt();
+	}
+
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("{id: " + id + ", ");
+		sb.append("leaderId: " + leaderId + ", ");
+		sb.append("name: " + name + ", ");
+		sb.append("createdAt: " + createdAt + "}");
+		return sb.toString();
+	}
 
 	public Long getId() {
 		return id;
