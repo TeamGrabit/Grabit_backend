@@ -13,13 +13,13 @@ public class UserRefreshToken {
 
     @NotNull
     @Column(name = "USER_ID")
-    private String userId;
+    private int userId;
 
     @NotNull
     @Column(name = "REFRESH_TOKEN")
     private String refreshToken;
 
-    public UserRefreshToken(String userId, String refreshToken) {
+    public UserRefreshToken(int userId, String refreshToken) {
         this.userId = userId;
         this.refreshToken = refreshToken;
     }
@@ -30,9 +30,9 @@ public class UserRefreshToken {
     public void setRefreshToken(String refresh_token) {
         this.refreshToken = refresh_token;
     }
-    public void setUserId(String userId) { this.userId = userId; }
+    public void setUserId(int userId) { this.userId = userId; }
 
     public Long getRefreshTokenSeq() { return refreshTokenSeq; }
     public String getRefreshToken() { return refreshToken; }
-    public String getUserId() { return userId; }
+    public int getUserId() { return userId; }
 }

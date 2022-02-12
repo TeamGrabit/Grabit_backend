@@ -60,11 +60,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         OAuth2User user = (OAuth2User) authentication.getPrincipal();
-        String userEmail = user.getAttribute("email");
-        String userId = user.getAttribute("login");
+        int userId = user.getAttribute("id");
 
-        String refreshToken = jwtProvider.issueJwt(userEmail, userId, refreshTokenExpiry);
-        String accessToken = jwtProvider.issueJwt(userEmail, userId, accessTokenExpiry);
+        String refreshToken = jwtProvider.issueJwt(userId, refreshTokenExpiry);
+        String accessToken = jwtProvider.issueJwt(userId, accessTokenExpiry);
 
         // refreshToken DB에 저장
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userId);

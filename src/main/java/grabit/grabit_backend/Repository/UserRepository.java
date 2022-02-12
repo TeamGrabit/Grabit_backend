@@ -12,7 +12,7 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User, Integer> {
     User save(User challenge);
-    Optional<User> findById(Integer unique_id);
+    Optional<User> findById(Integer Id);
     List<User> findAll();
     void deleteById(Integer id);
 }

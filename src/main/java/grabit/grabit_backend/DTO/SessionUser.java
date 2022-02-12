@@ -5,13 +5,13 @@ import grabit.grabit_backend.Domain.User;
 import java.io.Serializable;
 
 public class SessionUser implements Serializable {
-    private Integer uniqueId;
+    private Integer Id;
     private String name;
     private String email;
 
     public SessionUser(User user) {
-        this.uniqueId = user.getUniqueId();
-        this.name = user.getUserName();
+        this.Id = user.getId();
+        this.name = user.getUsername();
         this.email = user.getUserEmail();
     }
 }
