@@ -1,5 +1,6 @@
 package grabit.grabit_backend.Service;
 
+import grabit.grabit_backend.DTO.CreateChallengeDTO;
 import grabit.grabit_backend.Domain.Challenge;
 import grabit.grabit_backend.Repository.ChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,11 @@ public class ChallengeService {
 
 	/**
 	 * 챌린지 생성
-	 * @param challenge
+	 * @param createChallengeDTO
 	 * @return id
 	 */
-	public Long createChallenge(Challenge challenge){
+	public Long createChallenge(CreateChallengeDTO createChallengeDTO){
+		Challenge challenge = new Challenge("testId",createChallengeDTO.getName(), createChallengeDTO.getChallengeDesc());
 		// 유저 아이디 정보 확인.
 		return challengeRepository.save(challenge).getId();
 	}

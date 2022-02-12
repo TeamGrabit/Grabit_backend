@@ -1,6 +1,8 @@
 package grabit.grabit_backend.Controller;
 
 import grabit.grabit_backend.DTO.ChallengeDTO;
+import grabit.grabit_backend.DTO.CreateChallengeDTO;
+import grabit.grabit_backend.DTO.FindChallengeDTO;
 import grabit.grabit_backend.Domain.Challenge;
 import grabit.grabit_backend.Service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +47,13 @@ public class ChallengeController {
 
 	/**
 	 * 챌린지 생성 API
-	 * @param challengeDTO
-	 * @return Challenge
+	 * @param createChallengeDTO
+	 * @return Long
 	 */
 	@PostMapping(value = "")
-	public ResponseEntity<ChallengeDTO> createChallengeAPI(@RequestBody ChallengeDTO challengeDTO){
-		Challenge challenge = new Challenge("testId", challengeDTO.getName());
-		Long challengeId = challengeService.createChallenge(challenge);
-		ChallengeDTO createdChallenge = new ChallengeDTO(challengeService.findChallengeById(challengeId));
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdChallenge);
+	public ResponseEntity<Long> createChallengeAPI(@RequestBody CreateChallengeDTO createChallengeDTO){
+		Long challengeId = challengeService.createChallenge(createChallengeDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(challengeId);
 	}
 
 	/**
@@ -88,7 +88,8 @@ public class ChallengeController {
 	 * @return Challenge
 	 */
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
-		return ResponseEntity.status(HttpStatus.OK).body(new ChallengeDTO(challengeService.findChallengeById(id)));
+	public ResponseEntity<ChallengeDTO> findChallengeAPI(@PathVariable(value = "id") FindChallengeDTO findChallengeDTO){
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ChallengeDTO(challengeService.findChallengeById(findChallengeDTO.getId())));
 	}
 }
