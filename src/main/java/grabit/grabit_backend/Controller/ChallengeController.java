@@ -3,6 +3,8 @@ package grabit.grabit_backend.Controller;
 import grabit.grabit_backend.DTO.ChallengeDTO;
 import grabit.grabit_backend.DTO.CreateChallengeDTO;
 import grabit.grabit_backend.DTO.FindChallengeDTO;
+import grabit.grabit_backend.DTO.ModifyChallengeDTO;
+import grabit.grabit_backend.DTO.ResponseChallengeDTO;
 import grabit.grabit_backend.Domain.Challenge;
 import grabit.grabit_backend.Service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +38,9 @@ public class ChallengeController {
 	 * @return List of Challenge
 	 */
 	@GetMapping(value = "")
-	public ResponseEntity<List<ChallengeDTO>> findAllChallengesAPI(){
-		List<Challenge> findChallenges = challengeService.findAllChallenge();
-		ArrayList<ChallengeDTO> findChallengesDTO = new ArrayList<>();
-		for(Challenge challenge: findChallenges){
-			findChallengesDTO.add(new ChallengeDTO(challenge));
-		}
-		return ResponseEntity.status(HttpStatus.OK).body(findChallengesDTO);
+	public ResponseEntity<ArrayList<ResponseChallengeDTO>> findAllChallengesAPI(){
+		ArrayList<ResponseChallengeDTO> findChallenges = challengeService.findAllChallenge();
+		return ResponseEntity.status(HttpStatus.OK).body(findChallenges);
 	}
 
 	/**
@@ -51,9 +49,9 @@ public class ChallengeController {
 	 * @return Long
 	 */
 	@PostMapping(value = "")
-	public ResponseEntity<Long> createChallengeAPI(@RequestBody CreateChallengeDTO createChallengeDTO){
-		Long challengeId = challengeService.createChallenge(createChallengeDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).body(challengeId);
+	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@RequestBody CreateChallengeDTO createChallengeDTO){
+		ResponseChallengeDTO responseChallengeDTO = challengeService.createChallenge(createChallengeDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
 
 	/**
@@ -63,13 +61,10 @@ public class ChallengeController {
 	 * @return Challenge
 	 */
 	@PatchMapping(value = "/{id}")
-	public ResponseEntity<ChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
-										@RequestBody ChallengeDTO challengeDTO){
-		Challenge challenge = challengeService.findChallengeById(id);
-		challenge.setName(challengeDTO.getName());
-		challenge.setLeaderId(challengeDTO.getLeaderId());
-		ChallengeDTO changeChallenge = new ChallengeDTO(challengeService.updateChallenge(id, challenge));
-		return ResponseEntity.status(HttpStatus.CREATED).body(changeChallenge);
+	public ResponseEntity<ResponseChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
+										@RequestBody ModifyChallengeDTO modifyChallengeDTO){
+		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(modifyChallengeDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
 
 	/**
@@ -88,8 +83,8 @@ public class ChallengeController {
 	 * @return Challenge
 	 */
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ChallengeDTO> findChallengeAPI(@PathVariable(value = "id") FindChallengeDTO findChallengeDTO){
-
-		return ResponseEntity.status(HttpStatus.OK).body(new ChallengeDTO(challengeService.findChallengeById(findChallengeDTO.getId())));
+	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
+		ResponseChallengeDTO responseChallengeDTO = challengeService.findChallengeById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 }
