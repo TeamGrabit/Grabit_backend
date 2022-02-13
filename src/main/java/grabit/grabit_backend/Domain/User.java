@@ -31,10 +31,6 @@ public class User implements UserDetails {
 	@Column(name="USER_EMAIL")
 	private String userEmail;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> roles = new ArrayList<>();
-
-
 	@CreatedDate
 	private LocalDateTime createdAt;
 	@LastModifiedDate
@@ -42,18 +38,15 @@ public class User implements UserDetails {
 
 	private boolean enabled = true;
 
-	public User(Integer Id, String userId, String userName, String userEmail, String r) {
+	public User(Integer Id, String userId, String userName, String userEmail) {
 		this.Id = Id;
 		this.username = userName;
 		this.userId = userId;
 		this.userEmail = userEmail;
 		this.enabled = true;
-		this.roles = new ArrayList<>();
-		this.roles.add(r);
 	}
 
 	public User() { }
-
 
 	@Override
 	public int hashCode() {
@@ -71,15 +64,11 @@ public class User implements UserDetails {
 		return userEmail;
 	}
 
-	public List<String> getRoles() {
-		return roles;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.roles.stream()
-				.map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList());
+		List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+		list.add(new SimpleGrantedAuthority("ROLE_USER"));
+		return list;
 	}
 
 	@Override
@@ -92,12 +81,10 @@ public class User implements UserDetails {
 		return username;
 	}
 
-	public User update(String userId, String userName, String userEmail, String r) {
+	public User update(String userId, String userName, String userEmail) {
 		this.userId = userId;
 		this.username = userName;
 		this.userEmail = userEmail;
-		this.roles = new ArrayList<>();
-		this.roles.add(r);
 		return this;
 	}
 

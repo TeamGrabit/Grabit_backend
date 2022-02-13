@@ -56,7 +56,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         return new DefaultOAuth2User(
             Collections.singleton(
-                new SimpleGrantedAuthority("BADA")
+                new SimpleGrantedAuthority("ROLE_USER")
             ),
             attributes.getAttributes(),
             attributes.getNameAttributeKey()
@@ -65,7 +65,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private User saveOrUpdate(OAuthAttributes attributes) {
         User user = userRepository.findById(attributes.getId())
-                .map(entity -> entity.update(attributes.getUserId(),attributes.getUsername(), attributes.getUserEmail(), "BADA"))
+                .map(entity -> entity.update(attributes.getUserId(),attributes.getUsername(), attributes.getUserEmail()))
                 .orElse(attributes.toEntity());
         return userRepository.save(user);
     }
