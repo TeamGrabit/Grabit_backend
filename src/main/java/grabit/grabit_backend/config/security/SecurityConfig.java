@@ -8,6 +8,7 @@ import grabit.grabit_backend.Repository.UserRefreshTokenRepository;
 import grabit.grabit_backend.auth.JwtAuthenticationFilter;
 import grabit.grabit_backend.auth.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.SessionCookieConfig;
+import javax.servlet.SessionTrackingMode;
+import java.util.Collections;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -35,6 +42,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userRefreshTokenRepository = userRefreshTokenRepository;
         this.clientRegistrationRepository = clientRegistrationRepository;
     }
+
+    @Bean
+    public ServletContextInitializer clearJsession() {
+        return new ServletContextInitializer() {
+            @Override
+            public void onStartup(ServletContext servletContext) throws ServletException {
+                servletContext.setSessionTrackingModes(Collections.singleton(SessionTrackingMode.COOKIE));
+                SessionCookieConfig sessionCookieConfig=servletContext.getSessionCookieConfig();
+                sessionCookieConfig.setHttpOnly(true);
+            }
+        };
+    }
+
 
     /**
      * OAuth 인증 성공 핸들러
