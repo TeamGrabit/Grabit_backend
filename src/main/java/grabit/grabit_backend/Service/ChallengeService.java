@@ -32,8 +32,7 @@ public class ChallengeService {
 		Challenge challenge = new Challenge("testId",createChallengeDTO.getName(), createChallengeDTO.getChallengeDesc());
 		Challenge createChallenge = challengeRepository.save(challenge);
 		// 유저 아이디 정보 확인.
-		return new ResponseChallengeDTO(createChallenge.getId(), createChallenge.getLeaderId(),
-				createChallenge.getName(), createChallenge.getChallengeDesc());
+		return ResponseChallengeDTO.convertDTO(createChallenge);
 
 	}
 
@@ -48,8 +47,7 @@ public class ChallengeService {
 			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
 		}
 		Challenge ChallengeDomain = findChallenge.get();
-		return new ResponseChallengeDTO(ChallengeDomain.getId(), ChallengeDomain.getLeaderId(),
-				ChallengeDomain.getLeaderId(), ChallengeDomain.getChallengeDesc());
+		return ResponseChallengeDTO.convertDTO(ChallengeDomain);
 	}
 
 	/**
@@ -61,7 +59,7 @@ public class ChallengeService {
 		List<Challenge> findChallenges = challengeRepository.findByName(name);
 		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
 		for(Challenge challenge: findChallenges){
-			returnChallenges.add(new ResponseChallengeDTO(challenge.getId(), challenge.getLeaderId(), challenge.getName(), challenge.getChallengeDesc()));
+			returnChallenges.add(ResponseChallengeDTO.convertDTO(challenge));
 		}
 		return returnChallenges;
 	}
@@ -95,8 +93,7 @@ public class ChallengeService {
 		findChallenge.get().setLeaderId(modifyChallengeDTO.getLeaderId());
 		findChallenge.get().setChallengeDesc(modifyChallengeDTO.getChallengeDesc());
 		Challenge modifyChallenge = challengeRepository.save(findChallenge.get());
-		return new ResponseChallengeDTO(modifyChallenge.getId(), modifyChallengeDTO.getLeaderId(),
-				modifyChallengeDTO.getName(), modifyChallengeDTO.getChallengeDesc());
+		return ResponseChallengeDTO.convertDTO(modifyChallenge);
 	}
 
 	/**
@@ -107,7 +104,7 @@ public class ChallengeService {
 		List<Challenge> findChallenges = challengeRepository.findAll();
 		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
 		for(Challenge challenge: findChallenges){
-			returnChallenges.add(new ResponseChallengeDTO(challenge.getId(), challenge.getLeaderId(), challenge.getName(), challenge.getChallengeDesc()));
+			returnChallenges.add(ResponseChallengeDTO.convertDTO(challenge));
 		}
 		return returnChallenges;
 	}

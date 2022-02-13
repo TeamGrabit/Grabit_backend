@@ -10,6 +10,7 @@ import grabit.grabit_backend.Service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +48,10 @@ public class ChallengeController {
 	/**
 	 * 챌린지 생성 API
 	 * @param createChallengeDTO
-	 * @return Long
+	 * @return responseChallengeDTO
 	 */
 	@PostMapping(value = "")
-	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@RequestBody CreateChallengeDTO createChallengeDTO){
+	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@Valid @RequestBody CreateChallengeDTO createChallengeDTO){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.createChallenge(createChallengeDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
@@ -57,12 +59,12 @@ public class ChallengeController {
 	/**
 	 * 챌린지 수정 API
 	 * @param id
-	 * @param challengeDTO
-	 * @return Challenge
+	 * @param modifyChallengeDTO
+	 * @return responseChallengeDTO
 	 */
 	@PatchMapping(value = "/{id}")
 	public ResponseEntity<ResponseChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
-										@RequestBody ModifyChallengeDTO modifyChallengeDTO){
+										@Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(modifyChallengeDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
@@ -80,7 +82,7 @@ public class ChallengeController {
 	/**
 	 * 챌린지 검색 API
 	 * @param id
-	 * @return Challenge
+	 * @return responseChallengeDTO
 	 */
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
