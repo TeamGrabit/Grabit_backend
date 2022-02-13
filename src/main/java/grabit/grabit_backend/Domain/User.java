@@ -2,20 +2,20 @@ package grabit.grabit_backend.Domain;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails{
 
 	@Id
 	@Column(name="ID")
@@ -30,11 +30,6 @@ public class User implements UserDetails {
 	@NotNull
 	@Column(name="USER_EMAIL")
 	private String userEmail;
-
-	@CreatedDate
-	private LocalDateTime createdAt;
-	@LastModifiedDate
-	private LocalDateTime modifiedAt;
 
 	private boolean enabled = true;
 
