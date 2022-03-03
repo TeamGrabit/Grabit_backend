@@ -37,15 +37,7 @@ public class APILoggingAspect {
 	public Object aroundControllerLog(ProceedingJoinPoint pjp) throws Throwable{
 		LocalDateTime currentTime = LocalDateTime.now();
 		String currentMethod = pjp.getSignature().toString();
-		logger.info("## Current LocalDataTime ## : " + currentTime);
 		logger.info("## Call API ## : " + currentMethod);
-
-		// request Log 저장.
-		RequestLog requestLog = new RequestLog();
-		requestLog.setCalledAt(currentTime);
-		requestLog.setData(currentMethod);
-		requestLog.setType("API");
-		requestLogRepository.save(requestLog);
 
 		// API 시간 측정 시작
 		StopWatch stopWatch = new StopWatch();
@@ -56,16 +48,8 @@ public class APILoggingAspect {
 
 		// API 시간 측정 끝
 		stopWatch.stop();
-		logger.info("## API 수행 시간 ## : " + stopWatch.getTotalTimeMillis() + " (ms)초");
-
-		// response Log 저장.
-		ResponseLog responseLog = new ResponseLog();
-		responseLog.setResponseAt(LocalDateTime.now());
-		responseLog.setRequestLog(requestLog);
-		responseLog.setResponseBody(obj.getBody().toString());
-		responseLog.setProcessTime(stopWatch.getTotalTimeMillis());
-		responseLog.setHttpStatus(obj.getStatusCode().toString());
-		responseLogRepository.save(responseLog);
+		logger.info("## Response Data ## : " + obj);
+		logger.info("## API process Time ## : " + stopWatch.getTotalTimeMillis() + " (ms)초");
 
 		return obj;
 	}
