@@ -1,10 +1,15 @@
 package grabit.grabit_backend.Service;
 
+import grabit.grabit_backend.DTO.CreateChallengeDTO;
+import grabit.grabit_backend.DTO.FindChallengeDTO;
+import grabit.grabit_backend.DTO.ModifyChallengeDTO;
+import grabit.grabit_backend.DTO.ResponseChallengeDTO;
 import grabit.grabit_backend.Domain.Challenge;
 import grabit.grabit_backend.Repository.ChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +25,15 @@ public class ChallengeService {
 
 	/**
 	 * 챌린지 생성
-	 * @param challenge
+	 * @param createChallengeDTO
 	 * @return id
 	 */
-	public Long createChallenge(Challenge challenge){
+	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO){
+		Challenge challenge = new Challenge("testId",createChallengeDTO.getName(), createChallengeDTO.getChallengeDesc());
+		Challenge createChallenge = challengeRepository.save(challenge);
 		// 유저 아이디 정보 확인.
-		return challengeRepository.save(challenge).getId();
+		return ResponseChallengeDTO.convertDTO(createChallenge);
+
 	}
 
 	/**
@@ -33,12 +41,13 @@ public class ChallengeService {
 	 * @param id
 	 * @return Challenge
 	 */
-	public Challenge findChallengeById(Long id){
+	public ResponseChallengeDTO findChallengeById(Long id){
 		Optional<Challenge> findChallenge = challengeRepository.findById(id);
 		if(findChallenge.isEmpty()){
 			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
 		}
-		return findChallenge.get();
+		Challenge ChallengeDomain = findChallenge.get();
+		return ResponseChallengeDTO.convertDTO(ChallengeDomain);
 	}
 
 	/**
@@ -46,8 +55,13 @@ public class ChallengeService {
 	 * @param name
 	 * @return List of Challenge
 	 */
-	public List<Challenge> findChallengeByName(String name){
-		return challengeRepository.findByName(name);
+	public ArrayList<ResponseChallengeDTO> findChallengeByName(String name){
+		List<Challenge> findChallenges = challengeRepository.findByName(name);
+		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
+		for(Challenge challenge: findChallenges){
+			returnChallenges.add(ResponseChallengeDTO.convertDTO(challenge));
+		}
+		return returnChallenges;
 	}
 
 	/**
@@ -69,23 +83,30 @@ public class ChallengeService {
 	 * @param afterChallenge
 	 * @return Challenge
 	 */
-	public Challenge updateChallenge(Long id, Challenge afterChallenge){
+	public ResponseChallengeDTO updateChallenge(ModifyChallengeDTO modifyChallengeDTO){
 		// 유저 아이디 정보 확인.
-		Optional<Challenge> findChallenge = challengeRepository.findById(id);
+		Optional<Challenge> findChallenge = challengeRepository.findById(modifyChallengeDTO.getId());
 		if(findChallenge.isEmpty()){
 			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
 		}
-		findChallenge.get().setName(afterChallenge.getName());
-		findChallenge.get().setLeaderId(afterChallenge.getLeaderId());
-		return challengeRepository.save(findChallenge.get());
+		findChallenge.get().setName(modifyChallengeDTO.getName());
+		findChallenge.get().setLeaderId(modifyChallengeDTO.getLeaderId());
+		findChallenge.get().setChallengeDesc(modifyChallengeDTO.getChallengeDesc());
+		Challenge modifyChallenge = challengeRepository.save(findChallenge.get());
+		return ResponseChallengeDTO.convertDTO(modifyChallenge);
 	}
 
 	/**
 	 * 모든 챌린지 검색
-	 * @return List of Challenge
+	 * @return ArrayList of ResponseChallengeDTO
 	 */
-	public List<Challenge> findAllChallenge(){
-		return challengeRepository.findAll();
+	public ArrayList<ResponseChallengeDTO> findAllChallenge(){
+		List<Challenge> findChallenges = challengeRepository.findAll();
+		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
+		for(Challenge challenge: findChallenges){
+			returnChallenges.add(ResponseChallengeDTO.convertDTO(challenge));
+		}
+		return returnChallenges;
 	}
 
 }

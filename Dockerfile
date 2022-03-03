@@ -1,4 +1,5 @@
 FROM openjdk:16-jdk-alpine AS builder
+
 WORKDIR application
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} application.jar

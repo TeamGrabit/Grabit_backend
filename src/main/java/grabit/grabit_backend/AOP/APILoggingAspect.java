@@ -40,13 +40,6 @@ public class APILoggingAspect {
 		logger.info("## Current LocalDataTime ## : " + currentTime);
 		logger.info("## Call API ## : " + currentMethod);
 
-		// request Log 저장.
-		RequestLog requestLog = new RequestLog();
-		requestLog.setCalledAt(currentTime);
-		requestLog.setData(currentMethod);
-		requestLog.setType("API");
-		requestLogRepository.save(requestLog);
-
 		// API 시간 측정 시작
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -57,15 +50,6 @@ public class APILoggingAspect {
 		// API 시간 측정 끝
 		stopWatch.stop();
 		logger.info("## API 수행 시간 ## : " + stopWatch.getTotalTimeMillis() + " (ms)초");
-
-		// response Log 저장.
-		ResponseLog responseLog = new ResponseLog();
-		responseLog.setResponseAt(LocalDateTime.now());
-		responseLog.setRequestLog(requestLog);
-		responseLog.setResponseBody(obj.getBody().toString());
-		responseLog.setProcessTime(stopWatch.getTotalTimeMillis());
-		responseLog.setHttpStatus(obj.getStatusCode().toString());
-		responseLogRepository.save(responseLog);
 
 		return obj;
 	}
