@@ -5,13 +5,17 @@ import grabit.grabit_backend.DTO.FindChallengeDTO;
 import grabit.grabit_backend.DTO.ModifyChallengeDTO;
 import grabit.grabit_backend.DTO.ResponseChallengeDTO;
 import grabit.grabit_backend.Domain.Challenge;
+import grabit.grabit_backend.Domain.User;
 import grabit.grabit_backend.Repository.ChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ChallengeService {
@@ -28,12 +32,14 @@ public class ChallengeService {
 	 * @param createChallengeDTO
 	 * @return id
 	 */
-	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO){
-		Challenge challenge = new Challenge("testId",createChallengeDTO.getName(), createChallengeDTO.getChallengeDesc());
+	@Transactional
+	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO, User leader){
+		Challenge challenge = new Challenge(leader,createChallengeDTO.getName(), createChallengeDTO.getChallengeDesc());
 		Challenge createChallenge = challengeRepository.save(challenge);
 		// 유저 아이디 정보 확인.
+		User[] temp= createChallenge.getMembers().toArray(new User[0]);
+		System.out.println(temp[0].getUserId());
 		return ResponseChallengeDTO.convertDTO(createChallenge);
-
 	}
 
 	/**
@@ -90,7 +96,7 @@ public class ChallengeService {
 			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
 		}
 		findChallenge.get().setName(modifyChallengeDTO.getName());
-		findChallenge.get().setLeaderId(modifyChallengeDTO.getLeaderId());
+//		findChallenge.get().setLeaderId(modifyChallengeDTO.getLeaderId());
 		findChallenge.get().setChallengeDesc(modifyChallengeDTO.getChallengeDesc());
 		Challenge modifyChallenge = challengeRepository.save(findChallenge.get());
 		return ResponseChallengeDTO.convertDTO(modifyChallenge);

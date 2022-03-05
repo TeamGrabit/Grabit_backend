@@ -15,7 +15,7 @@ public class ChallengeDTO {
 
 	public ChallengeDTO(Challenge challenge) {
 		this.id = challenge.getId();
-		this.leaderId = challenge.getLeaderId();
+		this.leaderId = challenge.getLeader().getUserId();
 		this.name = challenge.getName();
 		this.createdAt = challenge.getCreatedAt();
 	}

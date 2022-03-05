@@ -6,15 +6,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Data
 public class User extends BaseEntity implements UserDetails{
 
 	@Id
@@ -32,6 +31,9 @@ public class User extends BaseEntity implements UserDetails{
 	private String userEmail;
 
 	private boolean enabled = true;
+
+	@ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
+	List<Challenge> challenges;
 
 	public User(Integer Id, String userId, String userName, String userEmail) {
 		this.Id = Id;
@@ -57,6 +59,14 @@ public class User extends BaseEntity implements UserDetails{
 
 	public String getUserEmail() {
 		return userEmail;
+	}
+
+	public List<Challenge> getChallenges() {
+		return challenges;
+	}
+
+	public void setChallenges(List<Challenge> challenges) {
+		this.challenges = challenges;
 	}
 
 	@Override

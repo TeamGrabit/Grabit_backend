@@ -22,7 +22,7 @@ public class ResponseChallengeDTO {
 	private LocalDateTime modifiedAt;
 
 	public static ResponseChallengeDTO convertDTO(Challenge challenge){
-		return new ResponseChallengeDTO(challenge.getId(), challenge.getLeaderId(), challenge.getName(),
+		return new ResponseChallengeDTO(challenge.getId(), challenge.getLeader().getUserId(), challenge.getName(),
 				challenge.getChallengeDesc(), challenge.getCreatedAt(), challenge.getModifiedAt());
 	}
 
