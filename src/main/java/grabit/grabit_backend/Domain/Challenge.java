@@ -1,14 +1,12 @@
 package grabit.grabit_backend.Domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name = "challenge")
-public class Challenge extends BaseEntity{
+public class Challenge extends BaseEntity {
 
-	@Id @GeneratedValue
+	@Id
+	@GeneratedValue
 	@Column(name = "CHALLENGE_ID")
 	private Long id;
 
@@ -16,11 +14,16 @@ public class Challenge extends BaseEntity{
 	private String leaderId;
 	private String name;
 
-	public Challenge(){}
+	@Column(name = "CHALLENGE_DESC")
+	private String challengeDesc;
 
-	public Challenge(String leaderId, String name) {
+	public Challenge() {}
+
+	public Challenge(String leaderId, String name, String challengeDesc) {
 		this.leaderId = leaderId;
 		this.name = name;
+
+		this.challengeDesc = challengeDesc;
 	}
 
 	public Long getId() {
@@ -31,14 +34,6 @@ public class Challenge extends BaseEntity{
 		this.id = id;
 	}
 
-	public String getLeaderId() {
-		return leaderId;
-	}
-
-	public void setLeaderId(String leaderId) {
-		this.leaderId = leaderId;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -47,4 +42,11 @@ public class Challenge extends BaseEntity{
 		this.name = name;
 	}
 
+	public String getChallengeDesc() {
+		return challengeDesc;
+	}
+
+	public void setChallengeDesc(String challengeDesc) {
+		this.challengeDesc = challengeDesc;
+	}
 }
