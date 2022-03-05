@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class ModifyChallengeDTO {
 
-	private Long id;
-	private String leaderId;
 	private String name;
-	private String challengeDesc;
+	private String description;
+	private String leader;
+	private Boolean isPrivate;
 
 }

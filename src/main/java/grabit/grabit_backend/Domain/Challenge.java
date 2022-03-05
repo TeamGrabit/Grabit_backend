@@ -1,12 +1,15 @@
 package grabit.grabit_backend.Domain;
 
+import grabit.grabit_backend.DTO.ModifyChallengeDTO;
 import org.apache.tomcat.jni.Local;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "challenge")
 public class Challenge {
@@ -15,22 +18,35 @@ public class Challenge {
 	@Column(name = "CHALLENGE_ID")
 	private Long id;
 
-	@Column(name = "LEADER_ID")
-	private String leaderId;
+	@Column(name = "NAME")
 	private String name;
-	@Column(name = "CHALLENGE_DESC")
-	private String challengeDesc;
+
+	@Column(name = "DESCRIPTION")
+	private String description;
+
+	@Column(name = "LEADER")
+	private String leader;
+
+	@Column(name = "IS_PRIVATE")
+	private Boolean isPrivate;
+
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 
 	public Challenge(){}
 
-	public Challenge(String leaderId, String name, String challengeDesc) {
-		this.leaderId = leaderId;
+	public Challenge(String name, String description, String leader, Boolean isPrivate) {
 		this.name = name;
-		this.challengeDesc = challengeDesc;
-		this.createdAt = LocalDateTime.now();
-		this.modifiedAt = LocalDateTime.now();
+		this.description = description;
+		this.leader = leader;
+		this.isPrivate = isPrivate;
+	}
+
+	public void modifyChallenge(ModifyChallengeDTO modifyChallengeDTO){
+		this.name = modifyChallengeDTO.getName();
+		this.description = modifyChallengeDTO.getDescription();
+		this.leader = modifyChallengeDTO.getLeader();
+		this.isPrivate = modifyChallengeDTO.getIsPrivate();
 	}
 
 	public Long getId() {
@@ -41,14 +57,6 @@ public class Challenge {
 		this.id = id;
 	}
 
-	public String getLeaderId() {
-		return leaderId;
-	}
-
-	public void setLeaderId(String leaderId) {
-		this.leaderId = leaderId;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -57,12 +65,28 @@ public class Challenge {
 		this.name = name;
 	}
 
-	public String getChallengeDesc() {
-		return challengeDesc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setChallengeDesc(String challengeDesc) {
-		this.challengeDesc = challengeDesc;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getLeader() {
+		return leader;
+	}
+
+	public void setLeader(String leader) {
+		this.leader = leader;
+	}
+
+	public Boolean getPrivate() {
+		return isPrivate;
+	}
+
+	public void setPrivate(Boolean aPrivate) {
+		isPrivate = aPrivate;
 	}
 
 	public LocalDateTime getCreatedAt() {
