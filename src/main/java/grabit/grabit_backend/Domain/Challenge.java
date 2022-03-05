@@ -18,14 +18,17 @@ public class Challenge {
 	@Column(name = "LEADER_ID")
 	private String leaderId;
 	private String name;
+	@Column(name = "CHALLENGE_DESC")
+	private String challengeDesc;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 
 	public Challenge(){}
 
-	public Challenge(String leaderId, String name) {
+	public Challenge(String leaderId, String name, String challengeDesc) {
 		this.leaderId = leaderId;
 		this.name = name;
+		this.challengeDesc = challengeDesc;
 		this.createdAt = LocalDateTime.now();
 		this.modifiedAt = LocalDateTime.now();
 	}
@@ -52,6 +55,14 @@ public class Challenge {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getChallengeDesc() {
+		return challengeDesc;
+	}
+
+	public void setChallengeDesc(String challengeDesc) {
+		this.challengeDesc = challengeDesc;
 	}
 
 	public LocalDateTime getCreatedAt() {
