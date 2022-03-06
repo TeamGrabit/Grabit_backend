@@ -5,23 +5,34 @@ import grabit.grabit_backend.DTO.ModifyChallengeDTO;
 import grabit.grabit_backend.DTO.ResponseChallengeDTO;
 import grabit.grabit_backend.Domain.Challenge;
 import grabit.grabit_backend.Domain.User;
+<<<<<<< HEAD
 import grabit.grabit_backend.Repository.ChallengeRepository;
 import grabit.grabit_backend.exception.UnauthorizedException;
+=======
+import grabit.grabit_backend.Domain.UserChallenge;
+import grabit.grabit_backend.Repository.ChallengeRepository;
+import grabit.grabit_backend.Repository.UserChallengeRepository;
+>>>>>>> develop
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ChallengeService {
 
 	private final ChallengeRepository challengeRepository;
+	private final UserChallengeRepository userChallengeRepository;
 
 	@Autowired
-	public ChallengeService(ChallengeRepository challengeRepository){
+	public ChallengeService(ChallengeRepository challengeRepository, UserChallengeRepository userChallengeRepository){
 		this.challengeRepository = challengeRepository;
+		this.userChallengeRepository = userChallengeRepository;
 	}
 
 	/**
@@ -29,13 +40,22 @@ public class ChallengeService {
 	 * @param createChallengeDTO
 	 * @return id
 	 */
+<<<<<<< HEAD
 	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO, User user){
 		Challenge challenge = new Challenge(createChallengeDTO.getName(), createChallengeDTO.getDescription(),
 				user.getUserId(), createChallengeDTO.getIsPrivate());
+=======
+	@Transactional
+	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO, User leader){
+		Challenge challenge = new Challenge(leader,createChallengeDTO.getName(), createChallengeDTO.getChallengeDesc());
+>>>>>>> develop
 		Challenge createChallenge = challengeRepository.save(challenge);
 		// 유저 아이디 정보 확인.
+		UserChallenge userChallenge = new UserChallenge();
+		userChallenge.setChallenge(createChallenge);
+		userChallenge.setUser(leader);
+		userChallengeRepository.save(userChallenge);
 		return ResponseChallengeDTO.convertDTO(createChallenge);
-
 	}
 
 	/**
@@ -92,10 +112,18 @@ public class ChallengeService {
 		if(findChallenge.getLeader() != user.getUserId()){
 			throw new UnauthorizedException();
 		}
+<<<<<<< HEAD
 
 		findChallenge.modifyChallenge(modifyChallengeDTO);
 		Challenge modifiedChallenge = challengeRepository.save(findChallenge);
 		return ResponseChallengeDTO.convertDTO(modifiedChallenge);
+=======
+		findChallenge.get().setName(modifyChallengeDTO.getName());
+//		findChallenge.get().setLeaderId(modifyChallengeDTO.getLeaderId());
+		findChallenge.get().setChallengeDesc(modifyChallengeDTO.getChallengeDesc());
+		Challenge modifyChallenge = challengeRepository.save(findChallenge.get());
+		return ResponseChallengeDTO.convertDTO(modifyChallenge);
+>>>>>>> develop
 	}
 
 	/**

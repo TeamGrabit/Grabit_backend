@@ -17,6 +17,7 @@ public class ChallengeDTO {
 	private List<User> user;
 	private Boolean isPrivate;
 
+<<<<<<< HEAD
 	public ChallengeDTO(Long id, String name, String description, String leader, List<User> user, Boolean isPrivate) {
 		this.id = id;
 		this.name = name;
@@ -24,6 +25,23 @@ public class ChallengeDTO {
 		this.leader = leader;
 		this.user = user;
 		this.isPrivate = isPrivate;
+=======
+	public ChallengeDTO(Challenge challenge) {
+		this.id = challenge.getId();
+		this.leaderId = challenge.getLeader().getUserId();
+		this.name = challenge.getName();
+		this.createdAt = challenge.getCreatedAt();
+	}
+
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("{id: " + id + ", ");
+		sb.append("leaderId: " + leaderId + ", ");
+		sb.append("name: " + name + ", ");
+		sb.append("createdAt: " + createdAt + "}");
+		return sb.toString();
+>>>>>>> develop
 	}
 
 	public Long getId() {

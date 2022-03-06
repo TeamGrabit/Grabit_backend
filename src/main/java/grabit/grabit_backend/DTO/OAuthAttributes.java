@@ -1,6 +1,5 @@
 package grabit.grabit_backend.DTO;
 
-import grabit.grabit_backend.Domain.Role;
 import grabit.grabit_backend.Domain.User;
 
 import java.util.Map;
@@ -42,7 +41,7 @@ public class OAuthAttributes {
     }
 
     public User toEntity() {
-        return new User(id, userId, username, userEmail, "BADA");
+        return new User(id, userId, username, userEmail);
     }
 
     public Map<String, Object> getAttributes() {

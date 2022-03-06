@@ -70,9 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
         http
-
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -81,20 +79,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .authorizeRequests()
-                    .anyRequest().permitAll()//.hasAnyRole("ROLE_BADA", null, "ROLE_[BADA]", "[]")
-//                    .antMatchers("/api/oauth2/authorization/**").permitAll()
-//                    .antMatchers("/api/channel/**").hasAnyRole("USER")
-
+                .antMatchers("/oauth2/**").permitAll()
+                    .antMatchers("/login/**").permitAll()
+                    .antMatchers("/api/**").hasAnyRole("USER")
                 .and()
-               .oauth2Login()
-                    .authorizationEndpoint()
+                .oauth2Login()
+                .authorizationEndpoint()
                         .authorizationRequestRepository(customAuthorizationRequestRepository())
-                        .authorizationRequestResolver(new CustomAuthorizationRequestResolver(clientRegistrationRepository, "/api/oauth2/authorization"))
+//                        .authorizationRequestResolver(new CustomAuthorizationRequestResolver(clientRegistrationRepository, "/api/oauth2/authorization"))
                 .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler())
                     .userInfoEndpoint()
                     .userService(customOAuth2UserService);
-
-        // @formatter:on
     }
 }

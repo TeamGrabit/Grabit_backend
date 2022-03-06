@@ -23,8 +23,13 @@ public class ResponseChallengeDTO {
 	private Boolean isPrivate;
 
 	public static ResponseChallengeDTO convertDTO(Challenge challenge){
+<<<<<<< HEAD
 		return new ResponseChallengeDTO(challenge.getId(), challenge.getName(), challenge.getDescription(),
 				challenge.getLeader(),challenge.getPrivate());
+=======
+		return new ResponseChallengeDTO(challenge.getId(), challenge.getLeader().getUserId(), challenge.getName(),
+				challenge.getChallengeDesc(), challenge.getCreatedAt(), challenge.getModifiedAt());
+>>>>>>> develop
 	}
 
 }

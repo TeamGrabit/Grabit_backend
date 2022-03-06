@@ -1,5 +1,6 @@
 package grabit.grabit_backend.Domain;
 
+<<<<<<< HEAD
 import grabit.grabit_backend.DTO.ModifyChallengeDTO;
 import org.apache.tomcat.jni.Local;
 
@@ -10,14 +11,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.List;
+=======
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+>>>>>>> develop
 
 @Entity(name = "challenge")
-public class Challenge {
+public class Challenge extends BaseEntity {
 
-	@Id @GeneratedValue
+	@Id
+	@GeneratedValue
 	@Column(name = "CHALLENGE_ID")
 	private Long id;
 
+<<<<<<< HEAD
 	@Column(name = "NAME")
 	private String name;
 
@@ -32,9 +41,20 @@ public class Challenge {
 
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
+=======
+	private String name;
 
-	public Challenge(){}
+	@Column(name = "CHALLENGE_DESC")
+	private String challengeDesc;
+>>>>>>> develop
 
+	@ManyToOne(optional = false)
+	@JoinColumn(name="LEADER_ID")
+	private User leader;
+
+	public Challenge() {}
+
+<<<<<<< HEAD
 	public Challenge(String name, String description, String leader, Boolean isPrivate) {
 		this.name = name;
 		this.description = description;
@@ -47,6 +67,12 @@ public class Challenge {
 		this.description = modifyChallengeDTO.getDescription();
 		this.leader = modifyChallengeDTO.getLeader();
 		this.isPrivate = modifyChallengeDTO.getIsPrivate();
+=======
+	public Challenge(User leader, String name, String challengeDesc) {
+		this.leader = leader;
+		this.name = name;
+		this.challengeDesc = challengeDesc;
+>>>>>>> develop
 	}
 
 	public Long getId() {
@@ -65,6 +91,7 @@ public class Challenge {
 		this.name = name;
 	}
 
+<<<<<<< HEAD
 	public String getDescription() {
 		return description;
 	}
@@ -95,13 +122,21 @@ public class Challenge {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+=======
+	public User getLeader() {
+		return leader;
 	}
 
-	public LocalDateTime getModifiedAt() {
-		return modifiedAt;
+	public void setLeader(User leader) {
+		this.leader = leader;
+>>>>>>> develop
 	}
 
-	public void setModifiedAt(LocalDateTime modifiedAt) {
-		this.modifiedAt = modifiedAt;
+	public String getChallengeDesc() {
+		return challengeDesc;
+	}
+
+	public void setChallengeDesc(String challengeDesc) {
+		this.challengeDesc = challengeDesc;
 	}
 }
