@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User save(User challenge);
+    User save(User user);
     Optional<User> findById(Integer Id);
     List<User> findAll();
     void deleteById(Integer id);
