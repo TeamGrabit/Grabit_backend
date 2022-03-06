@@ -1,6 +1,6 @@
-package grabit.grabit_backend.Domain;
+package grabit.grabit_backend.domain;
 
-import grabit.grabit_backend.DTO.ModifyChallengeDTO;
+import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import lombok.Getter;
 import lombok.Setter;
 

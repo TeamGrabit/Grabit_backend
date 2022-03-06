@@ -1,9 +1,7 @@
-package grabit.grabit_backend.Service;
+package grabit.grabit_backend.service;
 
-import grabit.grabit_backend.Domain.Challenge;
-import grabit.grabit_backend.Repository.ChallengeRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
+import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.repository.ChallengeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

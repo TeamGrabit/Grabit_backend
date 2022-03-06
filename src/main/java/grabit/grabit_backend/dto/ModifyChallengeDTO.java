@@ -1,4 +1,4 @@
-package grabit.grabit_backend.DTO;
+package grabit.grabit_backend.dto;
 
 import lombok.Getter;
 import lombok.Setter;

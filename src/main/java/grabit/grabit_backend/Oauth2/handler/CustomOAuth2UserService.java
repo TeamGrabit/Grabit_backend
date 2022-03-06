@@ -1,9 +1,9 @@
 package grabit.grabit_backend.Oauth2.handler;
 
-import grabit.grabit_backend.DTO.OAuthAttributes;
-import grabit.grabit_backend.DTO.SessionUser;
-import grabit.grabit_backend.Domain.User;
-import grabit.grabit_backend.Repository.UserRepository;
+import grabit.grabit_backend.dto.OAuthAttributes;
+import grabit.grabit_backend.dto.SessionUser;
+import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

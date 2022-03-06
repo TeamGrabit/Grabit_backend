@@ -1,8 +1,8 @@
 package grabit.grabit_backend.Oauth2.handler;
 
-import grabit.grabit_backend.Domain.UserRefreshToken;
+import grabit.grabit_backend.domain.UserRefreshToken;
 import grabit.grabit_backend.Oauth2.repository.CustomAuthorizationRequestRepository;
-import grabit.grabit_backend.Repository.UserRefreshTokenRepository;
+import grabit.grabit_backend.repository.UserRefreshTokenRepository;
 import grabit.grabit_backend.auth.JwtProvider;
 import grabit.grabit_backend.utils.CookieUtil;
 

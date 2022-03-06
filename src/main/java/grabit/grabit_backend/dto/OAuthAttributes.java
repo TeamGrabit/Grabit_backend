@@ -1,6 +1,6 @@
-package grabit.grabit_backend.DTO;
+package grabit.grabit_backend.dto;
 
-import grabit.grabit_backend.Domain.User;
+import grabit.grabit_backend.domain.User;
 
 import java.util.Map;
 

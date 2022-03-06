@@ -1,9 +1,6 @@
-package grabit.grabit_backend.DTO;
+package grabit.grabit_backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import grabit.grabit_backend.Domain.User;
-import lombok.Getter;
-import lombok.Setter;
+import grabit.grabit_backend.domain.User;
 
 public class UserResDTO {
     private int id;

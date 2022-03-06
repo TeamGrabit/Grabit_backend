@@ -1,14 +1,11 @@
-package grabit.grabit_backend.DTO;
+package grabit.grabit_backend.dto;
 
-import grabit.grabit_backend.Domain.Challenge;
-import grabit.grabit_backend.Domain.User;
+import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

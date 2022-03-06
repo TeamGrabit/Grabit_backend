@@ -1,4 +1,4 @@
-package grabit.grabit_backend.AOP;
+package grabit.grabit_backend.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -18,7 +18,7 @@ public class APILoggingAspect {
 
 	private static final Logger logger = LoggerFactory.getLogger(APILoggingAspect.class);
 
-	@Pointcut("execution(* grabit.grabit_backend.Controller.*Controller.*(..))")
+	@Pointcut("execution(* grabit.grabit_backend.controller.*Controller.*(..))")
 	public void controllerLog(){}
 
 	@Around(value = "controllerLog()")

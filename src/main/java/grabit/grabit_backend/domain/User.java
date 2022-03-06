@@ -1,17 +1,14 @@
-package grabit.grabit_backend.Domain;
+package grabit.grabit_backend.domain;
 
 import com.sun.istack.NotNull;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class User extends BaseEntity implements UserDetails{

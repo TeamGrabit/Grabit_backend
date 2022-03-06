@@ -1,15 +1,10 @@
-package grabit.grabit_backend.DTO;
+package grabit.grabit_backend.dto;
 
-import grabit.grabit_backend.Domain.Challenge;
-import grabit.grabit_backend.Domain.User;
+import grabit.grabit_backend.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

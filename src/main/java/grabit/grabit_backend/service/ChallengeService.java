@@ -1,23 +1,21 @@
-package grabit.grabit_backend.Service;
+package grabit.grabit_backend.service;
 
-import grabit.grabit_backend.DTO.CreateChallengeDTO;
-import grabit.grabit_backend.DTO.ModifyChallengeDTO;
-import grabit.grabit_backend.DTO.ResponseChallengeDTO;
-import grabit.grabit_backend.Domain.Challenge;
-import grabit.grabit_backend.Domain.User;
-import grabit.grabit_backend.Repository.ChallengeRepository;
+import grabit.grabit_backend.dto.CreateChallengeDTO;
+import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import grabit.grabit_backend.dto.ResponseChallengeDTO;
+import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.repository.ChallengeRepository;
 import grabit.grabit_backend.exception.UnauthorizedException;
-import grabit.grabit_backend.Domain.UserChallenge;
-import grabit.grabit_backend.Repository.UserChallengeRepository;
+import grabit.grabit_backend.domain.UserChallenge;
+import grabit.grabit_backend.repository.UserChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ChallengeService {

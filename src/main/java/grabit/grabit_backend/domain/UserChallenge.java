@@ -1,4 +1,4 @@
-package grabit.grabit_backend.Domain;
+package grabit.grabit_backend.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

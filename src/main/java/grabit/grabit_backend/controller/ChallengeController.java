@@ -1,11 +1,10 @@
-package grabit.grabit_backend.Controller;
+package grabit.grabit_backend.controller;
 
-import grabit.grabit_backend.DTO.CreateChallengeDTO;
-import grabit.grabit_backend.DTO.ModifyChallengeDTO;
-import grabit.grabit_backend.DTO.ResponseChallengeDTO;
-import grabit.grabit_backend.Domain.User;
-import grabit.grabit_backend.Service.ChallengeService;
-import grabit.grabit_backend.exception.UnauthorizedException;
+import grabit.grabit_backend.dto.CreateChallengeDTO;
+import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import grabit.grabit_backend.dto.ResponseChallengeDTO;
+import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
