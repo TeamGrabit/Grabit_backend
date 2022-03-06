@@ -41,7 +41,11 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO, User user){
-		Challenge challenge = new Challenge(createChallengeDTO.getName(), createChallengeDTO.getDescription(), createChallengeDTO.getIsPrivate(), user);
+		Challenge challenge = new Challenge(createChallengeDTO.getName(),
+				createChallengeDTO.getDescription(),
+				createChallengeDTO.getIsPrivate(),
+				user
+		);
 		Challenge createChallenge = challengeRepository.save(challenge);
 
 		UserChallenge userChallenge = new UserChallenge();
@@ -87,6 +91,7 @@ public class ChallengeService {
 		if(findChallenge.getLeader().getUserId() != user.getUserId()){
 			throw new UnauthorizedException();
 		}
+
 		challengeRepository.deleteById(id);
 	}
 
@@ -135,6 +140,12 @@ public class ChallengeService {
 	public ResponseChallengeDTO joinChallenge(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
+		UserChallenge userChallenge = UserChallenge.builder()
+				.user(user)
+				.challenge(findChallenge)
+				.build();
+
+		userChallengeRepository.save(userChallenge);
 		Challenge modifiedChallenge = challengeRepository.save(findChallenge);
 		return ResponseChallengeDTO.convertDTO(modifiedChallenge);
 	}
@@ -145,11 +156,10 @@ public class ChallengeService {
 	 * @param user
 	 * @return
 	 */
-	public ResponseChallengeDTO leaveChallenge(Long id, User user){
+	public void leaveChallenge(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
-		Challenge modifiedChallenge = challengeRepository.save(findChallenge);
-		return ResponseChallengeDTO.convertDTO(modifiedChallenge);
+		userChallengeRepository.deleteByUserAndChallenge(user, findChallenge);
 	}
 
 	private Challenge isExistChallenge(Long id){
