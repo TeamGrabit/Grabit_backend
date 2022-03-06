@@ -9,6 +9,7 @@ import grabit.grabit_backend.repository.ChallengeRepository;
 import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.domain.UserChallenge;
 import grabit.grabit_backend.repository.UserChallengeRepository;
+import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +23,15 @@ public class ChallengeService {
 
 	private final ChallengeRepository challengeRepository;
 	private final UserChallengeRepository userChallengeRepository;
+	private final UserRepository userRepository;
 
 	@Autowired
-	public ChallengeService(ChallengeRepository challengeRepository, UserChallengeRepository userChallengeRepository){
+	public ChallengeService(ChallengeRepository challengeRepository,
+							UserChallengeRepository userChallengeRepository,
+							UserRepository userRepository){
 		this.challengeRepository = challengeRepository;
 		this.userChallengeRepository = userChallengeRepository;
+		this.userRepository = userRepository;
 	}
 
 	/**
@@ -98,7 +103,12 @@ public class ChallengeService {
 		if(findChallenge.getLeader().getId() != user.getId()){
 			throw new UnauthorizedException();
 		}
-		findChallenge.modifyChallenge(modifyChallengeDTO);
+		Optional<User> leader = userRepository.findByUserId(modifyChallengeDTO.getLeader());
+		if(leader.isEmpty()){
+			throw new IllegalStateException("존재하지 않는 유저입니다.");
+		}
+		User findLeader = leader.get();
+		findChallenge.modifyChallenge(modifyChallengeDTO, findLeader);
 		Challenge modifiedChallenge = challengeRepository.save(findChallenge);
 		return ResponseChallengeDTO.convertDTO(modifiedChallenge);
 	}
