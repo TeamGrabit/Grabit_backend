@@ -32,9 +32,6 @@ public class User extends BaseEntity implements UserDetails{
 
 	private boolean enabled = true;
 
-	@ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
-	List<Challenge> challenges;
-
 	public User(Integer Id, String userId, String userName, String userEmail) {
 		this.Id = Id;
 		this.username = userName;
@@ -59,14 +56,6 @@ public class User extends BaseEntity implements UserDetails{
 
 	public String getUserEmail() {
 		return userEmail;
-	}
-
-	public List<Challenge> getChallenges() {
-		return challenges;
-	}
-
-	public void setChallenges(List<Challenge> challenges) {
-		this.challenges = challenges;
 	}
 
 	@Override

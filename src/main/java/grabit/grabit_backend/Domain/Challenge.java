@@ -22,22 +22,12 @@ public class Challenge extends BaseEntity {
 	@JoinColumn(name="LEADER_ID")
 	private User leader;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(
-		name = "users_challenges",
-		joinColumns = @JoinColumn(name = "challenge_id"),
-		inverseJoinColumns = @JoinColumn(name = "member_id"))
-	Set<User> members = new HashSet<>();
-
 	public Challenge() {}
 
 	public Challenge(User leader, String name, String challengeDesc) {
 		this.leader = leader;
 		this.name = name;
-
 		this.challengeDesc = challengeDesc;
-
-		this.members.add(leader);
 	}
 
 	public Long getId() {
@@ -64,12 +54,6 @@ public class Challenge extends BaseEntity {
 		this.leader = leader;
 	}
 
-	public Set<User> getMembers() {
-		return members;
-	}
-	public void setMembers(Set<User> members) {
-		this.members = members;
-	}
 	public String getChallengeDesc() {
 		return challengeDesc;
 	}

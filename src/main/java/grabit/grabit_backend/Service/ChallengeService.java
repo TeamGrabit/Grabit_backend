@@ -6,7 +6,9 @@ import grabit.grabit_backend.DTO.ModifyChallengeDTO;
 import grabit.grabit_backend.DTO.ResponseChallengeDTO;
 import grabit.grabit_backend.Domain.Challenge;
 import grabit.grabit_backend.Domain.User;
+import grabit.grabit_backend.Domain.UserChallenge;
 import grabit.grabit_backend.Repository.ChallengeRepository;
+import grabit.grabit_backend.Repository.UserChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +23,12 @@ import java.util.Set;
 public class ChallengeService {
 
 	private final ChallengeRepository challengeRepository;
+	private final UserChallengeRepository userChallengeRepository;
 
 	@Autowired
-	public ChallengeService(ChallengeRepository challengeRepository){
+	public ChallengeService(ChallengeRepository challengeRepository, UserChallengeRepository userChallengeRepository){
 		this.challengeRepository = challengeRepository;
+		this.userChallengeRepository = userChallengeRepository;
 	}
 
 	/**
@@ -37,8 +41,10 @@ public class ChallengeService {
 		Challenge challenge = new Challenge(leader,createChallengeDTO.getName(), createChallengeDTO.getChallengeDesc());
 		Challenge createChallenge = challengeRepository.save(challenge);
 		// 유저 아이디 정보 확인.
-		User[] temp= createChallenge.getMembers().toArray(new User[0]);
-		System.out.println(temp[0].getUserId());
+		UserChallenge userChallenge = new UserChallenge();
+		userChallenge.setChallenge(createChallenge);
+		userChallenge.setUser(leader);
+		userChallengeRepository.save(userChallenge);
 		return ResponseChallengeDTO.convertDTO(createChallenge);
 	}
 
