@@ -10,18 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-<<<<<<< HEAD
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-=======
 import org.springframework.web.bind.annotation.*;
->>>>>>> develop
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -54,14 +43,6 @@ public class ChallengeController {
 	 */
 	@PostMapping(value = "")
 	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@Valid @RequestBody CreateChallengeDTO createChallengeDTO, @AuthenticationPrincipal User user){
-<<<<<<< HEAD
-		if (user == null) {
-			throw new UnauthorizedException();
-		}
-
-		System.out.println(user);
-=======
->>>>>>> develop
 		ResponseChallengeDTO responseChallengeDTO = challengeService.createChallenge(createChallengeDTO, user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
@@ -75,10 +56,6 @@ public class ChallengeController {
 	@PatchMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
 										@Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO, @AuthenticationPrincipal User user){
-		if (user == null) {
-			throw new UnauthorizedException();
-		}
-
 		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(id, modifyChallengeDTO, user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
@@ -89,10 +66,6 @@ public class ChallengeController {
 	 */
 	@DeleteMapping(value = "{id}")
 	public ResponseEntity<Void> deleteChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
-		if (user == null) {
-			throw new UnauthorizedException();
-		}
-
 		challengeService.deleteChallengeById(id, user);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -110,21 +83,12 @@ public class ChallengeController {
 
 	@PatchMapping(value = "{id}/join")
 	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
-		if (user == null) {
-			throw new UnauthorizedException();
-		}
-
 		ResponseChallengeDTO responseChallengeDTO = challengeService.joinChallenge(id, user);
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 
 	@PatchMapping(value = "{id}/leave")
 	public ResponseEntity<ResponseChallengeDTO> leaveChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
-		if (user == null) {
-			throw new UnauthorizedException();
-		}
-
-
 		ResponseChallengeDTO responseChallengeDTO = challengeService.leaveChallenge(id, user);
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}

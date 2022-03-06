@@ -5,14 +5,10 @@ import grabit.grabit_backend.DTO.ModifyChallengeDTO;
 import grabit.grabit_backend.DTO.ResponseChallengeDTO;
 import grabit.grabit_backend.Domain.Challenge;
 import grabit.grabit_backend.Domain.User;
-<<<<<<< HEAD
 import grabit.grabit_backend.Repository.ChallengeRepository;
 import grabit.grabit_backend.exception.UnauthorizedException;
-=======
 import grabit.grabit_backend.Domain.UserChallenge;
-import grabit.grabit_backend.Repository.ChallengeRepository;
 import grabit.grabit_backend.Repository.UserChallengeRepository;
->>>>>>> develop
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,21 +36,16 @@ public class ChallengeService {
 	 * @param createChallengeDTO
 	 * @return id
 	 */
-<<<<<<< HEAD
-	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO, User user){
-		Challenge challenge = new Challenge(createChallengeDTO.getName(), createChallengeDTO.getDescription(),
-				user.getUserId(), createChallengeDTO.getIsPrivate());
-=======
 	@Transactional
-	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO, User leader){
-		Challenge challenge = new Challenge(leader,createChallengeDTO.getName(), createChallengeDTO.getChallengeDesc());
->>>>>>> develop
+	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO, User user){
+		Challenge challenge = new Challenge(createChallengeDTO.getName(), createChallengeDTO.getDescription(), createChallengeDTO.getIsPrivate(), user);
 		Challenge createChallenge = challengeRepository.save(challenge);
-		// 유저 아이디 정보 확인.
+
 		UserChallenge userChallenge = new UserChallenge();
 		userChallenge.setChallenge(createChallenge);
-		userChallenge.setUser(leader);
+		userChallenge.setUser(user);
 		userChallengeRepository.save(userChallenge);
+
 		return ResponseChallengeDTO.convertDTO(createChallenge);
 	}
 
@@ -64,11 +55,8 @@ public class ChallengeService {
 	 * @return Challenge
 	 */
 	public ResponseChallengeDTO findChallengeById(Long id){
-		Optional<Challenge> findChallenge = challengeRepository.findById(id);
-		if(findChallenge.isEmpty()){
-			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
-		}
-		return ResponseChallengeDTO.convertDTO(findChallenge.get());
+		Challenge challenge = isExistChallenge(id);
+		return ResponseChallengeDTO.convertDTO(challenge);
 	}
 
 	/**
@@ -93,7 +81,7 @@ public class ChallengeService {
 		Challenge findChallenge = isExistChallenge(id);
 
 		// leader 여부 확인.
-		if(findChallenge.getLeader() != user.getUserId()){
+		if(findChallenge.getLeader().getUserId() != user.getUserId()){
 			throw new UnauthorizedException();
 		}
 		challengeRepository.deleteById(id);
@@ -102,28 +90,19 @@ public class ChallengeService {
 	/**
 	 * 챌린지 수정
 	 * @param id
-	 * @param afterChallenge
+	 * @param modifyChallengeDTO
 	 * @return Challenge
 	 */
 	public ResponseChallengeDTO updateChallenge(Long id, ModifyChallengeDTO modifyChallengeDTO, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
 		// leader 여부 확인.
-		if(findChallenge.getLeader() != user.getUserId()){
+		if(findChallenge.getLeader().getId() != user.getId()){
 			throw new UnauthorizedException();
 		}
-<<<<<<< HEAD
-
 		findChallenge.modifyChallenge(modifyChallengeDTO);
 		Challenge modifiedChallenge = challengeRepository.save(findChallenge);
 		return ResponseChallengeDTO.convertDTO(modifiedChallenge);
-=======
-		findChallenge.get().setName(modifyChallengeDTO.getName());
-//		findChallenge.get().setLeaderId(modifyChallengeDTO.getLeaderId());
-		findChallenge.get().setChallengeDesc(modifyChallengeDTO.getChallengeDesc());
-		Challenge modifyChallenge = challengeRepository.save(findChallenge.get());
-		return ResponseChallengeDTO.convertDTO(modifyChallenge);
->>>>>>> develop
 	}
 
 	/**
@@ -164,7 +143,6 @@ public class ChallengeService {
 		Challenge modifiedChallenge = challengeRepository.save(findChallenge);
 		return ResponseChallengeDTO.convertDTO(modifiedChallenge);
 	}
-
 
 	private Challenge isExistChallenge(Long id){
 		Optional<Challenge> findChallenge = challengeRepository.findById(id);

@@ -19,17 +19,11 @@ public class ResponseChallengeDTO {
 	private Long id;
 	private String name;
 	private String description;
-	private String leader;
+	private User leader;
 	private Boolean isPrivate;
 
 	public static ResponseChallengeDTO convertDTO(Challenge challenge){
-<<<<<<< HEAD
-		return new ResponseChallengeDTO(challenge.getId(), challenge.getName(), challenge.getDescription(),
-				challenge.getLeader(),challenge.getPrivate());
-=======
-		return new ResponseChallengeDTO(challenge.getId(), challenge.getLeader().getUserId(), challenge.getName(),
-				challenge.getChallengeDesc(), challenge.getCreatedAt(), challenge.getModifiedAt());
->>>>>>> develop
+		return new ResponseChallengeDTO(challenge.getId(), challenge.getName(), challenge.getDescription(), challenge.getLeader(), challenge.getIsPrivate());
 	}
 
 }
