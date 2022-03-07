@@ -20,7 +20,7 @@ public class ResponseChallengeDTO {
 	private final Long id;
 	private final String name;
 	private final String description;
-	private final User leader;
+	private final String leader;
 	private final Boolean isPrivate;
 	private final List<String> member;
 
@@ -33,7 +33,7 @@ public class ResponseChallengeDTO {
 				challenge.getId(),
 				challenge.getName(),
 				challenge.getDescription(),
-				challenge.getLeader(),
+				challenge.getLeader().getUserId(),
 				challenge.getIsPrivate(),
 				members
 		);

@@ -159,7 +159,11 @@ public class ChallengeService {
 	public void leaveChallenge(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
-		userChallengeRepository.deleteByUserAndChallenge(user, findChallenge);
+		Optional<UserChallenge> finduserChallenge = userChallengeRepository.findByUserAndChallenge(user, findChallenge);
+		if(finduserChallenge.isEmpty()){
+			throw new IllegalStateException("잘못된 요청입니다.");
+		}
+		userChallengeRepository.delete(finduserChallenge.get());
 	}
 
 	private Challenge isExistChallenge(Long id){

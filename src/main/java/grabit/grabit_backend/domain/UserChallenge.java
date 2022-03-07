@@ -28,7 +28,7 @@ public class UserChallenge {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID")
+	@JoinColumn(name = "USER_ID")
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
