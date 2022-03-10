@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -22,16 +23,16 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@IdClass(UserChallengePK.class)
 public class UserChallenge {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_CHALLENGE_ID")
-	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
+	@Id
+	@ManyToOne
+	@JoinColumn(name = "ID")
 	private User user;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@Id
+	@ManyToOne
 	@JoinColumn(name = "CHALLENGE_ID")
 	private Challenge challenge;
 }

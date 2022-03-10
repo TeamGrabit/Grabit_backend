@@ -97,6 +97,7 @@ public class ChallengeController {
 	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id,
 																 @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.joinChallenge(id, user);
+
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 

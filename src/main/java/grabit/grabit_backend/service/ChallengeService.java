@@ -146,8 +146,7 @@ public class ChallengeService {
 				.build();
 
 		userChallengeRepository.save(userChallenge);
-		Challenge modifiedChallenge = challengeRepository.save(findChallenge);
-		return ResponseChallengeDTO.convertDTO(modifiedChallenge);
+		return ResponseChallengeDTO.convertDTO(findChallenge);
 	}
 
 	/**
@@ -163,7 +162,9 @@ public class ChallengeService {
 		if(finduserChallenge.isEmpty()){
 			throw new IllegalStateException("잘못된 요청입니다.");
 		}
-		userChallengeRepository.delete(finduserChallenge.get());
+//		userChallengeRepository.delete(finduserChallenge.get());
+		userChallengeRepository.findAll()
+		userChallengeRepository.deleteByUserAndChallenge(user, findChallenge);
 	}
 
 	private Challenge isExistChallenge(Long id){
