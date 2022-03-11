@@ -61,6 +61,7 @@ public class ChallengeService {
 	 * @param id
 	 * @return Challenge
 	 */
+	@Transactional
 	public ResponseChallengeDTO findChallengeById(Long id){
 		Challenge challenge = isExistChallenge(id);
 		return ResponseChallengeDTO.convertDTO(challenge);
@@ -71,6 +72,7 @@ public class ChallengeService {
 	 * @param name
 	 * @return List of Challenge
 	 */
+	@Transactional
 	public ArrayList<ResponseChallengeDTO> findChallengeByName(String name){
 		List<Challenge> findChallenges = challengeRepository.findByName(name);
 		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
@@ -84,6 +86,7 @@ public class ChallengeService {
 	 * 챌린지 삭제
 	 * @param id
 	 */
+	@Transactional
 	public void deleteChallengeById(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
@@ -101,6 +104,7 @@ public class ChallengeService {
 	 * @param modifyChallengeDTO
 	 * @return Challenge
 	 */
+	@Transactional
 	public ResponseChallengeDTO updateChallenge(Long id, ModifyChallengeDTO modifyChallengeDTO, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
@@ -122,6 +126,7 @@ public class ChallengeService {
 	 * 모든 챌린지 검색
 	 * @return ArrayList of ResponseChallengeDTO
 	 */
+	@Transactional
 	public ArrayList<ResponseChallengeDTO> findAllChallenge(){
 		List<Challenge> findChallenges = challengeRepository.findAll();
 		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
@@ -137,6 +142,7 @@ public class ChallengeService {
 	 * @param user
 	 * @return
 	 */
+	@Transactional
 	public ResponseChallengeDTO joinChallenge(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
@@ -155,15 +161,10 @@ public class ChallengeService {
 	 * @param user
 	 * @return
 	 */
+	@Transactional
 	public void leaveChallenge(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
-		Optional<UserChallenge> finduserChallenge = userChallengeRepository.findByUserAndChallenge(user, findChallenge);
-		if(finduserChallenge.isEmpty()){
-			throw new IllegalStateException("잘못된 요청입니다.");
-		}
-//		userChallengeRepository.delete(finduserChallenge.get());
-		userChallengeRepository.findAll()
 		userChallengeRepository.deleteByUserAndChallenge(user, findChallenge);
 	}
 
