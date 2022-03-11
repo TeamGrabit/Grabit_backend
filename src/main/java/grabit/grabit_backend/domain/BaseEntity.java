@@ -1,4 +1,4 @@
-package grabit.grabit_backend.Domain;
+package grabit.grabit_backend.domain;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

@@ -1,10 +1,10 @@
-package grabit.grabit_backend.Controller;
+package grabit.grabit_backend.controller;
 
-import grabit.grabit_backend.DTO.CreateChallengeDTO;
-import grabit.grabit_backend.DTO.ModifyChallengeDTO;
-import grabit.grabit_backend.DTO.ResponseChallengeDTO;
-import grabit.grabit_backend.Domain.User;
-import grabit.grabit_backend.Service.ChallengeService;
+import grabit.grabit_backend.dto.CreateChallengeDTO;
+import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import grabit.grabit_backend.dto.ResponseChallengeDTO;
+import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/api/challenges")
+@RequestMapping("api/challenges")
 public class ChallengeController {
 
 	private final ChallengeService challengeService;
@@ -52,10 +52,10 @@ public class ChallengeController {
 	 * @param modifyChallengeDTO
 	 * @return responseChallengeDTO
 	 */
-	@PatchMapping(value = "/{id}")
+	@PatchMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
-										@Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(modifyChallengeDTO);
+										@Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO, @AuthenticationPrincipal User user){
+		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(id, modifyChallengeDTO, user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
 
@@ -63,9 +63,9 @@ public class ChallengeController {
 	 * 챌린지 삭제 API
 	 * @param id
 	 */
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> deleteChallengeAPI(@PathVariable(value = "id") Long id){
-		challengeService.deleteChallengeById(id);
+	@DeleteMapping(value = "{id}")
+	public ResponseEntity<Void> deleteChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+		challengeService.deleteChallengeById(id, user);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
@@ -74,9 +74,21 @@ public class ChallengeController {
 	 * @param id
 	 * @return responseChallengeDTO
 	 */
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.findChallengeById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
+	}
+
+	@PatchMapping(value = "{id}/join")
+	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+		ResponseChallengeDTO responseChallengeDTO = challengeService.joinChallenge(id, user);
+		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
+	}
+
+	@PatchMapping(value = "{id}/leave")
+	public ResponseEntity<ResponseChallengeDTO> leaveChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+		ResponseChallengeDTO responseChallengeDTO = challengeService.leaveChallenge(id, user);
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 }

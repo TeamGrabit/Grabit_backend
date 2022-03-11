@@ -1,4 +1,4 @@
-package grabit.grabit_backend.DTO;
+package grabit.grabit_backend.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +14,8 @@ public class CreateChallengeDTO {
 	private String name;
 
 	@NotNull
-	private String challengeDesc;
+	private String description;
+
+	@NotNull
+	private Boolean isPrivate;
 }

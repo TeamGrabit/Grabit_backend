@@ -1,6 +1,6 @@
-package grabit.grabit_backend.Repository;
+package grabit.grabit_backend.repository;
 
-import grabit.grabit_backend.Domain.Challenge;
+import grabit.grabit_backend.domain.Challenge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
