@@ -146,6 +146,11 @@ public class ChallengeService {
 	public ResponseChallengeDTO joinChallenge(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
+		Optional<UserChallenge> findUserChallenge = userChallengeRepository.findByUserAndChallenge(user, findChallenge);
+		if(findUserChallenge.isPresent()){
+			throw new IllegalStateException("이미 가입한 유저입니다.");
+		}
+
 		UserChallenge userChallenge = UserChallenge.builder()
 				.user(user)
 				.challenge(findChallenge)
