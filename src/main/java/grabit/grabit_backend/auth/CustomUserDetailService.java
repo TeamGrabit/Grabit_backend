@@ -1,7 +1,7 @@
 package grabit.grabit_backend.auth;
 
-import grabit.grabit_backend.Domain.User;
-import grabit.grabit_backend.Repository.UserRepository;
+import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

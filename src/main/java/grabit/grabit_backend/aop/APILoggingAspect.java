@@ -1,9 +1,5 @@
-package grabit.grabit_backend.AOP;
+package grabit.grabit_backend.aop;
 
-import grabit.grabit_backend.Domain.RequestLog;
-import grabit.grabit_backend.Domain.ResponseLog;
-import grabit.grabit_backend.Repository.RequestLogRepository;
-import grabit.grabit_backend.Repository.ResponseLogRepository;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,17 +16,9 @@ import java.time.LocalDateTime;
 @Aspect
 public class APILoggingAspect {
 
-	private RequestLogRepository requestLogRepository;
-	private ResponseLogRepository responseLogRepository;
-
-	public APILoggingAspect(RequestLogRepository requestLogRepository, ResponseLogRepository responseLogRepository){
-		this.requestLogRepository = requestLogRepository;
-		this.responseLogRepository = responseLogRepository;
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(APILoggingAspect.class);
 
-	@Pointcut("execution(* grabit.grabit_backend.Controller.*Controller.*(..))")
+	@Pointcut("execution(* grabit.grabit_backend.controller.*Controller.*(..))")
 	public void controllerLog(){}
 
 	@Around(value = "controllerLog()")

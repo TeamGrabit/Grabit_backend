@@ -1,10 +1,9 @@
 package grabit.grabit_backend.config.security;
 
-import grabit.grabit_backend.Oauth2.handler.CustomAuthorizationRequestResolver;
 import grabit.grabit_backend.Oauth2.handler.CustomOAuth2UserService;
 import grabit.grabit_backend.Oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import grabit.grabit_backend.Oauth2.repository.CustomAuthorizationRequestRepository;
-import grabit.grabit_backend.Repository.UserRefreshTokenRepository;
+import grabit.grabit_backend.repository.UserRefreshTokenRepository;
 import grabit.grabit_backend.auth.JwtAuthenticationFilter;
 import grabit.grabit_backend.auth.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;

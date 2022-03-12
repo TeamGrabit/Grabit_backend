@@ -1,6 +1,6 @@
-package grabit.grabit_backend.Repository;
+package grabit.grabit_backend.repository;
 
-import grabit.grabit_backend.Domain.User;
+import grabit.grabit_backend.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User save(User challenge);
+    User save(User user);
     Optional<User> findById(Integer Id);
     List<User> findAll();
     void deleteById(Integer id);

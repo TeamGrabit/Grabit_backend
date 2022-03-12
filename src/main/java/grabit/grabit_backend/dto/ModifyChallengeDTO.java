@@ -1,4 +1,4 @@
-package grabit.grabit_backend.DTO;
+package grabit.grabit_backend.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class ModifyChallengeDTO {
 
-	private Long id;
-	private String leaderId;
 	private String name;
-	private String challengeDesc;
+	private String description;
+	private String leader;
+	private Boolean isPrivate;
 
 }
