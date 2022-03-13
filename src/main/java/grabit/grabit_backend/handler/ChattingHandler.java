@@ -1,7 +1,7 @@
 package grabit.grabit_backend.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import grabit.grabit_backend.Domain.Chatting;
+import grabit.grabit_backend.domain.Chatting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -1,9 +1,5 @@
-package grabit.grabit_backend.AOP;
+package grabit.grabit_backend.aop;
 
-import grabit.grabit_backend.Domain.RequestLog;
-import grabit.grabit_backend.Domain.ResponseLog;
-import grabit.grabit_backend.Repository.RequestLogRepository;
-import grabit.grabit_backend.Repository.ResponseLogRepository;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,23 +16,16 @@ import java.time.LocalDateTime;
 @Aspect
 public class APILoggingAspect {
 
-	private RequestLogRepository requestLogRepository;
-	private ResponseLogRepository responseLogRepository;
-
-	public APILoggingAspect(RequestLogRepository requestLogRepository, ResponseLogRepository responseLogRepository){
-		this.requestLogRepository = requestLogRepository;
-		this.responseLogRepository = responseLogRepository;
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(APILoggingAspect.class);
 
-	@Pointcut("execution(* grabit.grabit_backend.Controller.*Controller.*(..))")
+	@Pointcut("execution(* grabit.grabit_backend.controller.*Controller.*(..))")
 	public void controllerLog(){}
 
 	@Around(value = "controllerLog()")
 	public Object aroundControllerLog(ProceedingJoinPoint pjp) throws Throwable{
 		LocalDateTime currentTime = LocalDateTime.now();
 		String currentMethod = pjp.getSignature().toString();
+		logger.info("## Current LocalDataTime ## : " + currentTime);
 		logger.info("## Call API ## : " + currentMethod);
 
 		// API 시간 측정 시작
@@ -48,8 +37,7 @@ public class APILoggingAspect {
 
 		// API 시간 측정 끝
 		stopWatch.stop();
-		logger.info("## Response Data ## : " + obj);
-		logger.info("## API process Time ## : " + stopWatch.getTotalTimeMillis() + " (ms)초");
+		logger.info("## API 수행 시간 ## : " + stopWatch.getTotalTimeMillis() + " (ms)초");
 
 		return obj;
 	}

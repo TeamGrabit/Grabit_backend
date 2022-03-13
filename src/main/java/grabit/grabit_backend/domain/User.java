@@ -1,21 +1,17 @@
-package grabit.grabit_backend.Domain;
+package grabit.grabit_backend.domain;
 
 import com.sun.istack.NotNull;
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-@Data
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails{
 
 	@Id
 	@Column(name="ID")
@@ -31,29 +27,17 @@ public class User implements UserDetails {
 	@Column(name="USER_EMAIL")
 	private String userEmail;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> roles = new ArrayList<>();
-
-
-	@CreatedDate
-	private LocalDateTime createdAt;
-	@LastModifiedDate
-	private LocalDateTime modifiedAt;
-
 	private boolean enabled = true;
 
-	public User(Integer Id, String userId, String userName, String userEmail, String r) {
+	public User(Integer Id, String userId, String userName, String userEmail) {
 		this.Id = Id;
 		this.username = userName;
 		this.userId = userId;
 		this.userEmail = userEmail;
 		this.enabled = true;
-		this.roles = new ArrayList<>();
-		this.roles.add(r);
 	}
 
 	public User() { }
-
 
 	@Override
 	public int hashCode() {
@@ -71,15 +55,11 @@ public class User implements UserDetails {
 		return userEmail;
 	}
 
-	public List<String> getRoles() {
-		return roles;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.roles.stream()
-				.map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList());
+		List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+		list.add(new SimpleGrantedAuthority("ROLE_USER"));
+		return list;
 	}
 
 	@Override
@@ -92,12 +72,10 @@ public class User implements UserDetails {
 		return username;
 	}
 
-	public User update(String userId, String userName, String userEmail, String r) {
+	public User update(String userId, String userName, String userEmail) {
 		this.userId = userId;
 		this.username = userName;
 		this.userEmail = userEmail;
-		this.roles = new ArrayList<>();
-		this.roles.add(r);
 		return this;
 	}
 

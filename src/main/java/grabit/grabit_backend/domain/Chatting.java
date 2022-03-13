@@ -1,4 +1,4 @@
-package grabit.grabit_backend.Domain;
+package grabit.grabit_backend.domain;
 
 public class Chatting {
 	private Long id;
