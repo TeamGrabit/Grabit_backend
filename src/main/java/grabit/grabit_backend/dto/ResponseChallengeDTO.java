@@ -20,7 +20,12 @@ public class ResponseChallengeDTO {
 	private Boolean isPrivate;
 
 	public static ResponseChallengeDTO convertDTO(Challenge challenge){
-		return new ResponseChallengeDTO(challenge.getId(), challenge.getName(), challenge.getDescription(), challenge.getLeader(), challenge.getIsPrivate());
+		return new ResponseChallengeDTO(
+				challenge.getId(),
+				challenge.getName(),
+				challenge.getDescription(),
+				challenge.getLeader(),
+				challenge.getIsPrivate());
 	}
 
 }
