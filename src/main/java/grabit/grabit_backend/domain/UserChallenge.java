@@ -28,7 +28,7 @@ public class UserChallenge {
 
 	@Id
 	@ManyToOne
-	@JoinColumn(name = "ID")
+	@JoinColumn(name = "USER_ID")
 	private User user;
 
 	@Id

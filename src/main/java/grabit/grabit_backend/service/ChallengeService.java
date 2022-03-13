@@ -157,6 +157,8 @@ public class ChallengeService {
 				.build();
 
 		userChallengeRepository.save(userChallenge);
+		findChallenge.getUserChallengeList().add(userChallenge);
+
 		return ResponseChallengeDTO.convertDTO(findChallenge);
 	}
 
