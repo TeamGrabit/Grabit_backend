@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/oauth2/**").permitAll()
                     .antMatchers("/login/**").permitAll()
-                    .antMatchers("/api/**").hasAnyRole("USER")
+//                    .antMatchers("/api/**").hasAnyRole("USER")
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint()
