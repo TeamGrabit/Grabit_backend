@@ -41,7 +41,8 @@ public class ChallengeController {
 	 * @return responseChallengeDTO
 	 */
 	@PostMapping(value = "")
-	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@Valid @RequestBody CreateChallengeDTO createChallengeDTO, @AuthenticationPrincipal User user){
+	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@Valid @RequestBody CreateChallengeDTO createChallengeDTO,
+																   @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.createChallenge(createChallengeDTO, user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
@@ -54,7 +55,8 @@ public class ChallengeController {
 	 */
 	@PatchMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
-										@Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO, @AuthenticationPrincipal User user){
+																   @Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO,
+																   @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(id, modifyChallengeDTO, user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
@@ -64,7 +66,8 @@ public class ChallengeController {
 	 * @param id
 	 */
 	@DeleteMapping(value = "{id}")
-	public ResponseEntity<Void> deleteChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+	public ResponseEntity<Void> deleteChallengeAPI(@PathVariable(value = "id") Long id,
+												   @AuthenticationPrincipal User user){
 		challengeService.deleteChallengeById(id, user);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -81,13 +84,15 @@ public class ChallengeController {
 	}
 
 	@PatchMapping(value = "{id}/join")
-	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id,
+																 @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.joinChallenge(id, user);
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 
 	@PatchMapping(value = "{id}/leave")
-	public ResponseEntity<ResponseChallengeDTO> leaveChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+	public ResponseEntity<ResponseChallengeDTO> leaveChallengeAPI(@PathVariable(value = "id") Long id,
+																  @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.leaveChallenge(id, user);
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
