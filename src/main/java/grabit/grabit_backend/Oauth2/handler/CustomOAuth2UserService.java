@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -45,7 +47,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuthAttributes attributes = OAuthAttributes
                 .of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-
+//        Set<String> ks = attributes.getAttributes().keySet();
+//        for(String key: ks) {
+//            System.out.println(key + " : "+attributes.getAttributes().get(key));
+//        }
         User user = saveOrUpdate(attributes);
         httpSession.setAttribute("user", new SessionUser(user));
 
@@ -64,9 +69,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private User saveOrUpdate(OAuthAttributes attributes) {
-        User user = userRepository.findById(attributes.getId())
-                .map(entity -> entity.update(attributes.getUserId(),attributes.getUsername(), attributes.getUserEmail()))
-                .orElse(attributes.toEntity());
+        User user = userRepository.findById(attributes.getId()).orElse(attributes.toEntity());
         return userRepository.save(user);
     }
 }

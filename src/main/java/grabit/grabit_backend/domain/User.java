@@ -1,6 +1,9 @@
 package grabit.grabit_backend.domain;
 
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
+@Getter
+@Setter
+@Entity(name = "user")
 public class User extends BaseEntity implements UserDetails{
 
 	@Id
@@ -27,13 +32,18 @@ public class User extends BaseEntity implements UserDetails{
 	@Column(name="USER_EMAIL")
 	private String userEmail;
 
+	@Nullable
+	@Column(name="BIO")
+	private String bio;
+
 	private boolean enabled = true;
 
-	public User(Integer Id, String userId, String userName, String userEmail) {
+	public User(Integer Id, String userId, String userName, String userEmail, String bio) {
 		this.Id = Id;
 		this.username = userName;
 		this.userId = userId;
 		this.userEmail = userEmail;
+		this.bio = bio;
 		this.enabled = true;
 	}
 
@@ -42,17 +52,6 @@ public class User extends BaseEntity implements UserDetails{
 	@Override
 	public int hashCode() {
 		return super.hashCode();
-	}
-
-	public Integer getId() {
-		return Id;
-	}
-	public String getUserId() {
-		return userId;
-	}
-
-	public String getUserEmail() {
-		return userEmail;
 	}
 
 	@Override
@@ -72,12 +71,12 @@ public class User extends BaseEntity implements UserDetails{
 		return username;
 	}
 
-	public User update(String userId, String userName, String userEmail) {
-		this.userId = userId;
-		this.username = userName;
-		this.userEmail = userEmail;
-		return this;
-	}
+//	public User update(String userId, String userName, String userEmail) {
+//		this.userId = userId;
+//		this.username = userName;
+//		this.userEmail = userEmail;
+//		return this;
+//	}
 
 	@Override
 	public boolean isAccountNonExpired() {

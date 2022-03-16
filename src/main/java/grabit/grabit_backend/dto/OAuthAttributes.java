@@ -1,9 +1,13 @@
 package grabit.grabit_backend.dto;
 
 import grabit.grabit_backend.domain.User;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 
+@Getter
+@Setter
 public class OAuthAttributes {
     private Map<String, Object> attributes;
     private String nameAttributeKey;
@@ -11,16 +15,18 @@ public class OAuthAttributes {
     private String userId;
     private String username;
     private String userEmail;
+    private String bio;
 
     public OAuthAttributes(Map<String, Object> attributes,
                            String nameAttributeKey, Integer id, String userId, String username,
-                           String userEmail) {
+                           String userEmail, String bio) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.id = id;
         this.userId = userId;
         this.username = username;
         this.userEmail = userEmail;
+        this.bio = bio;
     }
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if("github".equals(registrationId)) {
@@ -37,34 +43,11 @@ public class OAuthAttributes {
                 (Integer) attributes.get("id"),
                 (String) attributes.get("login"),
                 (String) attributes.get("name"),
-                (String) attributes.get("email"));
+                (String) attributes.get("email"),
+                (String) attributes.get("bio"));
     }
 
     public User toEntity() {
-        return new User(id, userId, username, userEmail);
-    }
-
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getNameAttributeKey() {
-        return nameAttributeKey;
+        return new User(id, userId, username, userEmail, bio);
     }
 }
