@@ -27,7 +27,7 @@ public class ChallengeController {
 
 	/**
 	 * 모든 챌린지 검색 API
-	 * @return List of Challenge
+	 * @return responseEntity
 	 */
 	@GetMapping(value = "")
 	public ResponseEntity<ArrayList<ResponseChallengeDTO>> findAllChallengesAPI(){
@@ -38,10 +38,12 @@ public class ChallengeController {
 	/**
 	 * 챌린지 생성 API
 	 * @param createChallengeDTO
-	 * @return responseChallengeDTO
+	 * @param user
+	 * @return responseEntity
 	 */
 	@PostMapping(value = "")
-	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@Valid @RequestBody CreateChallengeDTO createChallengeDTO, @AuthenticationPrincipal User user){
+	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@Valid @RequestBody CreateChallengeDTO createChallengeDTO,
+																   @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.createChallenge(createChallengeDTO, user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
@@ -50,11 +52,13 @@ public class ChallengeController {
 	 * 챌린지 수정 API
 	 * @param id
 	 * @param modifyChallengeDTO
-	 * @return responseChallengeDTO
+	 * @param user
+	 * @return responseEntity
 	 */
 	@PatchMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
-										@Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO, @AuthenticationPrincipal User user){
+																   @Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO,
+																   @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(id, modifyChallengeDTO, user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
 	}
@@ -62,9 +66,12 @@ public class ChallengeController {
 	/**
 	 * 챌린지 삭제 API
 	 * @param id
+	 * @param user
+	 * @return responseEntity
 	 */
 	@DeleteMapping(value = "{id}")
-	public ResponseEntity<Void> deleteChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+	public ResponseEntity<Void> deleteChallengeAPI(@PathVariable(value = "id") Long id,
+												   @AuthenticationPrincipal User user){
 		challengeService.deleteChallengeById(id, user);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -72,7 +79,7 @@ public class ChallengeController {
 	/**
 	 * 챌린지 검색 API
 	 * @param id
-	 * @return responseChallengeDTO
+	 * @return responseEntity
 	 */
 	@GetMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
@@ -80,15 +87,30 @@ public class ChallengeController {
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 
+	/**
+	 * 챌린지 가입 API
+	 * @param id
+	 * @param user
+	 * @return
+	 */
 	@PatchMapping(value = "{id}/join")
-	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id,
+																 @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.joinChallenge(id, user);
+
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 
+	/**
+	 * 챌린지 탈퇴 API
+	 * @param id
+	 * @param user
+	 * @return
+	 */
 	@PatchMapping(value = "{id}/leave")
-	public ResponseEntity<ResponseChallengeDTO> leaveChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.leaveChallenge(id, user);
-		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
+	public ResponseEntity<Void> leaveChallengeAPI(@PathVariable(value = "id") Long id,
+												  @AuthenticationPrincipal User user){
+		challengeService.leaveChallenge(id, user);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }
