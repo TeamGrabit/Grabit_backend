@@ -1,6 +1,6 @@
 package grabit.grabit_backend.Oauth2.handler;
 
-import grabit.grabit_backend.dto.OAuthAttributes;
+import grabit.grabit_backend.domain.OAuthAttributes;
 import grabit.grabit_backend.dto.SessionUser;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.repository.UserRepository;
@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {

@@ -1,6 +1,5 @@
-package grabit.grabit_backend.dto;
+package grabit.grabit_backend.domain;
 
-import grabit.grabit_backend.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,10 +15,11 @@ public class OAuthAttributes {
     private String username;
     private String userEmail;
     private String bio;
+    private String profileImg;
 
     public OAuthAttributes(Map<String, Object> attributes,
                            String nameAttributeKey, Integer id, String userId, String username,
-                           String userEmail, String bio) {
+                           String userEmail, String bio, String profileImg) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.id = id;
@@ -27,6 +27,7 @@ public class OAuthAttributes {
         this.username = username;
         this.userEmail = userEmail;
         this.bio = bio;
+        this.profileImg = profileImg;
     }
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if("github".equals(registrationId)) {
@@ -44,10 +45,11 @@ public class OAuthAttributes {
                 (String) attributes.get("login"),
                 (String) attributes.get("name"),
                 (String) attributes.get("email"),
-                (String) attributes.get("bio"));
+                (String) attributes.get("bio"),
+                (String) attributes.get("avatar_url"));
     }
 
     public User toEntity() {
-        return new User(id, userId, username, userEmail, bio);
+        return new User(id, userId, username, userEmail, bio, profileImg);
     }
 }

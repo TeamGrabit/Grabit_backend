@@ -36,14 +36,18 @@ public class User extends BaseEntity implements UserDetails{
 	@Column(name="BIO")
 	private String bio;
 
+	@Column(name="PROFILE_IMG")
+	private String profileImg; // image 링크 저장
+
 	private boolean enabled = true;
 
-	public User(Integer Id, String userId, String userName, String userEmail, String bio) {
+	public User(Integer Id, String userId, String userName, String userEmail, String bio, String profileImg) {
 		this.Id = Id;
 		this.username = userName;
 		this.userId = userId;
 		this.userEmail = userEmail;
 		this.bio = bio;
+		this.profileImg = profileImg;
 		this.enabled = true;
 	}
 
