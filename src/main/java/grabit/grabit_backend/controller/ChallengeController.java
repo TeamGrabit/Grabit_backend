@@ -1,11 +1,13 @@
 package grabit.grabit_backend.controller;
 
+import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,6 +35,19 @@ public class ChallengeController {
 	public ResponseEntity<ArrayList<ResponseChallengeDTO>> findAllChallengesAPI(){
 		ArrayList<ResponseChallengeDTO> findChallenges = challengeService.findAllChallenge();
 		return ResponseEntity.status(HttpStatus.OK).body(findChallenges);
+	}
+
+	/**
+	 * 챌린지 검색 API with Paging
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	@GetMapping(value = "/page")
+	public ResponseEntity<Page<Challenge>> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
+																		@RequestParam(defaultValue = "5") Integer size){
+		Page<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
+		return ResponseEntity.status(HttpStatus.OK).body(findChallengesWithPage);
 	}
 
 	/**

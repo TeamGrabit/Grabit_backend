@@ -10,6 +10,8 @@ import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.domain.UserChallenge;
 import grabit.grabit_backend.repository.UserChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -114,6 +116,17 @@ public class ChallengeService {
 			returnChallenges.add(ResponseChallengeDTO.convertDTO(challenge));
 		}
 		return returnChallenges;
+	}
+
+	/**
+	 * 챌린지 검색 with Paging
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public Page<Challenge> findAllChallengeWithPage(Integer page, Integer size){
+		PageRequest pageRequest = PageRequest.of(page, size);
+		return challengeRepository.findAll(pageRequest);
 	}
 
 	/**
