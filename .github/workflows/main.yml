@@ -1,0 +1,14 @@
+name: trigger jenkins job
+on: [push]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: trigger single Job
+      uses: appleboy/jenkins-action@master
+      with:
+        url: "http://35.200.110.17:8080"
+        user: "qf9ar8nv"
+        token: ${{ secrets.JENKINS_TOKEN }}
+        job: "CI-CD-grabit"
