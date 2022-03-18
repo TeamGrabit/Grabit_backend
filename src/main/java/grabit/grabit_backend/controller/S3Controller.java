@@ -1,9 +1,11 @@
 package grabit.grabit_backend.controller;
 
+import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +26,10 @@ public class S3Controller {
 	}
 
 	@PostMapping(value = "")
-	public ResponseEntity<String> execWrite(MultipartFile file) throws IOException {
+	public ResponseEntity<String> execWrite(@AuthenticationPrincipal User user,
+											MultipartFile file) throws IOException {
 		System.out.println(file.getName());
-		String result = s3Service.upload(file);
+		String result = s3Service.upload(user, file);
 
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
