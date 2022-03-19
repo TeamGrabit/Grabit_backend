@@ -2,6 +2,7 @@ package grabit.grabit_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity(name = "challenge")
+@Builder
 public class Challenge extends BaseEntity {
 
 	@Id
@@ -28,9 +30,6 @@ public class Challenge extends BaseEntity {
 
 	@Column(name = "IS_PRIVATE")
 	private Boolean isPrivate;
-
-	private LocalDateTime createdAt;
-	private LocalDateTime modifiedAt;
 
 	@OneToMany(mappedBy = "challenge")
 	private List<UserChallenge> userChallengeList = new ArrayList<>();
