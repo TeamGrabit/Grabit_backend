@@ -45,6 +45,7 @@ public class ChallengeService {
 				.name(createChallengeDTO.getName())
 				.description(createChallengeDTO.getDescription())
 				.isPrivate(createChallengeDTO.getIsPrivate())
+				.leader(user)
 				.build();
 		Challenge createChallenge = challengeRepository.save(challenge);
 
@@ -52,6 +53,10 @@ public class ChallengeService {
 		userChallenge.setChallenge(createChallenge);
 		userChallenge.setUser(user);
 		userChallengeRepository.save(userChallenge);
+
+		List<UserChallenge> userChallengeList = new ArrayList<>();
+		userChallengeList.add(userChallenge);
+		createChallenge.setUserChallengeList(userChallengeList);
 
 		return createChallenge;
 	}
@@ -91,7 +96,7 @@ public class ChallengeService {
 		Challenge findChallenge = isExistChallenge(id);
 
 		// leader 여부 확인.
-		if(findChallenge.getLeader().getUserId() != user.getUserId()){
+		if(!findChallenge.getLeader().getUserId().equals(user.getUserId())){
 			throw new UnauthorizedException();
 		}
 
@@ -109,7 +114,7 @@ public class ChallengeService {
 		Challenge findChallenge = isExistChallenge(id);
 
 		// leader 여부 확인.
-		if(findChallenge.getLeader().getId() != user.getId()){
+		if(!findChallenge.getLeader().getId().equals(user.getId())){
 			throw new UnauthorizedException();
 		}
 
