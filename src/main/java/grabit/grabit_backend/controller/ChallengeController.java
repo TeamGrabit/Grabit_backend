@@ -28,22 +28,12 @@ public class ChallengeController {
 	}
 
 	/**
-	 * 모든 챌린지 검색 API
-	 * @return List of Challenge
-	 */
-	@GetMapping(value = "")
-	public ResponseEntity<ArrayList<ResponseChallengeDTO>> findAllChallengesAPI(){
-		ArrayList<ResponseChallengeDTO> findChallenges = challengeService.findAllChallenge();
-		return ResponseEntity.status(HttpStatus.OK).body(findChallenges);
-	}
-
-	/**
 	 * 챌린지 검색 API with Paging
 	 * @param page
 	 * @param size
 	 * @return
 	 */
-	@GetMapping(value = "/page")
+	@GetMapping(value = "")
 	public ResponseEntity<Page<Challenge>> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
 																		@RequestParam(defaultValue = "5") Integer size){
 		Page<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);

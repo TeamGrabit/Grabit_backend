@@ -106,19 +106,6 @@ public class ChallengeService {
 	}
 
 	/**
-	 * 모든 챌린지 검색
-	 * @return ArrayList of ResponseChallengeDTO
-	 */
-	public ArrayList<ResponseChallengeDTO> findAllChallenge(){
-		List<Challenge> findChallenges = challengeRepository.findAll();
-		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
-		for(Challenge challenge: findChallenges){
-			returnChallenges.add(ResponseChallengeDTO.convertDTO(challenge));
-		}
-		return returnChallenges;
-	}
-
-	/**
 	 * 챌린지 검색 with Paging
 	 * @param page
 	 * @param size
