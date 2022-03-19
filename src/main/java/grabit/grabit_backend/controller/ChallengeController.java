@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("api/challenges")
+@RequestMapping("challenges")
 public class ChallengeController {
 
 	private final ChallengeService challengeService;
