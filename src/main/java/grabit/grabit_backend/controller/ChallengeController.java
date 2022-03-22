@@ -28,7 +28,7 @@ public class ChallengeController {
 	}
 
 	/**
-	 * 챌린지 검색 API with Paging
+	 * 모든 챌린지 정보 조회 with Paing API
 	 * @param page
 	 * @param size
 	 * @return
@@ -75,9 +75,9 @@ public class ChallengeController {
 	}
 
 	/**
-	 * 챌린지 검색 API
+	 * 챌린지 정보 조회 API
 	 * @param id
-	 * @return responseChallengeDTO
+	 * @return
 	 */
 	@GetMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
@@ -85,12 +85,24 @@ public class ChallengeController {
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 
+	/**
+	 * 챌린지 가입 API
+	 * @param id
+	 * @param user
+	 * @return
+	 */
 	@PatchMapping(value = "{id}/join")
 	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.joinChallenge(id, user);
 		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
 	}
 
+	/**
+	 * 챌린지 탈퇴 API
+	 * @param id
+	 * @param user
+	 * @return
+	 */
 	@PatchMapping(value = "{id}/leave")
 	public ResponseEntity<ResponseChallengeDTO> leaveChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
 		ResponseChallengeDTO responseChallengeDTO = challengeService.leaveChallenge(id, user);
