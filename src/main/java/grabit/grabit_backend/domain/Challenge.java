@@ -1,10 +1,13 @@
 package grabit.grabit_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 @Getter
@@ -29,6 +32,9 @@ public class Challenge extends BaseEntity {
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 
+	@OneToMany(mappedBy = "challenge")
+	private List<UserChallenge> userChallengeList = new ArrayList<>();
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name="LEADER_ID")
 	private User leader;
@@ -42,9 +48,10 @@ public class Challenge extends BaseEntity {
 		this.isPrivate = isPrivate;
 	}
 
-	public void modifyChallenge(ModifyChallengeDTO modifyChallengeDTO) {
+	public void modifyChallenge(ModifyChallengeDTO modifyChallengeDTO, User leader) {
 		this.name = modifyChallengeDTO.getName();
 		this.description = modifyChallengeDTO.getDescription();
 		this.isPrivate = modifyChallengeDTO.getIsPrivate();
+		this.leader = leader;
 	}
 }
