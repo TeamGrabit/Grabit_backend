@@ -27,12 +27,12 @@ import javax.persistence.ManyToOne;
 public class UserChallenge {
 
 	@Id
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "USER_ID")
 	private User user;
 
 	@Id
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "CHALLENGE_ID")
 	private Challenge challenge;
 }

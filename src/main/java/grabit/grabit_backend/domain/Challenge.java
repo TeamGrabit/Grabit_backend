@@ -32,7 +32,7 @@ public class Challenge extends BaseEntity {
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 
-	@OneToMany(mappedBy = "challenge")
+	@OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY)
 	private List<UserChallenge> userChallengeList = new ArrayList<>();
 
 	@ManyToOne(optional = false)
