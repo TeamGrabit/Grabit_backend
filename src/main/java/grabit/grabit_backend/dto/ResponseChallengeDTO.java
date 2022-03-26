@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class ResponseChallengeDTO {
 
 	private final Long id;
