@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/s3")
+@RequestMapping("image")
 public class S3Controller {
 
 	private S3Service s3Service;
