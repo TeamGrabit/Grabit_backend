@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("users")
 public class UserController {
     @GetMapping("")
     public ResponseEntity<UserResDTO> user(@AuthenticationPrincipal User user) {
