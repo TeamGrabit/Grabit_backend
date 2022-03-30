@@ -6,7 +6,9 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import grabit.grabit_backend.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,10 +17,12 @@ import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 @Service
 public class S3Service {
 	private AmazonS3 amazonS3;
+	private ObjectMetadata md;
 
 	@Value("${cloud.aws.credentials.accessKey}")
 	private String accessKey;
@@ -32,6 +36,9 @@ public class S3Service {
 	@Value("${cloud.aws.region.static}")
 	private String region;
 
+	@Value("${cloud.aws.cdn}")
+	private String cdn;
+
 	@PostConstruct
 	public void setAmazonS3(){
 		AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
@@ -40,14 +47,17 @@ public class S3Service {
 				.withCredentials(new AWSStaticCredentialsProvider(credentials))
 				.withRegion(this.region)
 				.build();
+
+		md = new ObjectMetadata();
+		md.setContentType("image/jpeg");
 	}
 
-	public String upload(MultipartFile file) throws IOException {
-		String fileName = file.getOriginalFilename();
+	public String upload(User user, MultipartFile file) throws IOException {
+		String fileName = user.getUserId() + "_" + UUID.randomUUID().toString();
 
-		amazonS3.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
+		amazonS3.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), md)
 				.withCannedAcl(CannedAccessControlList.PublicRead));
-		return amazonS3.getUrl(bucket, fileName).toString();
+		return cdn+fileName;
 	}
 
 }

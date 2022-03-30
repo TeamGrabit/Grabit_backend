@@ -42,12 +42,13 @@ public class ChallengeService {
 	 * @return id
 	 */
 	@Transactional
-	public ResponseChallengeDTO createChallenge(CreateChallengeDTO createChallengeDTO, User user){
-		Challenge challenge = new Challenge(createChallengeDTO.getName(),
-				createChallengeDTO.getDescription(),
-				createChallengeDTO.getIsPrivate(),
-				user
-		);
+	public Challenge createChallenge(CreateChallengeDTO createChallengeDTO, User user){
+		Challenge challenge = Challenge.builder()
+				.name(createChallengeDTO.getName())
+				.description(createChallengeDTO.getDescription())
+				.isPrivate(createChallengeDTO.getIsPrivate())
+				.leader(user)
+				.build();
 		Challenge createChallenge = challengeRepository.save(challenge);
 
 		UserChallenge userChallenge = new UserChallenge();
@@ -55,7 +56,11 @@ public class ChallengeService {
 		userChallenge.setUser(user);
 		userChallengeRepository.save(userChallenge);
 
-		return ResponseChallengeDTO.convertDTO(createChallenge);
+		List<UserChallenge> userChallengeList = new ArrayList<>();
+		userChallengeList.add(userChallenge);
+		createChallenge.setUserChallengeList(userChallengeList);
+
+		return createChallenge;
 	}
 
 	/**
@@ -64,9 +69,9 @@ public class ChallengeService {
 	 * @return Challenge
 	 */
 	@Transactional
-	public ResponseChallengeDTO findChallengeById(Long id){
+	public Challenge findChallengeById(Long id){
 		Challenge challenge = isExistChallenge(id);
-		return ResponseChallengeDTO.convertDTO(challenge);
+		return challenge;
 	}
 
 	/**
@@ -93,7 +98,7 @@ public class ChallengeService {
 		Challenge findChallenge = isExistChallenge(id);
 
 		// leader 여부 확인.
-		if(findChallenge.getLeader().getUserId() != user.getUserId()){
+		if(!findChallenge.getLeader().getUserId().equals(user.getUserId())){
 			throw new UnauthorizedException();
 		}
 
@@ -107,21 +112,24 @@ public class ChallengeService {
 	 * @return Challenge
 	 */
 	@Transactional
-	public ResponseChallengeDTO updateChallenge(Long id, ModifyChallengeDTO modifyChallengeDTO, User user){
+	public Challenge updateChallenge(Long id, ModifyChallengeDTO modifyChallengeDTO, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
 		// leader 여부 확인.
-		if(findChallenge.getLeader().getId() != user.getId()){
+		if(!findChallenge.getLeader().getId().equals(user.getId())){
 			throw new UnauthorizedException();
 		}
+
 		Optional<User> leader = userRepository.findByUserId(modifyChallengeDTO.getLeader());
 		if(leader.isEmpty()){
 			throw new IllegalStateException("존재하지 않는 유저입니다.");
 		}
+
 		User findLeader = leader.get();
 		findChallenge.modifyChallenge(modifyChallengeDTO, findLeader);
 		Challenge modifiedChallenge = challengeRepository.save(findChallenge);
-		return ResponseChallengeDTO.convertDTO(modifiedChallenge);
+
+		return modifiedChallenge;
 	}
 
 	/**
@@ -143,7 +151,7 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public ResponseChallengeDTO joinChallenge(Long id, User user){
+	public Challenge joinChallenge(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
 
 		Optional<UserChallenge> findUserChallenge = userChallengeRepository.findByUserAndChallenge(user, findChallenge);
@@ -159,7 +167,7 @@ public class ChallengeService {
 		userChallengeRepository.save(userChallenge);
 		findChallenge.getUserChallengeList().add(userChallenge);
 
-		return ResponseChallengeDTO.convertDTO(findChallenge);
+		return findChallenge;
 	}
 
 	/**
@@ -171,7 +179,6 @@ public class ChallengeService {
 	@Transactional
 	public void leaveChallenge(Long id, User user){
 		Challenge findChallenge = isExistChallenge(id);
-
 		userChallengeRepository.deleteByUserAndChallenge(user, findChallenge);
 	}
 

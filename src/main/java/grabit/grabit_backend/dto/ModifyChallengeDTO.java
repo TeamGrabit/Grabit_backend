@@ -1,6 +1,7 @@
 package grabit.grabit_backend.dto;
 
 import grabit.grabit_backend.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@Setter
+@Builder
 public class ModifyChallengeDTO {
 
 	@NotBlank

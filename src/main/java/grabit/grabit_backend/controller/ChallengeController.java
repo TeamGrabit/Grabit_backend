@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/challenges")
+@RequestMapping("challenges")
 public class ChallengeController {
 
 	private final ChallengeService challengeService;
@@ -49,8 +50,8 @@ public class ChallengeController {
 	@PostMapping(value = "")
 	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@Valid @RequestBody CreateChallengeDTO createChallengeDTO,
 																   @AuthenticationPrincipal User user){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.createChallenge(createChallengeDTO, user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
+		Challenge createdChallenge = challengeService.createChallenge(createChallengeDTO, user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(ResponseChallengeDTO.convertDTO(createdChallenge));
 	}
 
 	/**
@@ -64,8 +65,8 @@ public class ChallengeController {
 	public ResponseEntity<ResponseChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
 																   @Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO,
 																   @AuthenticationPrincipal User user){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(id, modifyChallengeDTO, user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
+		Challenge modifiedChallenge = challengeService.updateChallenge(id, modifyChallengeDTO, user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(ResponseChallengeDTO.convertDTO(modifiedChallenge));
 	}
 
 	/**
@@ -88,8 +89,8 @@ public class ChallengeController {
 	 */
 	@GetMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.findChallengeById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
+		Challenge findChallenge = challengeService.findChallengeById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(findChallenge));
 	}
 
 	/**
@@ -101,9 +102,8 @@ public class ChallengeController {
 	@PatchMapping(value = "{id}/join")
 	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id,
 																 @AuthenticationPrincipal User user){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.joinChallenge(id, user);
-
-		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
+		Challenge joinChallenge = challengeService.joinChallenge(id, user);
+		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(joinChallenge));
 	}
 
 	/**
