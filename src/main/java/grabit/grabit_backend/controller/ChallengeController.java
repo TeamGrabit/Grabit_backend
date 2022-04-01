@@ -7,6 +7,7 @@ import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,19 +29,16 @@ public class ChallengeController {
 	}
 
 	/**
-	 * 모든 챌린지 검색 API
-	 * @return responseEntity
+	 * 모든 챌린지 정보 조회 with Paing API
+	 * @param page
+	 * @param size
+	 * @return
 	 */
 	@GetMapping(value = "")
-	public ResponseEntity<ArrayList<ResponseChallengeDTO>> findAllChallengesAPI(){
-		List<Challenge> findChallenges = challengeService.findAllChallenge();
-
-		ArrayList<ResponseChallengeDTO> allChallenge = new ArrayList<>();
-		for(Challenge challenge : findChallenges){
-			allChallenge.add(ResponseChallengeDTO.convertDTO(challenge));
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(allChallenge);
+	public ResponseEntity<List<Challenge>> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
+																		@RequestParam(defaultValue = "5") Integer size){
+		List<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
+		return ResponseEntity.status(HttpStatus.OK).body(findChallengesWithPage);
 	}
 
 	/**
@@ -85,9 +83,9 @@ public class ChallengeController {
 	}
 
 	/**
-	 * 챌린지 검색 API
+	 * 챌린지 정보 조회 API
 	 * @param id
-	 * @return responseEntity
+	 * @return
 	 */
 	@GetMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){

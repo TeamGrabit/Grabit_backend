@@ -34,5 +34,6 @@ public class UserChallenge {
 	@Id
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "CHALLENGE_ID")
+	@JsonBackReference
 	private Challenge challenge;
 }

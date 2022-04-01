@@ -11,6 +11,8 @@ import grabit.grabit_backend.domain.UserChallenge;
 import grabit.grabit_backend.repository.UserChallengeRepository;
 import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +64,7 @@ public class ChallengeService {
 	}
 
 	/**
-	 * 챌린지 검색 (id)
+	 * 챌린지 조회 (id)
 	 * @param id
 	 * @return Challenge
 	 */
@@ -73,7 +75,7 @@ public class ChallengeService {
 	}
 
 	/**
-	 * 챌린지 검색 (name)
+	 * 챌린지 조회 (name)
 	 * @param name
 	 * @return List of Challenge
 	 */
@@ -131,12 +133,15 @@ public class ChallengeService {
 	}
 
 	/**
-	 * 모든 챌린지 검색
-	 * @return ArrayList of ResponseChallengeDTO
+	 * 챌린지 조회 with Paging
+	 * @param page
+	 * @param size
+	 * @return
 	 */
 	@Transactional
-	public List<Challenge> findAllChallenge(){
-		return challengeRepository.findAll();
+	public List<Challenge> findAllChallengeWithPage(Integer page, Integer size){
+		PageRequest pageRequest = PageRequest.of(page, size);
+		return challengeRepository.findAllWithPaging(pageRequest);
 	}
 
 	/**
