@@ -1,5 +1,6 @@
 package grabit.grabit_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class Challenge extends BaseEntity {
 	private Boolean isPrivate;
 
 	@OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE)
+	@JsonManagedReference
 	private List<UserChallenge> userChallengeList = new ArrayList<>();
 
 	@ManyToOne(optional = false)
