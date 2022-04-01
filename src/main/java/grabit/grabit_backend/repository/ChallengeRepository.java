@@ -19,6 +19,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 	@Query("select c from challenge c join fetch c.userChallengeList uc join fetch uc.user where c.id = ?1")
 	Optional<Challenge> findById(Long id);
 
-	@Query("select distinct c from challenge c join fetch c.userChallengeList uc join fetch uc.user")
+	@Query("select distinct c from challenge c join fetch c.userChallengeList uc")
 	List<Challenge> findAllWithPaging(Pageable pageable);
 }
