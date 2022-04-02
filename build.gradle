@@ -30,6 +30,11 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation "com.querydsl:querydsl-jpa:5.0.0"
+    annotationProcessor(
+            "javax.persistence:javax.persistence-api",
+            "javax.annotation:javax.annotation-api",
+            "com.querydsl:querydsl-apt:5.0.0:jpa")
 }
 
 test {
@@ -48,6 +53,9 @@ sourceSets {
     main {
         resources {
             srcDirs "src/main/resources-${profile}"
+        }
+        java {
+            srcDirs = ["src/main/java", "build/generated"]
         }
     }
 }

@@ -141,7 +141,7 @@ public class ChallengeService {
 	@Transactional
 	public List<Challenge> findAllChallengeWithPage(Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
-		return challengeRepository.findAllWithPaging(pageRequest);
+		return challengeRepository.findAllChallengeWithPaging(pageRequest);
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class ChallengeService {
 	}
 
 	private Challenge isExistChallenge(Long id){
-		Optional<Challenge> findChallenge = challengeRepository.findById(id);
+		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
 		if(findChallenge.isEmpty()){
 			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
 		}
