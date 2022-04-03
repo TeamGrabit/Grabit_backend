@@ -20,17 +20,17 @@ public class StompChatController {
 		this.template = template;
 	}
 
-	@MessageMapping(value = "/chat/enter/{id}")
-	public void enter(@AuthenticationPrincipal User user,
-					  @PathVariable(value = "id") Long id,
-					  ChatMessageDTO message){
-		message.setMessage(user.getUserId()+"님이 입장하였습니다.");
-		template.convertAndSend("/sub/chat/room/"+id, message);
-	}
+//	@MessageMapping(value = "/chat/enter/{id}")
+//	public void enter(@AuthenticationPrincipal User user,
+//					  @PathVariable(value = "id") String id,
+//					  ChatMessageDTO message){
+//		message.setMessage(user.getUserId()+"님이 입장하였습니다.");
+//		template.convertAndSend("/sub/chat/room/"+id, message);
+//	}
 
 	@MessageMapping(value = "/chat/message/{id}")
 	public void message(@AuthenticationPrincipal User user,
-						@PathVariable(value = "id") Long id,
+						@PathVariable(value = "id") String id,
 						ChatMessageDTO message){
 		template.convertAndSend("/sub/chat/room/"+id, message);
 	}
