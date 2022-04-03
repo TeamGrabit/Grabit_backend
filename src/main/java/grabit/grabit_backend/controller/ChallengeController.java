@@ -1,11 +1,13 @@
 package grabit.grabit_backend.controller;
 
+import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/challenges")
+@RequestMapping("challenges")
 public class ChallengeController {
 
 	private final ChallengeService challengeService;
@@ -26,44 +29,51 @@ public class ChallengeController {
 	}
 
 	/**
-	 * 모든 챌린지 검색 API
-	 * @return List of Challenge
+	 * 모든 챌린지 정보 조회 with Paing API
+	 * @param page
+	 * @param size
+	 * @return
 	 */
 	@GetMapping(value = "")
-	public ResponseEntity<ArrayList<ResponseChallengeDTO>> findAllChallengesAPI(){
-		ArrayList<ResponseChallengeDTO> findChallenges = challengeService.findAllChallenge();
-		return ResponseEntity.status(HttpStatus.OK).body(findChallenges);
+	public ResponseEntity<Page<Challenge>> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
+																		@RequestParam(defaultValue = "5") Integer size){
+		Page<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
+		return ResponseEntity.status(HttpStatus.OK).body(findChallengesWithPage);
 	}
 
 	/**
 	 * 챌린지 생성 API
 	 * @param createChallengeDTO
-	 * @return responseChallengeDTO
+	 * @param user
+	 * @return responseEntity
 	 */
 	@PostMapping(value = "")
 	public ResponseEntity<ResponseChallengeDTO> createChallengeAPI(@Valid @RequestBody CreateChallengeDTO createChallengeDTO,
 																   @AuthenticationPrincipal User user){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.createChallenge(createChallengeDTO, user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
+		Challenge createdChallenge = challengeService.createChallenge(createChallengeDTO, user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(ResponseChallengeDTO.convertDTO(createdChallenge));
 	}
 
 	/**
 	 * 챌린지 수정 API
 	 * @param id
 	 * @param modifyChallengeDTO
-	 * @return responseChallengeDTO
+	 * @param user
+	 * @return responseEntity
 	 */
 	@PatchMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> updateChallengeAPI(@PathVariable(value = "id") Long id,
 																   @Valid @RequestBody ModifyChallengeDTO modifyChallengeDTO,
 																   @AuthenticationPrincipal User user){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.updateChallenge(id, modifyChallengeDTO, user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseChallengeDTO);
+		Challenge modifiedChallenge = challengeService.updateChallenge(id, modifyChallengeDTO, user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(ResponseChallengeDTO.convertDTO(modifiedChallenge));
 	}
 
 	/**
 	 * 챌린지 삭제 API
 	 * @param id
+	 * @param user
+	 * @return responseEntity
 	 */
 	@DeleteMapping(value = "{id}")
 	public ResponseEntity<Void> deleteChallengeAPI(@PathVariable(value = "id") Long id,
@@ -73,27 +83,39 @@ public class ChallengeController {
 	}
 
 	/**
-	 * 챌린지 검색 API
+	 * 챌린지 정보 조회 API
 	 * @param id
-	 * @return responseChallengeDTO
+	 * @return
 	 */
 	@GetMapping(value = "{id}")
 	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.findChallengeById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
+		Challenge findChallenge = challengeService.findChallengeById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(findChallenge));
 	}
 
+	/**
+	 * 챌린지 가입 API
+	 * @param id
+	 * @param user
+	 * @return
+	 */
 	@PatchMapping(value = "{id}/join")
 	public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id,
 																 @AuthenticationPrincipal User user){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.joinChallenge(id, user);
-		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
+		Challenge joinChallenge = challengeService.joinChallenge(id, user);
+		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(joinChallenge));
 	}
 
+	/**
+	 * 챌린지 탈퇴 API
+	 * @param id
+	 * @param user
+	 * @return
+	 */
 	@PatchMapping(value = "{id}/leave")
-	public ResponseEntity<ResponseChallengeDTO> leaveChallengeAPI(@PathVariable(value = "id") Long id,
-																  @AuthenticationPrincipal User user){
-		ResponseChallengeDTO responseChallengeDTO = challengeService.leaveChallenge(id, user);
-		return ResponseEntity.status(HttpStatus.OK).body(responseChallengeDTO);
+	public ResponseEntity<Void> leaveChallengeAPI(@PathVariable(value = "id") Long id,
+												  @AuthenticationPrincipal User user){
+		challengeService.leaveChallenge(id, user);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }
