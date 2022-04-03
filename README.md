@@ -19,7 +19,7 @@ Grabit에서 사용하는 backend 저장소.
 
 AWS 서비스 설계
 
-<img src="./img/aws_architecture.png">
+<img src="https://user-images.githubusercontent.com/62492860/161040814-97e20862-2599-4f16-a37e-a8a6f4be2888.png">
 
 </br>
 

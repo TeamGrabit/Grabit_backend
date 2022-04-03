@@ -38,6 +38,7 @@ out/
 
 ### enviorment value ###
 application.yml
+application-*
 
 ### dev configuration ###
 resources-dev/
