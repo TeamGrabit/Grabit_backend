@@ -33,7 +33,7 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 	}
 
 	@Override
-	public List<Challenge> findAllWithPaging(Pageable pageable) {
+	public List<Challenge> findAllChallengeWithPaging(Pageable pageable) {
 		return jpaQueryFactory
 				.selectFrom(challenge)
 				.join(challenge.userChallengeList, userChallenge).fetchJoin()
