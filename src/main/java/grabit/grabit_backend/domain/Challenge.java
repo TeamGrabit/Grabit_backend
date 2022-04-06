@@ -36,6 +36,7 @@ public class Challenge extends BaseEntity {
 	private Boolean isPrivate;
 
 	@OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE)
+	@JsonManagedReference
 	private List<UserChallenge> userChallengeList = new ArrayList<>();
 
 	@ManyToOne(optional = false)

@@ -35,9 +35,9 @@ public class ChallengeController {
 	 * @return
 	 */
 	@GetMapping(value = "")
-	public ResponseEntity<Page<Challenge>> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
+	public ResponseEntity<List<Challenge>> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
 																		@RequestParam(defaultValue = "5") Integer size){
-		Page<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
+		List<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
 		return ResponseEntity.status(HttpStatus.OK).body(findChallengesWithPage);
 	}
 
