@@ -31,16 +31,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtProvider jwtProvider;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
-    private final ClientRegistrationRepository clientRegistrationRepository;
 
     @Autowired
     public SecurityConfig(CustomOAuth2UserService customOAuth2UserService,
                           JwtProvider jwtProvider,
-                          UserRefreshTokenRepository userRefreshTokenRepository, ClientRegistrationRepository clientRegistrationRepository) {
+                          UserRefreshTokenRepository userRefreshTokenRepository) {
         this.customOAuth2UserService = customOAuth2UserService;
         this.jwtProvider = jwtProvider;
         this.userRefreshTokenRepository = userRefreshTokenRepository;
-        this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
     @Bean
@@ -79,18 +77,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .authorizeRequests()
-                    .antMatchers("/api/login/**").permitAll()
-                    .antMatchers("/api/oauth2/**").permitAll()
-                    .antMatchers("/api").permitAll() // local에서 oauth로그인 시 redirect받을 링크
-                    .antMatchers("/api/**").hasAnyRole("USER")
+                    .antMatchers("/login/**").permitAll()
+                    .antMatchers("/oauth2/**").permitAll()
+                    .antMatchers("/").permitAll() // local에서 oauth로그인 시 redirect받을 링크
+                    .antMatchers("/**").hasAnyRole("USER")
                 .and()
                 .oauth2Login()
-//                    .redirectionEndpoint()
-//                    .baseUri("/api/login/oauth2/code/**")
-//                .and()
                 .authorizationEndpoint()
                         .authorizationRequestRepository(customAuthorizationRequestRepository())
-//                        .authorizationRequestResolver(new CustomAuthorizationRequestResolver(clientRegistrationRepository, "/api/oauth2/authorization"))
                 .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler())
                     .userInfoEndpoint()
