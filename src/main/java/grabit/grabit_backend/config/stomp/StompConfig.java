@@ -1,4 +1,4 @@
-package grabit.grabit_backend.config.security;
+package grabit.grabit_backend.config.stomp;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;

@@ -1,6 +1,6 @@
 package grabit.grabit_backend.config.websocket;
 
-import grabit.grabit_backend.config.security.StompConfig;
+import grabit.grabit_backend.config.stomp.StompConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
