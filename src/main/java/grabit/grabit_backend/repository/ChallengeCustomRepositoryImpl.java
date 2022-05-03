@@ -36,7 +36,6 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 	public List<Challenge> findAllChallengeWithPaging(Pageable pageable) {
 		return jpaQueryFactory
 				.selectFrom(challenge)
-				.join(challenge.userChallengeList, userChallenge).fetchJoin()
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
 				.fetch();
