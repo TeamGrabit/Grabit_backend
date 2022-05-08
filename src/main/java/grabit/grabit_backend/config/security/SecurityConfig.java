@@ -80,6 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/login/**").permitAll()
                     .antMatchers("/oauth2/**").permitAll()
                     .antMatchers("/").permitAll() // local에서 oauth로그인 시 redirect받을 링크
+                    .antMatchers("/actuator/health").permitAll()
                     .antMatchers("/**").hasAnyRole("USER")
                 .and()
                 .oauth2Login()
