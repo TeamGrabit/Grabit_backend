@@ -61,6 +61,18 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: Create application-prod.properties
+      run: |
+        cd ./src/main/resources
+        echo "${{ secret.APPLICATION_DATABASE }}" > application-DATABASE.properties
+        echo "${{ secret.APPLICATION_STOREAGE }}" > application-STOREAGE.properties
+        echo "${{ secret.APPLICATION }}" > application.yml
+        echo "${{ secret.LOGBACK }}" > logback.xml
+      shell: bash
+
+    - name: Build with Gradle
+      run: ./gradlew bootJar
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
