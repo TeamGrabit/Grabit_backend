@@ -63,7 +63,9 @@ jobs:
 
     - name: Create application-prod.properties
       run: |
-        cd ./src/main/resources
+        cd ./src/main
+        mkdir resources-prod
+        cd resources-prod
         echo "${{ secrets.APPLICATION_DATABASE }}" > application-DATABASE.properties
         echo "${{ secrets.APPLICATION_STOREAGE }}" > application-STOREAGE.properties
         echo "${{ secrets.APPLICATION }}" > application.yml
