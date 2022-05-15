@@ -43,17 +43,10 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge createChallenge(CreateChallengeDTO createChallengeDTO, User user){
-		Challenge challenge = Challenge.builder()
-				.name(createChallengeDTO.getName())
-				.description(createChallengeDTO.getDescription())
-				.isPrivate(createChallengeDTO.getIsPrivate())
-				.leader(user)
-				.build();
+		Challenge challenge = Challenge.createChallenge(createChallengeDTO, user);
 		Challenge createChallenge = challengeRepository.save(challenge);
 
-		UserChallenge userChallenge = new UserChallenge();
-		userChallenge.setChallenge(createChallenge);
-		userChallenge.setUser(user);
+		UserChallenge userChallenge = UserChallenge.createUserChallenge(challenge, user);
 		userChallengeRepository.save(userChallenge);
 
 		List<UserChallenge> userChallengeList = new ArrayList<>();

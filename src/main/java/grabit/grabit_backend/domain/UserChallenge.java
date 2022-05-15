@@ -36,4 +36,11 @@ public class UserChallenge {
 	@JoinColumn(name = "CHALLENGE_ID")
 	@JsonBackReference
 	private Challenge challenge;
+
+	public static UserChallenge createUserChallenge(Challenge challenge, User user) {
+		return UserChallenge.builder()
+				.user(user)
+				.challenge(challenge)
+				.build();
+	}
 }
