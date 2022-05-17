@@ -41,10 +41,4 @@ application.yml
 application-*
 
 ### dev configuration ###
-resources-dev/
-
-### prod configuration ###
-resources-prod/
-
-### dev configuration ###
-resources-dev/
+resources-*
