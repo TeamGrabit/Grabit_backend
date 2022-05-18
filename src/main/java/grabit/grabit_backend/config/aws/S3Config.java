@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 
 import javax.annotation.PostConstruct;
 
-@Profile("DATABASE")
+@Profile("STORAGE")
 @Configuration
 public class S3Config {
 
