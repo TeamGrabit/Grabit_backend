@@ -36,6 +36,10 @@ dependencies {
             "javax.persistence:javax.persistence-api",
             "javax.annotation:javax.annotation-api",
             "com.querydsl:querydsl-apt:5.0.0:jpa")
+    testImplementation "org.testcontainers:testcontainers:1.16.3"
+    testImplementation "org.testcontainers:junit-jupiter:1.16.3"
+    testImplementation 'org.testcontainers:mysql:1.17.1'
+    implementation 'io.findify:s3mock_2.13:0.2.6'
 }
 
 test {

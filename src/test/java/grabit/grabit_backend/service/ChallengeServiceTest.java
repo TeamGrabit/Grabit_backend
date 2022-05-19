@@ -1,7 +1,11 @@
 package grabit.grabit_backend.service;
 
 import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.domain.UserChallenge;
+import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.repository.ChallengeRepository;
+import grabit.grabit_backend.repository.UserChallengeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,106 +27,67 @@ import static org.mockito.Mockito.*;
 class ChallengeServiceTest {
 	@Mock
 	ChallengeRepository challengeRepository;
+	@Mock
+	UserChallengeRepository userChallengeRepository;
 	@InjectMocks
 	ChallengeService challengeService;
 
 	@Test
 	void 챌린지_생성() {
 		//given
-		Challenge challenge = new Challenge();
-		when(challengeRepository.save(challenge)).thenReturn(challenge);
+		CreateChallengeDTO createChallengeDTO = CreateChallengeDTO.builder()
+				.name("챌린지 생성 테스트")
+				.description("챌린지 생성 테스트 설명")
+				.isPrivate(false)
+				.build();
+		User user = new User();
+		user.setUserId("testId");
+		user.setUsername("testName");
+		user.setId(1);
+		Challenge challenge = Challenge.createChallenge(createChallengeDTO, user);
+		UserChallenge userChallenge = UserChallenge.createUserChallenge(challenge, user);
+		doReturn(challenge).when(challengeRepository).save(any(Challenge.class));
+		doReturn(userChallenge).when(userChallengeRepository).save(any(UserChallenge.class));
 
 		//when
-		//Long id = challengeService.createChallenge(challenge);
+		Challenge createChallenge = challengeService.createChallenge(createChallengeDTO, user);
 
 		//then
-		assertEquals(id, challenge.getId());
+		assertEquals(challenge.getName(), createChallenge.getName());
+		assertEquals(challenge.getDescription(), createChallenge.getDescription());
+		assertEquals(challenge.getIsPrivate(), createChallenge.getIsPrivate());
+		assertEquals(challenge.getLeader().getUserId(), createChallenge.getLeader().getUserId());
+		verify(challengeRepository).save(any(Challenge.class));
+		verify(userChallengeRepository).save(any(UserChallenge.class));
 	}
 
 	@Test
-	void 챌린지_삭제_id(){
-		//given
-		Challenge challenge = new Challenge();
-		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(challenge));
+	void 챌린지_삭제_id() {
 
-		//when
-		challengeService.deleteChallengeById(challenge.getId());
-
-		//then
-		verify(challengeRepository).deleteById(challenge.getId());
 	}
 
 	@Test
-	void 챌린지_삭제_아이디없음_에러(){
-		//given
-		Challenge challenge = new Challenge();
-		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(null));
+	void 챌린지_삭제_아이디없음_에러() {
 
-		//when
-		Throwable exception = assertThrows(IllegalStateException.class, () -> {
-			challengeService.deleteChallengeById(challenge.getId());
-		});
-
-		//then
-		assertEquals("존재하지 않는 챌린지입니다..", exception.getMessage());
 	}
 
 	@Test
-	void 챌린지_검색_id(){
-		//given
-		Challenge challenge = new Challenge();
-		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(challenge));
+	void 챌린지_검색_id() {
 
-		//when
-		//Challenge findChallenge = challengeService.findChallengeById();
-
-		//then
-		//assertEquals(findChallenge.getId(), challenge.getId());
 	}
 
 	@Test
-	void 챌린지_검색_name(){
-		//given
-		Challenge challenge1 = new Challenge();
-		Challenge challenge2 = new Challenge();
-		when(challengeRepository.findByName(challenge1.getName())).thenReturn(new ArrayList<Challenge>(Arrays.asList(challenge1, challenge2)));
+	void 챌린지_검색_name() {
 
-		//when
-		List<Challenge> findChallenge = challengeService.findChallengeByName(challenge1.getName());
-
-		//then
-		assertEquals(Arrays.asList(challenge1, challenge2), findChallenge);
 	}
 
 	@Test
-	void 챌린지_수정(){
-		//given
-		Challenge challenge = new Challenge();
-		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(challenge));
-		when(challengeRepository.save(challenge)).thenReturn(challenge);
+	void 챌린지_수정() {
 
-		//when
-		challenge.setName("changeName");
-		// Challenge changeChallenge = challengeService.updateChallenge(challenge.getId(), challenge);
-
-		//then
-		// assertEquals(challenge, changeChallenge);
 	}
 
 	@Test
-	void 챌린지_수정_아이디없음_에러(){
-		//given
-		Challenge challenge = new Challenge();
-		when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.ofNullable(null));
-
-		//when
-		challenge.setName("이름 바꾸기 테스트");
-		Throwable exception = assertThrows(IllegalStateException.class, () -> {
-			challengeService.updateChallenge(challenge.getId(), challenge);
-		});
-
-		//then
-		assertEquals("존재하지 않는 챌린지입니다..", exception.getMessage());
+	void 챌린지_수정_아이디없음_에러() {
 
 	}
 }

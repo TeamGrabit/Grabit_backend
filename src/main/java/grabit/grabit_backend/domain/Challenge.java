@@ -1,6 +1,7 @@
 package grabit.grabit_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,5 +49,14 @@ public class Challenge extends BaseEntity {
 		this.description = modifyChallengeDTO.getDescription();
 		this.isPrivate = modifyChallengeDTO.getIsPrivate();
 		this.leader = leader;
+	}
+
+	public static Challenge createChallenge(CreateChallengeDTO createChallengeDTO, User leader) {
+		return Challenge.builder()
+				.name(createChallengeDTO.getName())
+				.description(createChallengeDTO.getDescription())
+				.isPrivate(createChallengeDTO.getIsPrivate())
+				.leader(leader)
+				.build();
 	}
 }
