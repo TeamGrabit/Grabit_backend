@@ -5,6 +5,7 @@ import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.dto.ResponsePagingDTO;
 import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("challenges")
@@ -35,10 +37,10 @@ public class ChallengeController {
 	 * @return
 	 */
 	@GetMapping(value = "")
-	public ResponseEntity<List<Challenge>> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
-																		@RequestParam(defaultValue = "5") Integer size){
-		List<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
-		return ResponseEntity.status(HttpStatus.OK).body(findChallengesWithPage);
+	public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
+																		  @RequestParam(defaultValue = "5") Integer size){
+		Page<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
+		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengesWithPage));
 	}
 
 	/**

@@ -132,7 +132,7 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public List<Challenge> findAllChallengeWithPage(Integer page, Integer size){
+	public Page<Challenge> findAllChallengeWithPage(Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
 		return challengeRepository.findAllChallengeWithPaging(pageRequest);
 	}
