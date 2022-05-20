@@ -9,7 +9,7 @@ Grabit에서 사용하는 backend 저장소.
 |       [김바다_sally0226](https://github.com/sally0226)       |        [차현철_qf9ar8nv](https://github.com/qf9ar8nv)        |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | <img src="https://avatars.githubusercontent.com/u/43634786?v=4" alt="img" style="zoom:33%;" /> | <img src="https://avatars.githubusercontent.com/u/62492860?v=4" alt="img" style="zoom:33%;" /> |
-|          OAuth2.0를 이용한 github 소셜 로그인 구현           |                         AWS를 이용한 Infra 설계 및 구축 </br> nginx를 이용한 WS, Reverse_proxy 설정 </br> Challenge 핵심 logic 작성                   |
+|          OAuth2.0를 이용한 github 소셜 로그인 구현           |                         AWS를 이용한 Infra 설계 및 구축 </br> Challenge 관련 핵심 logic 작성 </br> CI/CD 및 로컬 테스트 환경 구성.                   |
 
 <br>
 
@@ -19,7 +19,7 @@ Grabit에서 사용하는 backend 저장소.
 
 AWS 서비스 설계
 
-<img src="https://user-images.githubusercontent.com/62492860/161040814-97e20862-2599-4f16-a37e-a8a6f4be2888.png">
+<img src="./img/aws_architecture.png">
 
 </br>
 
@@ -29,7 +29,8 @@ AWS 서비스 설계
 
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/></a>
 
-<img src="https://img.shields.io/badge/AWS-232F3E?style=flat&logo=Amazon AWS&logoColor=white"/></a><img src="https://img.shields.io/badge/nginx-009639?logo=nginx&logoColor=white"></a>
+<img src="https://img.shields.io/badge/AWS-232F3E?style=flat&logo=Amazon AWS&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Github Action-2088FF?style=flat&logo=Github Actions&logoColor=white"/></a>
 
 
 <br>
