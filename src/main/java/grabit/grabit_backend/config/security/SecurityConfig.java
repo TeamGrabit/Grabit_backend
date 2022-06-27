@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.ServletContext;
@@ -75,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .cors()
+                .configurationSource(corsConfigurationSource())
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -83,6 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .authorizeRequests()
+                    .requestMatchers(request -> CorsUtils.isPreFlightRequest(request)).permitAll()
                     .antMatchers("/login/**").permitAll()
                     .antMatchers("/oauth2/**").permitAll()
                     .antMatchers("/").permitAll() // local에서 oauth로그인 시 redirect받을 링크
