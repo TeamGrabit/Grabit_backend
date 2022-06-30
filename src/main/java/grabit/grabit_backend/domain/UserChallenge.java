@@ -1,31 +1,18 @@
 package grabit.grabit_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @IdClass(UserChallengePK.class)
 public class UserChallenge {
-
 	@Id
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "USER_ID")
@@ -37,10 +24,21 @@ public class UserChallenge {
 	@JsonBackReference
 	private Challenge challenge;
 
+	@Column
+	private boolean isBookmarked;
+
 	public static UserChallenge createUserChallenge(Challenge challenge, User user) {
 		return UserChallenge.builder()
 				.user(user)
 				.challenge(challenge)
+				.isBookmarked(false)
 				.build();
+	}
+
+	public boolean getIsBookmarked() {
+		return this.isBookmarked;
+	}
+	public void setIsBookmarked(boolean isBookmarked){
+		this.isBookmarked = isBookmarked;
 	}
 }

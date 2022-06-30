@@ -1,10 +1,10 @@
 package grabit.grabit_backend.controller;
 
 import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import grabit.grabit_backend.dto.ResponseChallengeDTO;
-import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.ResponsePagingDTO;
 import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("challenges")
@@ -119,5 +116,17 @@ public class ChallengeController {
 												  @AuthenticationPrincipal User user){
 		challengeService.leaveChallenge(id, user);
 		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	/**
+	 * 챌린지 즐겨찾기 토글
+	 * @param challengeId
+	 * @param user
+	 */
+	@PatchMapping(value = "{id}/bookmark")
+	public void bookmarkChallengeAPI(@PathVariable(value = "id") Long challengeId,
+									 @AuthenticationPrincipal User user) {
+		challengeService.bookmarkChallenge(challengeId, user);
+		return;
 	}
 }

@@ -5,6 +5,8 @@ import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.exception.ForbiddenException;
+import grabit.grabit_backend.exception.NotFoundException;
 import grabit.grabit_backend.repository.ChallengeRepository;
 import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.domain.UserChallenge;
@@ -22,7 +24,6 @@ import java.util.Optional;
 
 @Service
 public class ChallengeService {
-
 	private final ChallengeRepository challengeRepository;
 	private final UserChallengeRepository userChallengeRepository;
 	private final UserRepository userRepository;
@@ -63,8 +64,11 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge findChallengeById(Long id){
-		Challenge challenge = isExistChallenge(id);
-		return challenge;
+		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
+		if(findChallenge.isEmpty()){
+			throw new NotFoundException("존재하지 않는 챌린지입니다.");
+		}
+		return findChallenge.get();
 	}
 
 	/**
@@ -88,7 +92,7 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public void deleteChallengeById(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 
 		// leader 여부 확인.
 		if(!findChallenge.getLeader().getUserId().equals(user.getUserId())){
@@ -106,7 +110,7 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge updateChallenge(Long id, ModifyChallengeDTO modifyChallengeDTO, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 
 		// leader 여부 확인.
 		if(!findChallenge.getLeader().getId().equals(user.getId())){
@@ -145,7 +149,7 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge joinChallenge(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 
 		Optional<UserChallenge> findUserChallenge = userChallengeRepository.findByUserAndChallenge(user, findChallenge);
 		if(findUserChallenge.isPresent()){
@@ -171,16 +175,24 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public void leaveChallenge(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 		userChallengeRepository.deleteByUserAndChallenge(user, findChallenge);
 	}
 
-	private Challenge isExistChallenge(Long id){
-		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
-		if(findChallenge.isEmpty()){
-			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
+	/**
+	 * 챌린지 즐겨찾기 토글
+	 * @param challengeId
+	 * @param user
+	 */
+	public void bookmarkChallenge(Long challengeId, User user) {
+		Challenge challenge = findChallengeById(challengeId);
+		Optional<UserChallenge> data = userChallengeRepository.findByUserAndChallenge(user, challenge);
+		if (data.isEmpty()) {
+			throw new ForbiddenException("가입되지 않은 챌린지입니다.");
 		}
-		return findChallenge.get();
+		UserChallenge userChallenge = data.get();
+		userChallenge.setIsBookmarked(!userChallenge.getIsBookmarked());
+		userChallengeRepository.save(userChallenge);
 	}
 }
 
