@@ -68,21 +68,6 @@ public class ChallengeService {
 	}
 
 	/**
-	 * 챌린지 조회 (name)
-	 * @param name
-	 * @return List of Challenge
-	 */
-	@Transactional
-	public ArrayList<ResponseChallengeDTO> findChallengeByName(String name){
-		List<Challenge> findChallenges = challengeRepository.findByName(name);
-		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
-		for(Challenge challenge: findChallenges){
-			returnChallenges.add(ResponseChallengeDTO.convertDTO(challenge));
-		}
-		return returnChallenges;
-	}
-
-	/**
 	 * 챌린지 삭제
 	 * @param id
 	 */
@@ -135,6 +120,19 @@ public class ChallengeService {
 	public Page<Challenge> findAllChallengeWithPage(Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
 		return challengeRepository.findAllChallengeWithPaging(pageRequest);
+	}
+
+	/**
+	 * 챌린지 조회 (name) with Paging
+	 * @param name
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	@Transactional
+	public Page<Challenge> findChallengeByNameWithPage(String name, Integer page, Integer size){
+		PageRequest pageRequest = PageRequest.of(page, size);
+		return challengeRepository.findChallengeByNameWithPaging(name, pageRequest);
 	}
 
 	/**

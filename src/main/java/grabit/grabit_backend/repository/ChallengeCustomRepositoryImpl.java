@@ -49,4 +49,20 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 
 		return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetch().size());
 	}
+
+	@Override
+	public Page<Challenge> findChallengeByNameWithPaging(String name, Pageable pageable) {
+		List<Challenge> content = jpaQueryFactory
+				.selectFrom(challenge)
+				.where(challenge.name.eq(name))
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
+				.fetch();
+
+		JPAQuery<Challenge> countQuery = jpaQueryFactory
+				.selectFrom(challenge)
+				.where(challenge.name.eq(name));
+
+		return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetch().size());
+	}
 }

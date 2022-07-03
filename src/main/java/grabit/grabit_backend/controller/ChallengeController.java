@@ -43,6 +43,14 @@ public class ChallengeController {
 		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengesWithPage));
 	}
 
+	@GetMapping(value = "name")
+	public ResponseEntity<ResponsePagingDTO> findChallengeByNameWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
+																			@RequestParam(defaultValue = "5") Integer size,
+																			@RequestParam(defaultValue = "") String name) {
+		Page<Challenge> findChallengeByNameWithPage = challengeService.findChallengeByNameWithPage(name, page, size);
+		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengeByNameWithPage));
+	}
+
 	/**
 	 * 챌린지 생성 API
 	 * @param createChallengeDTO
