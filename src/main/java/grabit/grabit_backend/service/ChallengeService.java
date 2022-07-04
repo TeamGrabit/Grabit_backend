@@ -182,5 +182,10 @@ public class ChallengeService {
 		}
 		return findChallenge.get();
 	}
+
+	public Page<Challenge> findUserJoinedChallengeList(User user, Integer page, Integer size) {
+		PageRequest pageRequest = PageRequest.of(page, size);
+		return challengeRepository.findUserJoinedChallengeList(pageRequest, user);
+	}
 }
 
