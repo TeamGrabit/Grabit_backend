@@ -42,6 +42,7 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 				.selectFrom(challenge)
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
+				.orderBy(challenge.createdAt.desc())
 				.fetch();
 
 		JPAQuery<Challenge> countQuery = jpaQueryFactory
@@ -57,6 +58,7 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 				.where(challenge.name.eq(name))
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
+				.orderBy(challenge.createdAt.desc())
 				.fetch();
 
 		JPAQuery<Challenge> countQuery = jpaQueryFactory
