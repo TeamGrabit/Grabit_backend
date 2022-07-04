@@ -10,5 +10,6 @@ public interface ChallengeCustomRepository {
 
 	Optional<Challenge> findChallengeById(Long id);
 	Page<Challenge> findAllChallengeWithPaging(Pageable pageable);
-	Page<Challenge> findChallengeByNameWithPaging(String name, Pageable pageable);
+	Page<Challenge> findChallengeByTitleAndDescriptionWithPaging(String title, String description, Pageable pageable);
+	Page<Challenge> findChallengeByLeaderIdWithPaging(String leaderId, Pageable pageable);
 }

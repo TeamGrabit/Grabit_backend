@@ -123,16 +123,22 @@ public class ChallengeService {
 	}
 
 	/**
-	 * 챌린지 조회 (name) with Paging
+	 * 챌린지 조회 (search) with Paging
 	 * @param name
 	 * @param page
 	 * @param size
 	 * @return
 	 */
 	@Transactional
-	public Page<Challenge> findChallengeByNameWithPage(String name, Integer page, Integer size){
+	public Page<Challenge> findChallengeBySearchWithPage(String title, String description, String leaderId, Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
-		return challengeRepository.findChallengeByNameWithPaging(name, pageRequest);
+		if (leaderId == null && title == null){
+			throw new IllegalStateException("잘못된 요청입니다.");
+		}else if (leaderId != null){
+			return challengeRepository.findChallengeByLeaderIdWithPaging(leaderId, pageRequest);
+		}else {
+			return challengeRepository.findChallengeByTitleAndDescriptionWithPaging(title, description, pageRequest);
+		}
 	}
 
 	/**
