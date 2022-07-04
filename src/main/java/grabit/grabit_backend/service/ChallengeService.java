@@ -63,8 +63,11 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge findChallengeById(Long id){
-		Challenge challenge = isExistChallenge(id);
-		return challenge;
+		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
+		if(findChallenge.isEmpty()){
+			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
+		}
+		return findChallenge.get();
 	}
 
 	/**
@@ -88,7 +91,7 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public void deleteChallengeById(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 
 		// leader 여부 확인.
 		if(!findChallenge.getLeader().getUserId().equals(user.getUserId())){
@@ -106,7 +109,7 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge updateChallenge(Long id, ModifyChallengeDTO modifyChallengeDTO, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 
 		// leader 여부 확인.
 		if(!findChallenge.getLeader().getId().equals(user.getId())){
@@ -145,7 +148,7 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge joinChallenge(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge challenge = findChallengeById(id);
 
 		Optional<UserChallenge> findUserChallenge = userChallengeRepository.findByUserAndChallenge(user, findChallenge);
 		if(findUserChallenge.isPresent()){
@@ -154,13 +157,13 @@ public class ChallengeService {
 
 		UserChallenge userChallenge = UserChallenge.builder()
 				.user(user)
-				.challenge(findChallenge)
+				.challenge(challenge)
 				.build();
 
 		userChallengeRepository.save(userChallenge);
-		findChallenge.getUserChallengeList().add(userChallenge);
+		challenge.getUserChallengeList().add(userChallenge);
 
-		return findChallenge;
+		return challenge;
 	}
 
 	/**
@@ -171,16 +174,9 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public void leaveChallenge(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 		userChallengeRepository.deleteByUserAndChallenge(user, findChallenge);
 	}
 
-	private Challenge isExistChallenge(Long id){
-		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
-		if(findChallenge.isEmpty()){
-			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
-		}
-		return findChallenge.get();
-	}
 }
 
