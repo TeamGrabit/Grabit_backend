@@ -55,7 +55,7 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 	public Page<Challenge> findChallengeByTitleAndDescriptionWithPaging(String title, String description, Pageable pageable) {
 		List<Challenge> content = jpaQueryFactory
 				.selectFrom(challenge)
-				.where(challenge.name.eq(title), challenge.description.contains(description))
+				.where(challenge.name.contains(title), challenge.description.contains(description))
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
 				.orderBy(challenge.createdAt.desc())

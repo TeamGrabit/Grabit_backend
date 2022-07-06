@@ -39,6 +39,7 @@ public class ChallengeController {
 	@GetMapping(value = "")
 	public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
 																		  @RequestParam(defaultValue = "5") Integer size){
+		page = (page > 0) ? page-1 : page;
 		Page<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
 		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengesWithPage));
 	}
@@ -47,7 +48,9 @@ public class ChallengeController {
 	 * 모든 챌린지 정보 조회 (search) with Paing API
 	 * @param page
 	 * @param size
-	 * @param name
+	 * @param title
+	 * @param description
+	 * @param leaderId
 	 * @return
 	 */
 	@GetMapping(value = "search")
@@ -56,6 +59,7 @@ public class ChallengeController {
 																			@RequestParam(required = false) String title,
 																			@RequestParam(defaultValue = "",required = false) String description,
 																			@RequestParam(required = false) String leaderId) {
+		page = (page > 0) ? page-1 : page;
 		Page<Challenge> findChallengeBySearchWithPage = challengeService.findChallengeBySearchWithPage(title, description, leaderId, page, size);
 		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengeBySearchWithPage));
 	}
