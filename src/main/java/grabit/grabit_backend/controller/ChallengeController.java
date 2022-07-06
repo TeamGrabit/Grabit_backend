@@ -37,7 +37,7 @@ public class ChallengeController {
 	 * @return
 	 */
 	@GetMapping(value = "")
-	public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
+	public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
 																		  @RequestParam(defaultValue = "5") Integer size){
 		page = (page > 0) ? page-1 : page;
 		Page<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
@@ -54,7 +54,7 @@ public class ChallengeController {
 	 * @return
 	 */
 	@GetMapping(value = "search")
-	public ResponseEntity<ResponsePagingDTO> findChallengeByNameWithPageAPI(@RequestParam(defaultValue = "0") Integer page,
+	public ResponseEntity<ResponsePagingDTO> findChallengeByNameWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
 																			@RequestParam(defaultValue = "5") Integer size,
 																			@RequestParam(required = false) String title,
 																			@RequestParam(defaultValue = "",required = false) String description,
