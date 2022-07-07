@@ -44,6 +44,7 @@ public class UserController {
     public ResponseEntity<ResponsePagingDTO> getJoinedChallengeList(@AuthenticationPrincipal User user,
                                                                     @RequestParam(defaultValue = "1") Integer page,
                                                                     @RequestParam(defaultValue = "5") Integer size) {
+        if (page < 1) page = 1;
         page = page - 1;
         Page<Challenge> challenges = challengeService.findUserJoinedChallengeList(user, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(challenges));

@@ -9,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +24,7 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 	public ChallengeCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory){
 		this.jpaQueryFactory = jpaQueryFactory;
 	}
-	@PersistenceContext
-	private EntityManager entityManager;
+
 	@Override
 	public Optional<Challenge> findChallengeById(Long id) {
 		return Optional.ofNullable(jpaQueryFactory
@@ -60,7 +57,8 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 				.join(challenge.userChallengeList, userChallenge).fetchJoin()
 				.where(userChallenge.user.eq(u))
 				.offset(pageable.getOffset())
-				.limit(pageable.getPageSize()).fetch();
+				.limit(pageable.getPageSize())
+				.orderBy(challenge.createdAt.desc()).fetch();
 
 		JPAQuery<Challenge> query = jpaQueryFactory.selectFrom(challenge)
 				.join(challenge.userChallengeList, userChallenge).fetchJoin()
