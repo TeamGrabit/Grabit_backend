@@ -12,6 +12,9 @@ import java.time.LocalDate;
 public class CreateCommitApprovalDTO {
 
 	@NotBlank
+	private Long challengeId;
+
+	@NotBlank
 	private LocalDate targetDate;
 
 	@NotNull

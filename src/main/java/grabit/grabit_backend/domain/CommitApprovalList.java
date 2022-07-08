@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Getter
@@ -28,15 +29,15 @@ public class CommitApprovalList {
 	@Column(name = "COMMIT_APPROVAL_LIST_ID")
 	private Long id;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "COMMIT_APPROVAL_ID")
 	private CommitApproval commitApproval;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "CHALLENGE_ID")
 	private Challenge challenge;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "USER_ID")
 	private User user;
 
