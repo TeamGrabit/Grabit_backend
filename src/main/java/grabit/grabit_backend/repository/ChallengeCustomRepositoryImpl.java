@@ -3,6 +3,7 @@ package grabit.grabit_backend.repository;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -60,5 +61,22 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 			findChallengeQuery = findChallengeQuery.where(challenge.leader.userId.eq(leaderId));
 		}
 		return findChallengeQuery;
+	}
+
+	@Override
+	public Page<Challenge> findUserJoinedChallengeList(Pageable pageable, User u) {
+		List<Challenge> challengeList = jpaQueryFactory
+				.selectFrom(challenge)
+				.join(challenge.userChallengeList, userChallenge).fetchJoin()
+				.where(userChallenge.user.eq(u))
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
+				.orderBy(challenge.createdAt.desc()).fetch();
+
+		JPAQuery<Challenge> query = jpaQueryFactory.selectFrom(challenge)
+				.join(challenge.userChallengeList, userChallenge).fetchJoin()
+				.where(userChallenge.user.eq(u));
+
+		return PageableExecutionUtils.getPage(challengeList, pageable, () -> query.fetch().size());
 	}
 }
