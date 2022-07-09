@@ -5,7 +5,9 @@ import grabit.grabit_backend.domain.CommitApproval;
 import grabit.grabit_backend.domain.CommitApprovalList;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.CreateCommitApprovalDTO;
+import grabit.grabit_backend.exception.ForbiddenException;
 import grabit.grabit_backend.exception.NotFoundChallengeException;
+import grabit.grabit_backend.exception.NotFoundCommitApprovalException;
 import grabit.grabit_backend.repository.ChallengeRepository;
 import grabit.grabit_backend.repository.CommitApprovalListRepository;
 import grabit.grabit_backend.repository.CommitApprovalRepository;
@@ -32,7 +34,8 @@ public class CommitApprovalService {
 	public CommitApproval createCommitApproval(CreateCommitApprovalDTO createCommitApprovalDTO, User user) throws NotFoundChallengeException {
 		CommitApproval commitApproval = CommitApproval.builder()
 				.targetDate(createCommitApprovalDTO.getTargetDate())
-				.content(createCommitApprovalDTO.getContent()).build();
+				.content(createCommitApprovalDTO.getContent())
+				.user(user).build();
 
 		List<CommitApprovalList> commitApprovalLists = new ArrayList<>();
 		Challenge challenge = challengeRepository.findChallengeById(createCommitApprovalDTO.getChallengeId())
@@ -51,6 +54,18 @@ public class CommitApprovalService {
 		commitApprovalListRepository.saveAll(commitApprovalLists);
 
 		return commitApproval;
+	}
+
+	@Transactional
+	public void deleteCommitApproval(Long id, User user) {
+		CommitApproval commitApproval = commitApprovalRepository.findById(id)
+				.orElseThrow(() -> new NotFoundCommitApprovalException());
+
+		if (!commitApproval.getUser().getId().equals(user.getId())) {
+			throw new ForbiddenException();
+		}
+
+		commitApprovalRepository.delete(commitApproval);
 	}
 
 }

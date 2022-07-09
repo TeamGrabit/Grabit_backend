@@ -38,7 +38,7 @@ public class Challenge extends BaseEntity {
 
 	@OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
-	private List<UserChallenge> userChallengeList = new ArrayList<>();
+	private List<UserChallenge> userChallengeList;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name="LEADER_ID")
