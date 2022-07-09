@@ -262,5 +262,10 @@ public class ChallengeService {
 			throw new ForbiddenException("권한이 없습니다.");
 		}
 	}
+
+	public Page<Challenge> findUserJoinedChallengeList(User user, Integer page, Integer size) {
+		PageRequest pageRequest = PageRequest.of(page, size);
+		return challengeRepository.findUserJoinedChallengeList(pageRequest, user);
+	}
 }
 
