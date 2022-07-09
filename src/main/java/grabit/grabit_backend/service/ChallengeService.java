@@ -1,13 +1,12 @@
 package grabit.grabit_backend.service;
 
-import grabit.grabit_backend.dto.CreateChallengeDTO;
-import grabit.grabit_backend.dto.ModifyChallengeDTO;
-import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.domain.User;
-import grabit.grabit_backend.repository.ChallengeRepository;
-import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.domain.UserChallenge;
+import grabit.grabit_backend.dto.CreateChallengeDTO;
+import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import grabit.grabit_backend.exception.UnauthorizedException;
+import grabit.grabit_backend.repository.ChallengeRepository;
 import grabit.grabit_backend.repository.UserChallengeRepository;
 import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,28 +116,12 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public Page<Challenge> findAllChallengeWithPage(Integer page, Integer size){
-		PageRequest pageRequest = PageRequest.of(page, size);
-		return challengeRepository.findAllChallengeWithPaging(pageRequest);
-	}
-
-	/**
-	 * 챌린지 조회 (search) with Paging
-	 * @param name
-	 * @param page
-	 * @param size
-	 * @return
-	 */
-	@Transactional
 	public Page<Challenge> findChallengeBySearchWithPage(String title, String description, String leaderId, Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
-		if (leaderId == null && title == null){
+		if (leaderId == null && title == null && description == null){
 			throw new IllegalStateException("잘못된 요청입니다.");
-		}else if (leaderId != null){
-			return challengeRepository.findChallengeByLeaderIdWithPaging(leaderId, pageRequest);
-		}else {
-			return challengeRepository.findChallengeByTitleAndDescriptionWithPaging(title, description, pageRequest);
 		}
+		return challengeRepository.findChallengeBySearchWithPaging(pageRequest, title, description, leaderId);
 	}
 
 	/**

@@ -4,7 +4,6 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grabit.grabit_backend.domain.Challenge;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
@@ -12,9 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static grabit.grabit_backend.domain.QChallenge.*;
-import static grabit.grabit_backend.domain.QUser.*;
-import static grabit.grabit_backend.domain.QUserChallenge.*;
+import static grabit.grabit_backend.domain.QChallenge.challenge;
+import static grabit.grabit_backend.domain.QUser.user;
+import static grabit.grabit_backend.domain.QUserChallenge.userChallenge;
 
 @Repository
 public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
@@ -37,51 +36,29 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 	}
 
 	@Override
-	public Page<Challenge> findAllChallengeWithPaging(Pageable pageable) {
-		List<Challenge> content = jpaQueryFactory
-				.selectFrom(challenge)
-				.offset(pageable.getOffset())
+	public Page<Challenge> findChallengeBySearchWithPaging(Pageable pageable, String title, String description, String leaderId) {
+		JPAQuery<Challenge> findChallengeQuery = getChallengeJPAQuery(title, description, leaderId);
+
+		List<Challenge> content = findChallengeQuery.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
 				.orderBy(challenge.createdAt.desc())
 				.fetch();
 
-		JPAQuery<Challenge> countQuery = jpaQueryFactory
-				.selectFrom(challenge);
+		JPAQuery<Challenge> countQuery = getChallengeJPAQuery(title, description, leaderId);
 
 		return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetch().size());
 	}
-
-	@Override
-	public Page<Challenge> findChallengeByTitleAndDescriptionWithPaging(String title, String description, Pageable pageable) {
-		List<Challenge> content = jpaQueryFactory
-				.selectFrom(challenge)
-				.where(challenge.name.contains(title), challenge.description.contains(description))
-				.offset(pageable.getOffset())
-				.limit(pageable.getPageSize())
-				.orderBy(challenge.createdAt.desc())
-				.fetch();
-
-		JPAQuery<Challenge> countQuery = jpaQueryFactory
-				.selectFrom(challenge)
-				.where(challenge.name.eq(title));
-
-		return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetch().size());
-	}
-
-	@Override
-	public Page<Challenge> findChallengeByLeaderIdWithPaging(String leaderId, Pageable pageable) {
-		List<Challenge> content = jpaQueryFactory
-				.selectFrom(challenge)
-				.where(challenge.leader.userId.eq(leaderId))
-				.offset(pageable.getOffset())
-				.limit(pageable.getPageSize())
-				.orderBy(challenge.createdAt.desc())
-				.fetch();
-
-		JPAQuery<Challenge> countQuery = jpaQueryFactory
-				.selectFrom(challenge)
-				.where(challenge.leader.userId.eq(leaderId));
-
-		return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetch().size());
+	private JPAQuery<Challenge> getChallengeJPAQuery(String title, String description, String leaderId) {
+		JPAQuery<Challenge> findChallengeQuery = jpaQueryFactory.selectFrom(challenge);
+		if (title != null) {
+			findChallengeQuery = findChallengeQuery.where(challenge.name.contains(title));
+		}
+		if (description != null) {
+			findChallengeQuery = findChallengeQuery.where(challenge.description.contains(description));
+		}
+		if (leaderId != null) {
+			findChallengeQuery = findChallengeQuery.where(challenge.leader.userId.eq(leaderId));
+		}
+		return findChallengeQuery;
 	}
 }

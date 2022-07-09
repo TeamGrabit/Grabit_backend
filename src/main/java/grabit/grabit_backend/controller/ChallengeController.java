@@ -1,10 +1,10 @@
 package grabit.grabit_backend.controller;
 
 import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import grabit.grabit_backend.dto.ResponseChallengeDTO;
-import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.ResponsePagingDTO;
 import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("challenges")
@@ -31,21 +28,7 @@ public class ChallengeController {
 	}
 
 	/**
-	 * 모든 챌린지 정보 조회 with Paing API
-	 * @param page
-	 * @param size
-	 * @return
-	 */
-	@GetMapping(value = "")
-	public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
-																		  @RequestParam(defaultValue = "5") Integer size){
-		page = (page > 0) ? page-1 : page;
-		Page<Challenge> findChallengesWithPage = challengeService.findAllChallengeWithPage(page, size);
-		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengesWithPage));
-	}
-
-	/**
-	 * 모든 챌린지 정보 조회 (search) with Paing API
+	 * 챌린지 목록 조회 (search) with Paing API
 	 * @param page
 	 * @param size
 	 * @param title
@@ -53,15 +36,15 @@ public class ChallengeController {
 	 * @param leaderId
 	 * @return
 	 */
-	@GetMapping(value = "search")
-	public ResponseEntity<ResponsePagingDTO> findChallengeByNameWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
-																			@RequestParam(defaultValue = "5") Integer size,
-																			@RequestParam(required = false) String title,
-																			@RequestParam(defaultValue = "",required = false) String description,
-																			@RequestParam(required = false) String leaderId) {
+	@GetMapping(value = "")
+	public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
+																		  @RequestParam(defaultValue = "5") Integer size,
+																		  @RequestParam(required = false) String title,
+																		  @RequestParam(defaultValue = "",required = false) String description,
+																		  @RequestParam(required = false) String leaderId){
 		page = (page > 0) ? page-1 : page;
-		Page<Challenge> findChallengeBySearchWithPage = challengeService.findChallengeBySearchWithPage(title, description, leaderId, page, size);
-		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengeBySearchWithPage));
+		Page<Challenge> findChallengesWithPage = challengeService.findChallengeBySearchWithPage(title, description, leaderId, page, size);
+		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengesWithPage));
 	}
 
 	/**
