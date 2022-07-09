@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -26,7 +27,7 @@ import java.util.List;
 public class CommitApproval extends BaseEntity {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "COMMIT_APPROVAL_ID")
 	private Long id;
 
@@ -36,7 +37,7 @@ public class CommitApproval extends BaseEntity {
 	@Column(name = "CONTENT")
 	private String content;
 
-	@OneToMany(mappedBy = "commitApproval", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "commitApproval", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
 	private List<CommitApprovalList> commitApprovalList;
 
 }

@@ -7,8 +7,8 @@ import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.CreateCommitApprovalDTO;
 import grabit.grabit_backend.exception.NotFoundChallengeException;
 import grabit.grabit_backend.repository.ChallengeRepository;
+import grabit.grabit_backend.repository.CommitApprovalListRepository;
 import grabit.grabit_backend.repository.CommitApprovalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +19,16 @@ import java.util.List;
 public class CommitApprovalService {
 
 	private final CommitApprovalRepository commitApprovalRepository;
+	private final CommitApprovalListRepository commitApprovalListRepository;
 	private final ChallengeRepository challengeRepository;
 
-	public CommitApprovalService(CommitApprovalRepository commitApprovalRepository, ChallengeRepository challengeRepository) {
+	public CommitApprovalService(CommitApprovalRepository commitApprovalRepository, ChallengeRepository challengeRepository, CommitApprovalListRepository commitApprovalListRepository) {
 		this.commitApprovalRepository = commitApprovalRepository;
+		this.commitApprovalListRepository = commitApprovalListRepository;
 		this.challengeRepository = challengeRepository;
 	}
 
+	@Transactional
 	public CommitApproval createCommitApproval(CreateCommitApprovalDTO createCommitApprovalDTO, User user) throws NotFoundChallengeException {
 		CommitApproval commitApproval = CommitApproval.builder()
 				.targetDate(createCommitApprovalDTO.getTargetDate())
@@ -39,12 +42,13 @@ public class CommitApprovalService {
 				x -> commitApprovalLists.add(CommitApprovalList.builder()
 						.commitApproval(commitApproval)
 						.challenge(challenge)
-						.user(user)
+						.user(x.getUser())
 						.status("미승인")
 						.build())
 		);
-		commitApproval.setCommitApprovalList(commitApprovalLists);
+
 		commitApprovalRepository.save(commitApproval);
+		commitApprovalListRepository.saveAll(commitApprovalLists);
 
 		return commitApproval;
 	}
