@@ -42,7 +42,7 @@ public class ChallengeController {
 																		  @RequestParam(required = false) String title,
 																		  @RequestParam(defaultValue = "",required = false) String description,
 																		  @RequestParam(required = false) String leaderId){
-		page = (page > 0) ? page-1 : page;
+		page = page - 1;
 		Page<Challenge> findChallengesWithPage = challengeService.findChallengeBySearchWithPage(title, description, leaderId, page, size);
 		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengesWithPage));
 	}
