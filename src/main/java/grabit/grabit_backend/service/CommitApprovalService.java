@@ -56,6 +56,13 @@ public class CommitApprovalService {
 		return commitApproval;
 	}
 
+	public CommitApproval readCommitApproval(Long id) {
+		CommitApproval commitApproval = commitApprovalRepository.findById(id)
+				.orElseThrow(() -> new NotFoundCommitApprovalException());
+
+		return commitApproval;
+	}
+
 	@Transactional
 	public void deleteCommitApproval(Long id, User user) {
 		CommitApproval commitApproval = commitApprovalRepository.findById(id)
