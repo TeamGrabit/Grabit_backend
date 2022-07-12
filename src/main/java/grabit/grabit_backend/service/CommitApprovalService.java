@@ -41,12 +41,13 @@ public class CommitApprovalService {
 		Challenge challenge = challengeRepository.findChallengeById(createCommitApprovalDTO.getChallengeId())
 						.orElseThrow(() -> new NotFoundChallengeException());
 
-		challenge.getUserChallengeList().forEach(
-				x -> commitApprovalLists.add(CommitApprovalList.builder()
+		challenge.getUserChallengeList().stream()
+				.filter(x -> !(x.getUser().getId().equals(user.getId())))
+				.forEach(x -> commitApprovalLists.add(CommitApprovalList.builder()
 						.commitApproval(commitApproval)
 						.challenge(challenge)
 						.user(x.getUser())
-						.status("미승인")
+						.status("미확인")
 						.build())
 		);
 

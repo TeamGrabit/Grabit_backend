@@ -90,7 +90,7 @@ public class ChallengeService {
 		Challenge findChallenge = isExistChallenge(id);
 
 		// leader 여부 확인.
-		if(!findChallenge.getLeader().getUserId().equals(user.getUserId())){
+		if(!findChallenge.getLeader().getId().equals(user.getId())){
 			throw new UnauthorizedException();
 		}
 

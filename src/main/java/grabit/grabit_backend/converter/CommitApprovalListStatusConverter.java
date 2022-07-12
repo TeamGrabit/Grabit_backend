@@ -4,23 +4,31 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class CommitApprovalListStatusConverter implements AttributeConverter<String, Boolean> {
+public class CommitApprovalListStatusConverter implements AttributeConverter<String, Integer> {
 
 	@Override
-	public Boolean convertToDatabaseColumn(String attribute) {
-		if (attribute.equals("승인")) {
-			return Boolean.TRUE;
+	public Integer convertToDatabaseColumn(String attribute) {
+		if (attribute.equals("미확인")) {
+			return 0;
+		}else if (attribute.equals("승인")){
+			return 1;
+		}else if (attribute.equals("거절")){
+			return 2;
 		}else{
-			return Boolean.FALSE;
+			throw new IllegalStateException("잘못된 값입니다.");
 		}
 	}
 
 	@Override
-	public String convertToEntityAttribute(Boolean dbData) {
-		if (dbData.equals(Boolean.TRUE)){
+	public String convertToEntityAttribute(Integer dbData) {
+		if (dbData.equals(0)){
+			return "미확인";
+		}else if (dbData.equals(1)){
 			return "승인";
+		}else if (dbData.equals(2)){
+			return "거절";
 		}else{
-			return "미승인";
+			throw new IllegalStateException("잘못된 값입니다.");
 		}
 	}
 }
