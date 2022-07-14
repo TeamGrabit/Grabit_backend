@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -91,6 +92,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/stomp/chat/**").permitAll()
                     .antMatchers("/").permitAll() // local에서 oauth로그인 시 redirect받을 링크
                     .antMatchers("/actuator/health").permitAll()
+                    .mvcMatchers(HttpMethod.GET, "/challenges").permitAll()
+                    .mvcMatchers(HttpMethod.GET, "/challenges/{id}").permitAll()
                     .antMatchers("/**").hasAnyRole("USER")
                 .and()
                 .oauth2Login()
