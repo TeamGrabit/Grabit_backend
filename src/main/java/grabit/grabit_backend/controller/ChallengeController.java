@@ -6,6 +6,7 @@ import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.dto.ResponsePagingDTO;
+import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -94,9 +95,12 @@ public class ChallengeController {
 	 * @return
 	 */
 	@GetMapping(value = "{id}")
-	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id){
-		Challenge findChallenge = challengeService.findChallengeById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(findChallenge));
+	public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
+		Challenge challenge = challengeService.findChallengeById(id);
+		if (challenge.getIsPrivate() && user == null) {
+			throw new UnauthorizedException();
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(challenge));
 	}
 
 	/**
