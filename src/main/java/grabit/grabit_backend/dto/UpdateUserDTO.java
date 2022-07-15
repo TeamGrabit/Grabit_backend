@@ -7,5 +7,5 @@ import javax.validation.constraints.Min;
 public class UpdateUserDTO {
     private String username;
     private String bio;
-    private String profileImage;
+    private String profileImg;
 }
