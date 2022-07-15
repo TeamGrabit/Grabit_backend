@@ -1,17 +1,12 @@
 package grabit.grabit_backend.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
-import grabit.grabit_backend.domain.JoinChallengeRequest;
-import grabit.grabit_backend.dto.CreateChallengeDTO;
-import grabit.grabit_backend.dto.ModifyChallengeDTO;
-import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.domain.User;
-import grabit.grabit_backend.exception.ForbiddenException;
-import grabit.grabit_backend.repository.ChallengeRepository;
-import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.domain.UserChallenge;
-import grabit.grabit_backend.repository.JoinChallengeRequestRepository;
+import grabit.grabit_backend.dto.CreateChallengeDTO;
+import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import grabit.grabit_backend.exception.UnauthorizedException;
+import grabit.grabit_backend.repository.ChallengeRepository;
 import grabit.grabit_backend.repository.UserChallengeRepository;
 import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,21 +73,6 @@ public class ChallengeService {
 	}
 
 	/**
-	 * 챌린지 조회 (name)
-	 * @param name
-	 * @return List of Challenge
-	 */
-	@Transactional
-	public ArrayList<ResponseChallengeDTO> findChallengeByName(String name){
-		List<Challenge> findChallenges = challengeRepository.findByName(name);
-		ArrayList<ResponseChallengeDTO> returnChallenges = new ArrayList<>();
-		for(Challenge challenge: findChallenges){
-			returnChallenges.add(ResponseChallengeDTO.convertDTO(challenge));
-		}
-		return returnChallenges;
-	}
-
-	/**
 	 * 챌린지 삭제
 	 * @param id
 	 */
@@ -142,9 +122,12 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public Page<Challenge> findAllChallengeWithPage(Integer page, Integer size){
+	public Page<Challenge> findChallengeBySearchWithPage(String title, String description, String leaderId, Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
-		return challengeRepository.findAllChallengeWithPaging(pageRequest);
+		if (leaderId == null && title == null && description == null){
+			throw new IllegalStateException("잘못된 요청입니다.");
+		}
+		return challengeRepository.findChallengeBySearchWithPaging(pageRequest, title, description, leaderId);
 	}
 
 	/**

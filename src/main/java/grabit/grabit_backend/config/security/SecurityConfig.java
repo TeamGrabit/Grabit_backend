@@ -88,6 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .requestMatchers(request -> CorsUtils.isPreFlightRequest(request)).permitAll()
                     .antMatchers("/login/**").permitAll()
                     .antMatchers("/oauth2/**").permitAll()
+                    .antMatchers("/stomp/chat/**").permitAll()
                     .antMatchers("/").permitAll() // local에서 oauth로그인 시 redirect받을 링크
                     .antMatchers("/actuator/health").permitAll()
                     .antMatchers("/**").hasAnyRole("USER")

@@ -37,17 +37,30 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
 	}
 
 	@Override
-	public Page<Challenge> findAllChallengeWithPaging(Pageable pageable) {
-		List<Challenge> content = jpaQueryFactory
-				.selectFrom(challenge)
-				.offset(pageable.getOffset())
+	public Page<Challenge> findChallengeBySearchWithPaging(Pageable pageable, String title, String description, String leaderId) {
+		JPAQuery<Challenge> findChallengeQuery = getChallengeJPAQuery(title, description, leaderId);
+
+		List<Challenge> content = findChallengeQuery.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
+				.orderBy(challenge.createdAt.desc())
 				.fetch();
 
-		JPAQuery<Challenge> countQuery = jpaQueryFactory
-				.selectFrom(challenge);
+		JPAQuery<Challenge> countQuery = getChallengeJPAQuery(title, description, leaderId);
 
 		return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetch().size());
+	}
+	private JPAQuery<Challenge> getChallengeJPAQuery(String title, String description, String leaderId) {
+		JPAQuery<Challenge> findChallengeQuery = jpaQueryFactory.selectFrom(challenge);
+		if (title != null) {
+			findChallengeQuery = findChallengeQuery.where(challenge.name.contains(title));
+		}
+		if (description != null) {
+			findChallengeQuery = findChallengeQuery.where(challenge.description.contains(description));
+		}
+		if (leaderId != null) {
+			findChallengeQuery = findChallengeQuery.where(challenge.leader.userId.eq(leaderId));
+		}
+		return findChallengeQuery;
 	}
 
 	@Override

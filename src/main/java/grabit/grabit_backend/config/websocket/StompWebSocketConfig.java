@@ -21,8 +21,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/stomp/chat")
-				.setAllowedOrigins("https://teamgrabit.github.io/Grabit_frontend")
-				.setAllowedOrigins("http://localhost:3000")
+				.setAllowedOriginPatterns("https://teamgrabit.github.io/Grabit_frontend", "http://localhost:5000")
 				.withSockJS();
 	}
 
