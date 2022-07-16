@@ -1,6 +1,6 @@
 package grabit.grabit_backend.domain;
 
-import grabit.grabit_backend.converter.CommitApprovalListStatusConverter;
+import grabit.grabit_backend.converter.PassApprovalListStatusConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,24 +15,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "COMMIT_APPROVAL_LIST")
-public class CommitApprovalList {
+@Entity(name = "PASS_APPROVAL_LIST")
+public class PassApprovalList {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "COMMIT_APPROVAL_LIST_ID")
+	@Column(name = "PASS_APPROVAL_LIST_ID")
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "COMMIT_APPROVAL_ID")
-	private CommitApproval commitApproval;
+	@JoinColumn(name = "Pass_APPROVAL_ID")
+	private PassApproval passApproval;
 
 	@ManyToOne
 	@JoinColumn(name = "CHALLENGE_ID")
@@ -43,7 +42,7 @@ public class CommitApprovalList {
 	private User user;
 
 	@Column(name = "STATUS")
-	@Convert(converter = CommitApprovalListStatusConverter.class)
+	@Convert(converter = PassApprovalListStatusConverter.class)
 	private String status;
 
 }

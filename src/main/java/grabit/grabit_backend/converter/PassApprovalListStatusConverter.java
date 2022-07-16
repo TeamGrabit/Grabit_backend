@@ -4,7 +4,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class CommitApprovalListStatusConverter implements AttributeConverter<String, Boolean> {
+public class PassApprovalListStatusConverter implements AttributeConverter<String, Boolean> {
 
 	@Override
 	public Boolean convertToDatabaseColumn(String attribute) {
