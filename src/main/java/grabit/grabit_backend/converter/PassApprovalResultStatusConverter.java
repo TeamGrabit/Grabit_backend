@@ -1,14 +1,16 @@
 package grabit.grabit_backend.converter;
 
+import grabit.grabit_backend.enums.PassApprovalResultStatus;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class PassApprovalResultStatusConverter implements AttributeConverter<String, Boolean> {
+public class PassApprovalResultStatusConverter implements AttributeConverter<PassApprovalResultStatus, Boolean> {
 
 	@Override
-	public Boolean convertToDatabaseColumn(String attribute) {
-		if (attribute.equals("승인")) {
+	public Boolean convertToDatabaseColumn(PassApprovalResultStatus attribute) {
+		if (attribute.equals(PassApprovalResultStatus.APPROVED)) {
 			return Boolean.TRUE;
 		}else{
 			return Boolean.FALSE;
@@ -16,11 +18,11 @@ public class PassApprovalResultStatusConverter implements AttributeConverter<Str
 	}
 
 	@Override
-	public String convertToEntityAttribute(Boolean dbData) {
+	public PassApprovalResultStatus convertToEntityAttribute(Boolean dbData) {
 		if (dbData.equals(Boolean.TRUE)){
-			return "승인";
+			return PassApprovalResultStatus.APPROVED;
 		}else{
-			return "미승인";
+			return PassApprovalResultStatus.NOT_APPROVED;
 		}
 	}
 }

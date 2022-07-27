@@ -5,6 +5,7 @@ import grabit.grabit_backend.domain.PassApproval;
 import grabit.grabit_backend.domain.PassApprovalResult;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.CreatePassApprovalDTO;
+import grabit.grabit_backend.enums.PassApprovalResultStatus;
 import grabit.grabit_backend.exception.ForbiddenException;
 import grabit.grabit_backend.exception.NotFoundChallengeException;
 import grabit.grabit_backend.exception.NotFoundPassApprovalException;
@@ -46,7 +47,7 @@ public class PassApprovalService {
 						.passApproval(passApproval)
 						.challenge(challenge)
 						.user(x.getUser())
-						.status("미승인")
+						.status(PassApprovalResultStatus.NOT_APPROVED)
 						.build())
 		);
 

@@ -1,6 +1,7 @@
 package grabit.grabit_backend.domain;
 
 import grabit.grabit_backend.converter.PassApprovalResultStatusConverter;
+import grabit.grabit_backend.enums.PassApprovalResultStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,6 +44,6 @@ public class PassApprovalResult {
 
 	@Column(name = "STATUS")
 	@Convert(converter = PassApprovalResultStatusConverter.class)
-	private String status;
+	private PassApprovalResultStatus status;
 
 }
