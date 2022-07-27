@@ -2,14 +2,14 @@ package grabit.grabit_backend.service;
 
 import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.domain.PassApproval;
-import grabit.grabit_backend.domain.PassApprovalList;
+import grabit.grabit_backend.domain.PassApprovalResult;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.CreatePassApprovalDTO;
 import grabit.grabit_backend.exception.ForbiddenException;
 import grabit.grabit_backend.exception.NotFoundChallengeException;
 import grabit.grabit_backend.exception.NotFoundPassApprovalException;
 import grabit.grabit_backend.repository.ChallengeRepository;
-import grabit.grabit_backend.repository.PassApprovalListRepository;
+import grabit.grabit_backend.repository.PassApprovalResultRepository;
 import grabit.grabit_backend.repository.PassApprovalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +21,12 @@ import java.util.List;
 public class PassApprovalService {
 
 	private final PassApprovalRepository passApprovalRepository;
-	private final PassApprovalListRepository passApprovalListRepository;
+	private final PassApprovalResultRepository passApprovalResultRepository;
 	private final ChallengeRepository challengeRepository;
 
-	public PassApprovalService(PassApprovalRepository passApprovalRepository, ChallengeRepository challengeRepository, PassApprovalListRepository passApprovalListRepository) {
+	public PassApprovalService(PassApprovalRepository passApprovalRepository, ChallengeRepository challengeRepository, PassApprovalResultRepository passApprovalResultRepository) {
 		this.passApprovalRepository = passApprovalRepository;
-		this.passApprovalListRepository = passApprovalListRepository;
+		this.passApprovalResultRepository = passApprovalResultRepository;
 		this.challengeRepository = challengeRepository;
 	}
 
@@ -37,12 +37,12 @@ public class PassApprovalService {
 				.content(createPassApprovalDTO.getContent())
 				.user(user).build();
 
-		List<PassApprovalList> passApprovalLists = new ArrayList<>();
+		List<PassApprovalResult> passApprovalResults = new ArrayList<>();
 		Challenge challenge = challengeRepository.findChallengeById(createPassApprovalDTO.getChallengeId())
 						.orElseThrow(() -> new NotFoundChallengeException());
 
 		challenge.getUserChallengeList().forEach(
-				x -> passApprovalLists.add(PassApprovalList.builder()
+				x -> passApprovalResults.add(PassApprovalResult.builder()
 						.passApproval(passApproval)
 						.challenge(challenge)
 						.user(x.getUser())
@@ -51,7 +51,7 @@ public class PassApprovalService {
 		);
 
 		passApprovalRepository.save(passApproval);
-		passApprovalListRepository.saveAll(passApprovalLists);
+		passApprovalResultRepository.saveAll(passApprovalResults);
 
 		return passApproval;
 	}

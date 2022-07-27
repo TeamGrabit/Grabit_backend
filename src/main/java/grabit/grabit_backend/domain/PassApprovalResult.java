@@ -1,6 +1,6 @@
 package grabit.grabit_backend.domain;
 
-import grabit.grabit_backend.converter.PassApprovalListStatusConverter;
+import grabit.grabit_backend.converter.PassApprovalResultStatusConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,16 +21,16 @@ import javax.persistence.ManyToOne;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "PASS_APPROVAL_LIST")
-public class PassApprovalList {
+@Entity(name = "PASS_APPROVAL_RESULT")
+public class PassApprovalResult {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "PASS_APPROVAL_LIST_ID")
+	@Column(name = "PASS_APPROVAL_RESULT_ID")
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "Pass_APPROVAL_ID")
+	@JoinColumn(name = "PASS_APPROVAL_ID")
 	private PassApproval passApproval;
 
 	@ManyToOne
@@ -42,7 +42,7 @@ public class PassApprovalList {
 	private User user;
 
 	@Column(name = "STATUS")
-	@Convert(converter = PassApprovalListStatusConverter.class)
+	@Convert(converter = PassApprovalResultStatusConverter.class)
 	private String status;
 
 }

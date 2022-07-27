@@ -34,6 +34,6 @@ public class PassApproval extends BaseEntity {
 	private String content;
 
 	@OneToMany(mappedBy = "passApproval", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-	private List<PassApprovalList> passApprovalList;
+	private List<PassApprovalResult> passApprovalResult;
 
 }

@@ -1,9 +1,9 @@
 package grabit.grabit_backend.repository;
 
-import grabit.grabit_backend.domain.PassApprovalList;
+import grabit.grabit_backend.domain.PassApprovalResult;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PassApprovalListRepository extends JpaRepository<PassApprovalList, Long> {
+public interface PassApprovalResultRepository extends JpaRepository<PassApprovalResult, Long> {
 }
