@@ -65,5 +65,4 @@ public class PassApprovalController {
 		String result = passApprovalResultService.rejectPassApproval(id, user);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
-
 }

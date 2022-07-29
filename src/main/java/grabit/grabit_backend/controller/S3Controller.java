@@ -1,6 +1,7 @@
 package grabit.grabit_backend.controller;
 
 import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.dto.ResponseImageURLDTO;
 import grabit.grabit_backend.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +26,11 @@ public class S3Controller {
 	}
 
 	@PostMapping(value = "")
-	public ResponseEntity<String> execWrite(@AuthenticationPrincipal User user,
+	public ResponseEntity<ResponseImageURLDTO> execWrite(@AuthenticationPrincipal User user,
 											MultipartFile file) throws IOException {
-		System.out.println(file.getName());
 		String result = s3Service.upload(user, file);
+		ResponseImageURLDTO responseImageURLDTO = new ResponseImageURLDTO(result);
 
-		return ResponseEntity.status(HttpStatus.OK).body(result);
+		return ResponseEntity.status(HttpStatus.OK).body(responseImageURLDTO);
 	}
 }
