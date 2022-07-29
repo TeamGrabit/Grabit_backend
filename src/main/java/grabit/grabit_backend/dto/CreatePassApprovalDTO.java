@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-public class CreateCommitApprovalDTO {
+public class CreatePassApprovalDTO {
 
 	@NotNull
 	private Long challengeId;

@@ -15,12 +15,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "COMMIT_APPROVAL")
-public class CommitApproval extends BaseEntity {
+@Entity(name = "PASS_APPROVAL")
+public class PassApproval extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "COMMIT_APPROVAL_ID")
+	@Column(name = "PASS_APPROVAL_ID")
 	private Long id;
 
 	@Column(name = "TargetDate")
@@ -33,7 +33,7 @@ public class CommitApproval extends BaseEntity {
 	@Column(name = "CONTENT")
 	private String content;
 
-	@OneToMany(mappedBy = "commitApproval", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-	private List<CommitApprovalList> commitApprovalList;
+	@OneToMany(mappedBy = "passApproval", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+	private List<PassApprovalResult> passApprovalResult;
 
 }
