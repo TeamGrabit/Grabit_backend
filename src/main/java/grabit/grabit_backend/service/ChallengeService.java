@@ -26,7 +26,6 @@ public class ChallengeService {
 	private final UserChallengeRepository userChallengeRepository;
 	private final UserRepository userRepository;
 
-	@Autowired
 	public ChallengeService(ChallengeRepository challengeRepository,
 							UserChallengeRepository userChallengeRepository,
 							UserRepository userRepository){
