@@ -25,10 +25,9 @@ public class ChallengeController {
 
     private final ChallengeService challengeService;
 
-    @Autowired
-    public ChallengeController(ChallengeService challengeService) {
-        this.challengeService = challengeService;
-    }
+	public ChallengeController(ChallengeService challengeService) {
+		this.challengeService = challengeService;
+	}
 
     /**
      * 챌린지 목록 조회 (search) with Paing API

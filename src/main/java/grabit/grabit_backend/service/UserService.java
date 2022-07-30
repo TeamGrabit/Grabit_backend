@@ -27,7 +27,7 @@ public class UserService {
     public User updateUser(UpdateUserDTO updateUserDTO, User user) {
         if (updateUserDTO.getUsername() != null) user.setUsername(updateUserDTO.getUsername());
         if (updateUserDTO.getBio() != null) user.setBio(updateUserDTO.getBio());
-        if (updateUserDTO.getProfileImage() != null) user.setProfileImg(updateUserDTO.getProfileImage());
+        if (updateUserDTO.getProfileImg() != null) user.setProfileImg(updateUserDTO.getProfileImg());
 
         return userRepository.save(user);
     }
