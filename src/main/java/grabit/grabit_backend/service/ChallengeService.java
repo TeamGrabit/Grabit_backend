@@ -60,9 +60,19 @@ public class ChallengeService {
 	 * @return Challenge
 	 */
 	@Transactional
-	public Challenge findChallengeById(Long id){
+	public Challenge findChallengeById(Long id, User user){
 		Challenge challenge = isExistChallenge(id);
-		return challenge;
+		if (!challenge.getIsPrivate())
+			return challenge;
+
+		if (user == null)
+			throw new UnauthorizedException();
+
+		for (UserChallenge userChallenge : challenge.getUserChallengeList()) {
+			if (userChallenge.getUser().getUserId().equals(user.getUserId()))
+				return challenge;
+		}
+		throw new UnauthorizedException();
 	}
 
 	/**
