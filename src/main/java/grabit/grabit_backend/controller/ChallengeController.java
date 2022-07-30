@@ -103,13 +103,9 @@ public class ChallengeController {
      */
     @GetMapping(value = "{id}")
     public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user) {
-        Challenge challenge = challengeService.findChallengeById(id);
+        Challenge challenge = challengeService.findChallengeById(id, user);
 
-        if (!challenge.getIsPrivate())
-            return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(challenge));
 
-        if (user == null)
-            throw new UnauthorizedException();
 
         for (UserChallenge userChallenge : challenge.getUserChallengeList()) {
             if (userChallenge.getUser().getUserId().equals(user.getUserId()))

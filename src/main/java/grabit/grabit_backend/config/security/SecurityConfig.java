@@ -92,8 +92,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/stomp/chat/**").permitAll()
                     .antMatchers("/").permitAll() // local에서 oauth로그인 시 redirect받을 링크
                     .antMatchers("/actuator/health").permitAll()
-                    .mvcMatchers(HttpMethod.GET, "/challenges").permitAll()
-                    .mvcMatchers(HttpMethod.GET, "/challenges/{id}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/challenges").permitAll()
+                    .antMatchers(HttpMethod.GET, "/challenges/{id}").permitAll()
                     .antMatchers("/**").hasAnyRole("USER")
                 .and()
                 .oauth2Login()
