@@ -24,7 +24,7 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 @Builder
 @IdClass(UserChallengePK.class)
-public class UserChallenge {
+public class UserChallenge extends BaseEntity{
 
 	@Id
 	@ManyToOne(fetch = FetchType.EAGER)

@@ -1,12 +1,17 @@
 package grabit.grabit_backend.service;
 
 import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.JoinChallengeRequest;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.domain.UserChallenge;
 import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import grabit.grabit_backend.exception.BadRequestException;
+import grabit.grabit_backend.exception.ForbiddenException;
+import grabit.grabit_backend.exception.NotFoundException;
 import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.repository.ChallengeRepository;
+import grabit.grabit_backend.repository.JoinChallengeRequestRepository;
 import grabit.grabit_backend.repository.UserChallengeRepository;
 import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +72,7 @@ public class ChallengeService {
 	public Challenge findChallengeById(Long id){
 		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
 		if(findChallenge.isEmpty()){
-			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
+			throw new NotFoundException("존재하지 않는 챌린지입니다..");
 		}
 		return findChallenge.get();
 	}
@@ -137,56 +142,41 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public Challenge joinChallenge(Long id, User user){
+	public Challenge requestJoinChallenge(Long id, User user){
 		Challenge challenge = findChallengeById(id);
 
 		Optional<UserChallenge> findUserChallenge = userChallengeRepository.findByUserAndChallenge(user, challenge);
 		if(findUserChallenge.isPresent()){
-			throw new IllegalStateException("이미 가입한 유저입니다.");
+			throw new BadRequestException("이미 가입한 유저입니다.");
 		}
 
 		if (challenge.getIsPrivate()) {
-			JoinChallengeRequest joinChallengeRequest = JoinChallengeRequest.builder()
-					.user(user)
-					.challenge(challenge)
-					.build();
+			JoinChallengeRequest joinChallengeRequest = JoinChallengeRequest.createJoinChallengeRequest(challenge, user);
 			this.joinChallengeRequestRepository.save(joinChallengeRequest);
-			return null;
+		} else {
+			joinChallenge(challenge, user);
 		}
+		return challenge;
+	}
 
-		UserChallenge userChallenge = UserChallenge.builder()
-				.user(user)
-				.challenge(challenge)
-				.build();
-
+	private void joinChallenge(Challenge challenge, User user) {
+		UserChallenge userChallenge = UserChallenge.createUserChallenge(challenge, user);
 		userChallengeRepository.save(userChallenge);
 		challenge.getUserChallengeList().add(userChallenge);
-
-		return challenge;
 	}
 
 	/**
 	 * 챌린지 가입 승인
-	 * @param user
-	 * @param joinChallengeRequestId
 	 */
-	public Challenge approveJoinChallengeRequest(User user, Long joinChallengeRequestId) {
-		JoinChallengeRequest request = getJoinChallengeRequestUser(joinChallengeRequestId);
-		Challenge challenge = request.getChallenge();
+	public Challenge approveJoinChallengeRequest(Long joinChallengeRequestId, User leader) {
+		JoinChallengeRequest joinChallengeRequest = findJoinChallengeRequestById(joinChallengeRequestId);
+		Challenge challenge = joinChallengeRequest.getChallenge();
 
-		checkIsLeader(user, challenge);
+		checkIsLeader(leader, challenge);
 
-		request.setStatus(1);
-		this.joinChallengeRequestRepository.save(request);
+		this.joinChallengeRequestRepository.delete(joinChallengeRequest);
 
-		UserChallenge userChallenge = UserChallenge.builder()
-				.user(user)
-				.challenge(challenge)
-				.build();
-
-		userChallengeRepository.save(userChallenge);
-		challenge.getUserChallengeList().add(userChallenge);
-
+		joinChallenge(challenge, joinChallengeRequest.getUser());
 		return challenge;
 	}
 
@@ -195,14 +185,13 @@ public class ChallengeService {
 	 * @param user
 	 * @param joinChallengeRequestId
 	 */
-	public void rejectJoinChallengeRequest(User user, Long joinChallengeRequestId) {
-		JoinChallengeRequest request = getJoinChallengeRequestUser(joinChallengeRequestId);
-		Challenge challenge = request.getChallenge();
+	public void rejectJoinChallengeRequest(Long joinChallengeRequestId, User user) {
+		JoinChallengeRequest joinChallengeRequest = findJoinChallengeRequestById(joinChallengeRequestId);
+		Challenge challenge = joinChallengeRequest.getChallenge();
 
 		checkIsLeader(user, challenge);
 
-		request.setStatus(2);
-		this.joinChallengeRequestRepository.save(request);
+		this.joinChallengeRequestRepository.delete(joinChallengeRequest);
 	}
 
 	/**
@@ -218,37 +207,29 @@ public class ChallengeService {
 	}
 
 	/**
-	 * 챌린지 가입 요청 조회 by ID
+	 * 챌린지 가입 요청 목록
 	 */
-	private JoinChallengeRequest getJoinChallengeRequestUser(Long joinChallengeRequestId) {
-		Optional<JoinChallengeRequest> request = this.joinChallengeRequestRepository.findById(joinChallengeRequestId);
-		if (request.isEmpty()) {
-			throw new NotFoundException("존재하지 않는 요청입니다.");
-		}
-		return request.get();
-	}
-
-	/**
-	 * 챌린지 가입 요청중인 유저 목록
-	 */
-	public List<JoinChallengeRequest> getJoinChallengeRequestUserList(User user, Long challengeId) {
+	public Page<JoinChallengeRequest> findJoinChallengeRequestListByChallengeWithPage(User user, Long challengeId, Integer page, Integer size) {
 		Challenge challenge = findChallengeById(challengeId);
 
 		checkIsLeader(user, challenge);
-
-		List<JoinChallengeRequest> requestList = this.joinChallengeRequestRepository.findByChallenge(challenge);
+		PageRequest pageRequest = PageRequest.of(page, size);
+		Page<JoinChallengeRequest> requestList = this.joinChallengeRequestRepository.findJoinChallengeRequestByChallengeWithPage(pageRequest, challenge);
 		return requestList;
 	}
 
 	private void checkIsLeader(User user, Challenge challenge) {
-		if (!challenge.getLeader().equals(user)) {
+		if (!challenge.getLeader().getId().equals(user.getId())) {
 			throw new ForbiddenException("권한이 없습니다.");
 		}
 	}
 
-	public Page<Challenge> findUserJoinedChallengeList(User user, Integer page, Integer size) {
-		PageRequest pageRequest = PageRequest.of(page, size);
-		return challengeRepository.findUserJoinedChallengeList(pageRequest, user);
+	public JoinChallengeRequest findJoinChallengeRequestById(Long joinChallengeRequestId) throws NotFoundException {
+		Optional<JoinChallengeRequest> request = this.joinChallengeRequestRepository.findById(joinChallengeRequestId);
+		if (request.isEmpty()) {
+			throw new NotFoundException();
+		}
+		return request.get();
 	}
 }
 
