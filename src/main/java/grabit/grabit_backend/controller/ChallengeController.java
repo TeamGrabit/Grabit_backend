@@ -9,7 +9,6 @@ import grabit.grabit_backend.dto.ResponseChallengeDTO;
 import grabit.grabit_backend.dto.ResponsePagingDTO;
 import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.service.ChallengeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
 @RequestMapping("challenges")
@@ -25,9 +23,9 @@ public class ChallengeController {
 
     private final ChallengeService challengeService;
 
-	public ChallengeController(ChallengeService challengeService) {
-		this.challengeService = challengeService;
-	}
+    public ChallengeController(ChallengeService challengeService) {
+        this.challengeService = challengeService;
+    }
 
     /**
      * 챌린지 목록 조회 (search) with Paing API
@@ -103,7 +101,6 @@ public class ChallengeController {
     @GetMapping(value = "{id}")
     public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user) {
         Challenge challenge = challengeService.findChallengeById(id, user);
-
 
 
         for (UserChallenge userChallenge : challenge.getUserChallengeList()) {
