@@ -6,7 +6,6 @@ import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.*;
 import grabit.grabit_backend.exception.DuplicateDataException;
 import grabit.grabit_backend.service.ChallengeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -37,11 +36,11 @@ public class ChallengeController {
      * @return
      */
     @GetMapping(value = "")
-    public ResponseEntity<ResponseChallengePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
-                                                                                   @RequestParam(defaultValue = "5") Integer size,
-                                                                                   @RequestParam(required = false) String title,
-                                                                                   @RequestParam(defaultValue = "", required = false) String description,
-                                                                                   @RequestParam(required = false) String leaderId) {
+    public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
+                                                                          @RequestParam(defaultValue = "5") Integer size,
+                                                                          @RequestParam(required = false) String title,
+                                                                          @RequestParam(defaultValue = "", required = false) String description,
+                                                                          @RequestParam(required = false) String leaderId) {
         page = page - 1;
         Page<Challenge> findChallengesWithPage = challengeService.findChallengeBySearchWithPage(title, description, leaderId, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengePagingDTO.convertDTO(findChallengesWithPage));
@@ -98,9 +97,11 @@ public class ChallengeController {
      * @return
      */
     @GetMapping(value = "{id}")
-    public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id) {
-        Challenge findChallenge = challengeService.findChallengeById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(findChallenge));
+    public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id,
+                                                                 @AuthenticationPrincipal User user) {
+        Challenge challenge = challengeService.findChallengeByIdWithAuth(id, user);
+        return ResponseEntity.status(HttpStatus.OK).
+                body(ResponseChallengeDTO.convertDTO(challenge));
     }
 
     /**
@@ -170,3 +171,4 @@ public class ChallengeController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseJoinChallengeRequestPagingDTO.convertDTO(joinChallengeRequestListByChallengeWithPage));
     }
 }
+

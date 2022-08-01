@@ -68,10 +68,25 @@ public class ChallengeService {
 	 * @return Challenge
 	 */
 	@Transactional
-	public Challenge findChallengeById(Long id){
+	public Challenge findChallengeByIdWithAuth(Long id, User user){
+		Challenge challenge = findChallengeById(id);
+		if (!challenge.getIsPrivate())
+			return challenge;
+
+		if (user == null)
+			throw new UnauthorizedException();
+
+		for (UserChallenge userChallenge : challenge.getUserChallengeList()) {
+			if (userChallenge.getUser().getUserId().equals(user.getUserId()))
+				return challenge;
+		}
+		throw new UnauthorizedException();
+	}
+
+	private Challenge findChallengeById(Long id){
 		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
 		if(findChallenge.isEmpty()){
-			throw new NotFoundException("존재하지 않는 챌린지입니다..");
+			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
 		}
 		return findChallenge.get();
 	}
