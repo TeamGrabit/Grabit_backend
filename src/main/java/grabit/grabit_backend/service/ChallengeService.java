@@ -5,8 +5,15 @@ import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.domain.UserChallenge;
 import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import grabit.grabit_backend.dto.SearchChallengeDTO;
+import grabit.grabit_backend.enums.SearchType;
 import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.repository.ChallengeRepository;
+import grabit.grabit_backend.repository.ChallengeSearchRepository;
+import grabit.grabit_backend.repository.ChallengeSearchWithDesc;
+import grabit.grabit_backend.repository.ChallengeSearchWithLeader;
+import grabit.grabit_backend.repository.ChallengeSearchWithTitle;
+import grabit.grabit_backend.repository.ChallengeSearchWithTitleAndDesc;
 import grabit.grabit_backend.repository.UserChallengeRepository;
 import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +32,25 @@ public class ChallengeService {
 	private final ChallengeRepository challengeRepository;
 	private final UserChallengeRepository userChallengeRepository;
 	private final UserRepository userRepository;
+	private final ChallengeSearchWithTitle challengeSearchWithTitle;
+	private final ChallengeSearchWithDesc challengeSearchWithDesc;
+	private final ChallengeSearchWithTitleAndDesc challengeSearchWithTitleAndDesc;
+	private final ChallengeSearchWithLeader challengeSearchWithLeader;
 
 	public ChallengeService(ChallengeRepository challengeRepository,
 							UserChallengeRepository userChallengeRepository,
-							UserRepository userRepository){
+							UserRepository userRepository,
+							ChallengeSearchWithTitle challengeSearchWithTitle,
+							ChallengeSearchWithDesc challengeSearchWithDesc,
+							ChallengeSearchWithTitleAndDesc challengeSearchWithTitleAndDesc,
+							ChallengeSearchWithLeader challengeSearchWithLeader){
 		this.challengeRepository = challengeRepository;
 		this.userChallengeRepository = userChallengeRepository;
 		this.userRepository = userRepository;
+		this.challengeSearchWithTitle = challengeSearchWithTitle;
+		this.challengeSearchWithDesc = challengeSearchWithDesc;
+		this.challengeSearchWithTitleAndDesc = challengeSearchWithTitleAndDesc;
+		this.challengeSearchWithLeader = challengeSearchWithLeader;
 	}
 
 	/**
@@ -125,12 +144,25 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public Page<Challenge> findChallengeBySearchWithPage(String title, String description, String leaderId, Integer page, Integer size){
+	public Page<Challenge> findChallengeBySearchWithPage(SearchChallengeDTO searchChallengeDTO, Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
-		if (leaderId == null && title == null && description == null){
-			throw new IllegalStateException("잘못된 요청입니다.");
+
+		SearchType searchType = searchChallengeDTO.getType();
+		ChallengeSearchRepository challengeSearchRepository = null;
+
+		if (searchType.equals(SearchType.title)) {
+			challengeSearchRepository = challengeSearchWithTitle;
+		} else if (searchType.equals(SearchType.desc)) {
+			challengeSearchRepository = challengeSearchWithDesc;
+		} else if (searchType.equals(SearchType.title_desc)) {
+			challengeSearchRepository = challengeSearchWithTitleAndDesc;
+		} else if (searchType.equals(SearchType.leader)) {
+			challengeSearchRepository = challengeSearchWithLeader;
+		} else {
+			throw new IllegalStateException("잘못된 SearchType 입니다.");
 		}
-		return challengeRepository.findChallengeBySearchWithPaging(pageRequest, title, description, leaderId);
+
+		return challengeSearchRepository.findChallengeWithPaing(pageRequest, searchChallengeDTO.getContent());
 	}
 
 	/**
