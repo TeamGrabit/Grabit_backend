@@ -175,13 +175,14 @@ public class ChallengeService {
 
 	private void joinChallenge(Challenge challenge, User user) {
 		UserChallenge userChallenge = UserChallenge.createUserChallenge(challenge, user);
-		userChallengeRepository.save(userChallenge);
+		this.userChallengeRepository.save(userChallenge);
 		challenge.getUserChallengeList().add(userChallenge);
 	}
 
 	/**
 	 * 챌린지 가입 승인
 	 */
+	@Transactional
 	public Challenge approveJoinChallengeRequest(Long joinChallengeRequestId, User leader) {
 		JoinChallengeRequest joinChallengeRequest = findJoinChallengeRequestById(joinChallengeRequestId);
 		Challenge challenge = joinChallengeRequest.getChallenge();
@@ -238,7 +239,7 @@ public class ChallengeService {
 		}
 	}
 
-	public JoinChallengeRequest findJoinChallengeRequestById(Long joinChallengeRequestId) throws NotFoundException {
+	private JoinChallengeRequest findJoinChallengeRequestById(Long joinChallengeRequestId) throws NotFoundException {
 		Optional<JoinChallengeRequest> request = this.joinChallengeRequestRepository.findById(joinChallengeRequestId);
 		if (request.isEmpty()) {
 			throw new NotFoundException();
