@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class SearchChallengeDTO {
 
 	@NotNull
-	SearchType type;
+	String type;
 
 	@NotNull
 	String content;

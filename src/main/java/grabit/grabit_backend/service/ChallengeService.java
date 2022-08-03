@@ -146,9 +146,8 @@ public class ChallengeService {
 	@Transactional
 	public Page<Challenge> findChallengeBySearchWithPage(SearchChallengeDTO searchChallengeDTO, Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
-
-		SearchType searchType = searchChallengeDTO.getType();
 		ChallengeSearchRepository challengeSearchRepository = null;
+		SearchType searchType = SearchType.valueOf(searchChallengeDTO.getType());
 
 		if (searchType.equals(SearchType.title)) {
 			challengeSearchRepository = challengeSearchWithTitle;
