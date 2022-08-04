@@ -3,6 +3,14 @@ package grabit.grabit_backend.controller;
 import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.domain.JoinChallengeRequest;
 import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.domain.UserChallenge;
+import grabit.grabit_backend.enums.SearchType;
+import grabit.grabit_backend.exception.UnauthorizedException;
+import grabit.grabit_backend.repository.ChallengeSearchRepository;
+import grabit.grabit_backend.repository.ChallengeSearchWithDesc;
+import grabit.grabit_backend.repository.ChallengeSearchWithLeader;
+import grabit.grabit_backend.repository.ChallengeSearchWithTitle;
+import grabit.grabit_backend.repository.ChallengeSearchWithTitleAndDesc;
 import grabit.grabit_backend.dto.*;
 import grabit.grabit_backend.exception.DuplicateDataException;
 import grabit.grabit_backend.service.ChallengeService;
@@ -38,12 +46,10 @@ public class ChallengeController {
     @GetMapping(value = "")
     public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
                                                                           @RequestParam(defaultValue = "5") Integer size,
-                                                                          @RequestParam(required = false) String title,
-                                                                          @RequestParam(defaultValue = "", required = false) String description,
-                                                                          @RequestParam(required = false) String leaderId) {
+                                                                          @RequestBody SearchChallengeDTO searchChallengeDTO) {
         page = page - 1;
-        Page<Challenge> findChallengesWithPage = challengeService.findChallengeBySearchWithPage(title, description, leaderId, page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengePagingDTO.convertDTO(findChallengesWithPage));
+        Page<Challenge> findChallengesWithPage = challengeService.findChallengeBySearchWithPage(searchChallengeDTO, page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(findChallengesWithPage));
     }
 
     /**
