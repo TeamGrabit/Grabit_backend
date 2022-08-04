@@ -1,12 +1,24 @@
 package grabit.grabit_backend.service;
 
 import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.JoinChallengeRequest;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.domain.UserChallenge;
 import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
+import grabit.grabit_backend.dto.SearchChallengeDTO;
+import grabit.grabit_backend.enums.SearchType;
 import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.repository.ChallengeRepository;
+import grabit.grabit_backend.repository.ChallengeSearchRepository;
+import grabit.grabit_backend.repository.ChallengeSearchWithDesc;
+import grabit.grabit_backend.repository.ChallengeSearchWithLeader;
+import grabit.grabit_backend.repository.ChallengeSearchWithTitle;
+import grabit.grabit_backend.repository.ChallengeSearchWithTitleAndDesc;
+import grabit.grabit_backend.exception.BadRequestException;
+import grabit.grabit_backend.exception.ForbiddenException;
+import grabit.grabit_backend.exception.NotFoundException;
+import grabit.grabit_backend.repository.JoinChallengeRequestRepository;
 import grabit.grabit_backend.repository.UserChallengeRepository;
 import grabit.grabit_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +37,28 @@ public class ChallengeService {
 	private final ChallengeRepository challengeRepository;
 	private final UserChallengeRepository userChallengeRepository;
 	private final UserRepository userRepository;
+	private final ChallengeSearchWithTitle challengeSearchWithTitle;
+	private final ChallengeSearchWithDesc challengeSearchWithDesc;
+	private final ChallengeSearchWithTitleAndDesc challengeSearchWithTitleAndDesc;
+	private final ChallengeSearchWithLeader challengeSearchWithLeader;
+	private final JoinChallengeRequestRepository joinChallengeRequestRepository;
 
 	public ChallengeService(ChallengeRepository challengeRepository,
 							UserChallengeRepository userChallengeRepository,
-							UserRepository userRepository){
+							UserRepository userRepository,
+							ChallengeSearchWithTitle challengeSearchWithTitle,
+							ChallengeSearchWithDesc challengeSearchWithDesc,
+							ChallengeSearchWithTitleAndDesc challengeSearchWithTitleAndDesc,
+							ChallengeSearchWithLeader challengeSearchWithLeader,
+              JoinChallengeRequestRepository joinChallengeRequestRepository){
 		this.challengeRepository = challengeRepository;
 		this.userChallengeRepository = userChallengeRepository;
 		this.userRepository = userRepository;
+		this.challengeSearchWithTitle = challengeSearchWithTitle;
+		this.challengeSearchWithDesc = challengeSearchWithDesc;
+		this.challengeSearchWithTitleAndDesc = challengeSearchWithTitleAndDesc;
+		this.challengeSearchWithLeader = challengeSearchWithLeader;
+    this.joinChallengeRequestRepository = joinChallengeRequestRepository;
 	}
 
 	/**
@@ -60,9 +87,27 @@ public class ChallengeService {
 	 * @return Challenge
 	 */
 	@Transactional
-	public Challenge findChallengeById(Long id){
-		Challenge challenge = isExistChallenge(id);
-		return challenge;
+	public Challenge findChallengeByIdWithAuth(Long id, User user){
+		Challenge challenge = findChallengeById(id);
+		if (!challenge.getIsPrivate())
+			return challenge;
+
+		if (user == null)
+			throw new UnauthorizedException();
+
+		for (UserChallenge userChallenge : challenge.getUserChallengeList()) {
+			if (userChallenge.getUser().getUserId().equals(user.getUserId()))
+				return challenge;
+		}
+		throw new UnauthorizedException();
+	}
+
+	private Challenge findChallengeById(Long id){
+		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
+		if(findChallenge.isEmpty()){
+			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
+		}
+		return findChallenge.get();
 	}
 
 	/**
@@ -71,7 +116,7 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public void deleteChallengeById(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 
 		// leader 여부 확인.
 		if(!findChallenge.getLeader().getId().equals(user.getId())){
@@ -89,7 +134,7 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge updateChallenge(Long id, ModifyChallengeDTO modifyChallengeDTO, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 
 		// leader 여부 확인.
 		if(!findChallenge.getLeader().getId().equals(user.getId())){
@@ -115,12 +160,24 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public Page<Challenge> findChallengeBySearchWithPage(String title, String description, String leaderId, Integer page, Integer size){
+	public Page<Challenge> findChallengeBySearchWithPage(SearchChallengeDTO searchChallengeDTO, Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
-		if (leaderId == null && title == null && description == null){
-			throw new IllegalStateException("잘못된 요청입니다.");
+		ChallengeSearchRepository challengeSearchRepository = null;
+		SearchType searchType = SearchType.valueOf(searchChallengeDTO.getType());
+
+		if (searchType.equals(SearchType.title)) {
+			challengeSearchRepository = challengeSearchWithTitle;
+		} else if (searchType.equals(SearchType.desc)) {
+			challengeSearchRepository = challengeSearchWithDesc;
+		} else if (searchType.equals(SearchType.title_desc)) {
+			challengeSearchRepository = challengeSearchWithTitleAndDesc;
+		} else if (searchType.equals(SearchType.leader)) {
+			challengeSearchRepository = challengeSearchWithLeader;
+		} else {
+			throw new IllegalStateException("잘못된 SearchType 입니다.");
 		}
-		return challengeRepository.findChallengeBySearchWithPaging(pageRequest, title, description, leaderId);
+
+		return challengeSearchRepository.findChallengeWithPaing(pageRequest, searchChallengeDTO.getContent());
 	}
 
 	/**
@@ -130,23 +187,57 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public Challenge joinChallenge(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+	public Challenge requestJoinChallenge(Long id, User user){
+		Challenge challenge = findChallengeById(id);
 
-		Optional<UserChallenge> findUserChallenge = userChallengeRepository.findByUserAndChallenge(user, findChallenge);
+		Optional<UserChallenge> findUserChallenge = userChallengeRepository.findByUserAndChallenge(user, challenge);
 		if(findUserChallenge.isPresent()){
-			throw new IllegalStateException("이미 가입한 유저입니다.");
+			throw new BadRequestException("이미 가입한 유저입니다.");
 		}
 
-		UserChallenge userChallenge = UserChallenge.builder()
-				.user(user)
-				.challenge(findChallenge)
-				.build();
+		if (challenge.getIsPrivate()) {
+			JoinChallengeRequest joinChallengeRequest = JoinChallengeRequest.createJoinChallengeRequest(challenge, user);
+			this.joinChallengeRequestRepository.save(joinChallengeRequest);
+		} else {
+			joinChallenge(challenge, user);
+		}
+		return challenge;
+	}
 
-		userChallengeRepository.save(userChallenge);
-		findChallenge.getUserChallengeList().add(userChallenge);
+	private void joinChallenge(Challenge challenge, User user) {
+		UserChallenge userChallenge = UserChallenge.createUserChallenge(challenge, user);
+		this.userChallengeRepository.save(userChallenge);
+		challenge.getUserChallengeList().add(userChallenge);
+	}
 
-		return findChallenge;
+	/**
+	 * 챌린지 가입 승인
+	 */
+	@Transactional
+	public Challenge approveJoinChallengeRequest(Long joinChallengeRequestId, User leader) {
+		JoinChallengeRequest joinChallengeRequest = findJoinChallengeRequestById(joinChallengeRequestId);
+		Challenge challenge = joinChallengeRequest.getChallenge();
+
+		checkIsLeader(leader, challenge);
+
+		this.joinChallengeRequestRepository.delete(joinChallengeRequest);
+
+		joinChallenge(challenge, joinChallengeRequest.getUser());
+		return challenge;
+	}
+
+	/**
+	 * 챌린지 가입 거절
+	 * @param user
+	 * @param joinChallengeRequestId
+	 */
+	public void rejectJoinChallengeRequest(Long joinChallengeRequestId, User user) {
+		JoinChallengeRequest joinChallengeRequest = findJoinChallengeRequestById(joinChallengeRequestId);
+		Challenge challenge = joinChallengeRequest.getChallenge();
+
+		checkIsLeader(user, challenge);
+
+		this.joinChallengeRequestRepository.delete(joinChallengeRequest);
 	}
 
 	/**
@@ -157,21 +248,34 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public void leaveChallenge(Long id, User user){
-		Challenge findChallenge = isExistChallenge(id);
+		Challenge findChallenge = findChallengeById(id);
 		userChallengeRepository.deleteByUserAndChallenge(user, findChallenge);
 	}
 
-	private Challenge isExistChallenge(Long id){
-		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
-		if(findChallenge.isEmpty()){
-			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
-		}
-		return findChallenge.get();
+	/**
+	 * 챌린지 가입 요청 목록
+	 */
+	public Page<JoinChallengeRequest> findJoinChallengeRequestListByChallengeWithPage(User user, Long challengeId, Integer page, Integer size) {
+		Challenge challenge = findChallengeById(challengeId);
+
+		checkIsLeader(user, challenge);
+		PageRequest pageRequest = PageRequest.of(page, size);
+		Page<JoinChallengeRequest> requestList = this.joinChallengeRequestRepository.findJoinChallengeRequestByChallengeWithPage(pageRequest, challenge);
+		return requestList;
 	}
 
-	public Page<Challenge> findUserJoinedChallengeList(User user, Integer page, Integer size) {
-		PageRequest pageRequest = PageRequest.of(page, size);
-		return challengeRepository.findUserJoinedChallengeList(pageRequest, user);
+	private void checkIsLeader(User user, Challenge challenge) {
+		if (!challenge.getLeader().getId().equals(user.getId())) {
+			throw new ForbiddenException("권한이 없습니다.");
+		}
+	}
+
+	private JoinChallengeRequest findJoinChallengeRequestById(Long joinChallengeRequestId) throws NotFoundException {
+		Optional<JoinChallengeRequest> request = this.joinChallengeRequestRepository.findById(joinChallengeRequestId);
+		if (request.isEmpty()) {
+			throw new NotFoundException();
+		}
+		return request.get();
 	}
 }
 
