@@ -6,6 +6,7 @@ import grabit.grabit_backend.domain.PassApprovalResult;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.enums.PassApprovalResultStatus;
 import grabit.grabit_backend.exception.ForbiddenException;
+import grabit.grabit_backend.exception.NotFoundException;
 import grabit.grabit_backend.repository.PassApprovalRepository;
 import grabit.grabit_backend.repository.PassApprovalResultRepository;
 import grabit.grabit_backend.repository.PassRepository;
@@ -66,7 +67,7 @@ public class PassApprovalResultService {
 
 	public PassApprovalResult readPassApproval(Long id, User user) {
 		PassApprovalResult passApprovalList = passApprovalResultRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("승인 요청 정보를 찾을 수 없습니다."));
+				.orElseThrow(() -> new NotFoundException("승인 요청 정보를 찾을 수 없습니다."));
 
 		if (!passApprovalList.getUser().getId().equals(user.getId())) {
 			throw new ForbiddenException();

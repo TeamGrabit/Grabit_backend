@@ -10,7 +10,7 @@ public class PassApprovalResultStatusConverter implements AttributeConverter<Pas
 
 	@Override
 	public Integer convertToDatabaseColumn(PassApprovalResultStatus attribute) {
-		if (attribute.equals(PassApprovalResultStatus.NOT_APPROVED)) {
+		if (attribute.equals(PassApprovalResultStatus.PENDING)) {
 			return 0;
 		}else if (attribute.equals(PassApprovalResultStatus.APPROVED)){
 			return 1;
@@ -24,7 +24,7 @@ public class PassApprovalResultStatusConverter implements AttributeConverter<Pas
 	@Override
 	public PassApprovalResultStatus convertToEntityAttribute(Integer dbData) {
 		if (dbData.equals(0)){
-			return PassApprovalResultStatus.NOT_APPROVED;
+			return PassApprovalResultStatus.PENDING;
 		}else if (dbData.equals(1)){
 			return PassApprovalResultStatus.APPROVED;
 		}else if (dbData.equals(2)){
