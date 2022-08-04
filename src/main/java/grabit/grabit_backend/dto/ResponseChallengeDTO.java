@@ -1,19 +1,12 @@
 package grabit.grabit_backend.dto;
 
 import grabit.grabit_backend.domain.Challenge;
-import grabit.grabit_backend.domain.User;
-import grabit.grabit_backend.domain.UserChallenge;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Builder
@@ -40,23 +33,4 @@ public class ResponseChallengeDTO {
 				members
 		);
 	}
-
-	public static ResponsePagingDTO convertPageDTO(Page<Challenge> challengePage){
-		List<ResponseChallengeDTO> challengeDTOList = new ArrayList<>();
-		challengePage.getContent().forEach(x -> challengeDTOList.add(convertDTO(x)));
-
-		return ResponsePagingDTO.builder()
-				.content(challengeDTOList)
-				.pageable(challengePage.getPageable())
-				.totalPages(challengePage.getTotalPages())
-				.totalElements(challengePage.getTotalElements())
-				.first(challengePage.isFirst())
-				.last(challengePage.isLast())
-				.numberOfElements(challengePage.getNumberOfElements())
-				.size(challengePage.getSize())
-				.number(challengePage.getNumber())
-				.sort(challengePage.getSort())
-				.build();
-	}
-
 }

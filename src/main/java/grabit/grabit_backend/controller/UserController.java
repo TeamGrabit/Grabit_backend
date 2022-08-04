@@ -3,7 +3,7 @@ package grabit.grabit_backend.controller;
 import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.ResponseChallengeDTO;
-import grabit.grabit_backend.dto.ResponsePagingDTO;
+import grabit.grabit_backend.dto.ResponseChallengePagingDTO;
 import grabit.grabit_backend.dto.ResponseUserDTO;
 import grabit.grabit_backend.dto.UpdateUserDTO;
 import grabit.grabit_backend.service.ChallengeService;
@@ -21,11 +21,9 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    private final ChallengeService challengeService;
 
-    public UserController(UserService userService, ChallengeService challengeService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.challengeService = challengeService;
     }
     @GetMapping("")
     public ResponseEntity<ResponseUserDTO> getUser(@AuthenticationPrincipal User user) {
@@ -41,13 +39,13 @@ public class UserController {
     }
 
     @GetMapping("challenges")
-    public ResponseEntity<ResponsePagingDTO> getJoinedChallengeList(@AuthenticationPrincipal User user,
-                                                                    @RequestParam(defaultValue = "1") Integer page,
-                                                                    @RequestParam(defaultValue = "5") Integer size) {
+    public ResponseEntity<ResponseChallengePagingDTO> getJoinedChallengeList(@AuthenticationPrincipal User user,
+                                                                             @RequestParam(defaultValue = "1") Integer page,
+                                                                             @RequestParam(defaultValue = "5") Integer size) {
         if (page < 1) page = 1;
         page = page - 1;
-        Page<Challenge> challenges = challengeService.findUserJoinedChallengeList(user, page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertPageDTO(challenges));
+        Page<Challenge> challenges = userService.findUserJoinedChallenges(user, page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengePagingDTO.convertDTO(challenges));
     }
 
 }

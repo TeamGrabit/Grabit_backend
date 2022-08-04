@@ -1,13 +1,9 @@
 package grabit.grabit_backend.controller;
 
 import grabit.grabit_backend.domain.Challenge;
+import grabit.grabit_backend.domain.JoinChallengeRequest;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.domain.UserChallenge;
-import grabit.grabit_backend.dto.CreateChallengeDTO;
-import grabit.grabit_backend.dto.ModifyChallengeDTO;
-import grabit.grabit_backend.dto.ResponseChallengeDTO;
-import grabit.grabit_backend.dto.ResponsePagingDTO;
-import grabit.grabit_backend.dto.SearchChallengeDTO;
 import grabit.grabit_backend.enums.SearchType;
 import grabit.grabit_backend.exception.UnauthorizedException;
 import grabit.grabit_backend.repository.ChallengeSearchRepository;
@@ -15,8 +11,10 @@ import grabit.grabit_backend.repository.ChallengeSearchWithDesc;
 import grabit.grabit_backend.repository.ChallengeSearchWithLeader;
 import grabit.grabit_backend.repository.ChallengeSearchWithTitle;
 import grabit.grabit_backend.repository.ChallengeSearchWithTitleAndDesc;
+import grabit.grabit_backend.dto.*;
+import grabit.grabit_backend.exception.DuplicateDataException;
 import grabit.grabit_backend.service.ChallengeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +22,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
 @RequestMapping("challenges")
@@ -106,30 +103,32 @@ public class ChallengeController {
      * @return
      */
     @GetMapping(value = "{id}")
-    public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user) {
-        Challenge challenge = challengeService.findChallengeById(id, user);
-
-
-
-        for (UserChallenge userChallenge : challenge.getUserChallengeList()) {
-            if (userChallenge.getUser().getUserId().equals(user.getUserId()))
-                return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(challenge));
-        }
-        throw new UnauthorizedException();
+    public ResponseEntity<ResponseChallengeDTO> findChallengeAPI(@PathVariable(value = "id") Long id,
+                                                                 @AuthenticationPrincipal User user) {
+        Challenge challenge = challengeService.findChallengeByIdWithAuth(id, user);
+        return ResponseEntity.status(HttpStatus.OK).
+                body(ResponseChallengeDTO.convertDTO(challenge));
     }
 
     /**
-     * 챌린지 가입 API
+     * 챌린지 가입 요청 API
      *
      * @param id
      * @param user
      * @return
      */
-    @PatchMapping(value = "{id}/join")
+    @PostMapping(value = "{id}/join")
     public ResponseEntity<ResponseChallengeDTO> joinChallengeAPI(@PathVariable(value = "id") Long id,
                                                                  @AuthenticationPrincipal User user) {
-        Challenge joinChallenge = challengeService.joinChallenge(id, user);
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(joinChallenge));
+        try {
+            Challenge challenge = challengeService.requestJoinChallenge(id, user);
+            return challenge == null ? null :
+                    ResponseEntity.status(HttpStatus.OK).
+                            body(ResponseChallengeDTO.convertDTO(challenge));
+
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateDataException("이미 가입신청이 되어있습니다.");
+        }
     }
 
     /**
@@ -144,6 +143,38 @@ public class ChallengeController {
                                                   @AuthenticationPrincipal User user) {
         challengeService.leaveChallenge(id, user);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    /**
+     * 챌린지 가입 요청 승인 API
+     */
+    @PostMapping(value = "join/approve")
+    public ResponseEntity<ResponseChallengeDTO> approveJoinChallengeAPI(@RequestParam() Long requestId,
+                                        @AuthenticationPrincipal User user) {
+        Challenge challenge = challengeService.approveJoinChallengeRequest(requestId, user);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengeDTO.convertDTO(challenge));
+    }
+
+    /**
+     * 챌린지 가입 요청 거절 API
+     */
+    @PostMapping(value = "join/reject")
+    public void rejectJoinChallengeAPI(@RequestParam() Long requestId,
+                                       @AuthenticationPrincipal User user) {
+        challengeService.rejectJoinChallengeRequest(requestId, user);
+    }
+
+    /**
+     * 챌린지 가입 요청 목록 조회 API
+     */
+    @GetMapping(value = "join")
+    public ResponseEntity<ResponseJoinChallengeRequestPagingDTO> findJoinChallengeRequestsWithPageAPI(@RequestParam() Long challengeId,
+                                                                     @RequestParam(defaultValue = "1") Integer page,
+                                                                     @RequestParam(defaultValue = "5") Integer size,
+                                                                     @AuthenticationPrincipal User user) {
+        page -= 1;
+        Page<JoinChallengeRequest> joinChallengeRequestListByChallengeWithPage = challengeService.findJoinChallengeRequestListByChallengeWithPage(user, challengeId, page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseJoinChallengeRequestPagingDTO.convertDTO(joinChallengeRequestListByChallengeWithPage));
     }
 }
 
