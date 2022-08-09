@@ -53,16 +53,16 @@ public class PassApprovalController {
 	}
 
 	@PatchMapping(value = "accept/{id}")
-	public ResponseEntity<String> acceptPassApprovalAPI(@PathVariable(value = "id") Long id,
+	public ResponseEntity<Void> acceptPassApprovalAPI(@PathVariable(value = "id") Long id,
 														  @AuthenticationPrincipal User user) {
-		String result = passApprovalResultService.acceptPassApproval(id, user);
-		return ResponseEntity.status(HttpStatus.OK).body(result);
+		passApprovalResultService.acceptPassApproval(id, user);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@PatchMapping(value = "reject/{id}")
-	public ResponseEntity<String> rejectPassApprovalAPI(@PathVariable(value = "id") Long id,
+	public ResponseEntity<Void> rejectPassApprovalAPI(@PathVariable(value = "id") Long id,
 														  @AuthenticationPrincipal User user) {
-		String result = passApprovalResultService.rejectPassApproval(id, user);
-		return ResponseEntity.status(HttpStatus.OK).body(result);
+		passApprovalResultService.rejectPassApproval(id, user);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }

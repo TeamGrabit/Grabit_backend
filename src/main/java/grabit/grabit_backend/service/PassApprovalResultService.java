@@ -27,7 +27,7 @@ public class PassApprovalResultService {
 	}
 
 	@Transactional
-	public String acceptPassApproval(Long id, User user) {
+	public void acceptPassApproval(Long id, User user) {
 		PassApprovalResult passApprovalList = readPassApproval(id, user);
 		Integer allCount = passApprovalResultRepository.countByPassApproval(passApprovalList.getPassApproval());
 		Integer acceptCount = passApprovalResultRepository.countByPassApprovalAndStatus(passApprovalList.getPassApproval(), PassApprovalResultStatus.APPROVED);
@@ -45,11 +45,10 @@ public class PassApprovalResultService {
 			passApprovalResultRepository.save(passApprovalList);
 		}
 
-		return "success";
 	}
 
 	@Transactional
-	public String rejectPassApproval(Long id, User user) {
+	public void rejectPassApproval(Long id, User user) {
 		PassApprovalResult passApprovalList = readPassApproval(id, user);
 		Integer allCount = passApprovalResultRepository.countByPassApproval(passApprovalList.getPassApproval());
 		Integer rejectCount = passApprovalResultRepository.countByPassApprovalAndStatus(passApprovalList.getPassApproval(), grabit.grabit_backend.enums.PassApprovalResultStatus.REJECT);
@@ -62,7 +61,6 @@ public class PassApprovalResultService {
 			passApprovalResultRepository.save(passApprovalList);
 		}
 
-		return "success";
 	}
 
 	public PassApprovalResult readPassApproval(Long id, User user) {
