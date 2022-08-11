@@ -8,20 +8,11 @@ import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.dto.ModifyChallengeDTO;
 import grabit.grabit_backend.dto.SearchChallengeDTO;
 import grabit.grabit_backend.enums.SearchType;
-import grabit.grabit_backend.exception.UnauthorizedException;
-import grabit.grabit_backend.repository.ChallengeRepository;
-import grabit.grabit_backend.repository.ChallengeSearchRepository;
-import grabit.grabit_backend.repository.ChallengeSearchWithDesc;
-import grabit.grabit_backend.repository.ChallengeSearchWithLeader;
-import grabit.grabit_backend.repository.ChallengeSearchWithTitle;
-import grabit.grabit_backend.repository.ChallengeSearchWithTitleAndDesc;
 import grabit.grabit_backend.exception.BadRequestException;
 import grabit.grabit_backend.exception.ForbiddenException;
 import grabit.grabit_backend.exception.NotFoundException;
-import grabit.grabit_backend.repository.JoinChallengeRequestRepository;
-import grabit.grabit_backend.repository.UserChallengeRepository;
-import grabit.grabit_backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import grabit.grabit_backend.exception.UnauthorizedException;
+import grabit.grabit_backend.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -105,7 +96,7 @@ public class ChallengeService {
 	private Challenge findChallengeById(Long id){
 		Optional<Challenge> findChallenge = challengeRepository.findChallengeById(id);
 		if(findChallenge.isEmpty()){
-			throw new IllegalStateException("존재하지 않는 챌린지입니다..");
+			throw new NotFoundException("존재하지 않는 챌린지입니다..");
 		}
 		return findChallenge.get();
 	}
