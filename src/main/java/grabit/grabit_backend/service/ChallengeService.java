@@ -68,17 +68,18 @@ public class ChallengeService {
 	 */
 	@Transactional
 	public Challenge createChallenge(CreateChallengeDTO createChallengeDTO, User user){
-		Challenge challenge = Challenge.createChallenge(createChallengeDTO, user);
-		Challenge createChallenge = challengeRepository.save(challenge);
 
+		Challenge challenge = Challenge.createChallenge(createChallengeDTO, user);
 		UserChallenge userChallenge = UserChallenge.createUserChallenge(challenge, user);
-		userChallengeRepository.save(userChallenge);
 
 		List<UserChallenge> userChallengeList = new ArrayList<>();
 		userChallengeList.add(userChallenge);
-		createChallenge.setUserChallengeList(userChallengeList);
+		challenge.setUserChallengeList(userChallengeList);
 
-		return createChallenge;
+		challengeRepository.save(challenge);
+		userChallengeRepository.save(userChallenge);
+
+		return challenge;
 	}
 
 	/**
