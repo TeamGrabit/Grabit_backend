@@ -47,7 +47,7 @@ public class PassApprovalService {
 						.passApproval(passApproval)
 						.challenge(challenge)
 						.user(x.getUser())
-						.status(PassApprovalResultStatus.NOT_APPROVED)
+						.status(PassApprovalResultStatus.PENDING)
 						.build())
 		);
 

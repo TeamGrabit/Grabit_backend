@@ -4,12 +4,14 @@ import grabit.grabit_backend.domain.PassApproval;
 import grabit.grabit_backend.domain.User;
 import grabit.grabit_backend.dto.CreatePassApprovalDTO;
 import grabit.grabit_backend.dto.ResponsePassApprovalDTO;
+import grabit.grabit_backend.service.PassApprovalResultService;
 import grabit.grabit_backend.service.PassApprovalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +25,11 @@ import javax.validation.Valid;
 public class PassApprovalController {
 
 	private final PassApprovalService passApprovalService;
+	private final PassApprovalResultService passApprovalResultService;
 
-	public PassApprovalController(PassApprovalService passApprovalService) {
+	public PassApprovalController(PassApprovalService passApprovalService, PassApprovalResultService passApprovalResultService) {
 		this.passApprovalService = passApprovalService;
+		this.passApprovalResultService = passApprovalResultService;
 	}
 
 	@PostMapping(value = "")
@@ -48,4 +52,17 @@ public class PassApprovalController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
+	@PatchMapping(value = "accept/{id}")
+	public ResponseEntity<Void> acceptPassApprovalAPI(@PathVariable(value = "id") Long id,
+														  @AuthenticationPrincipal User user) {
+		passApprovalResultService.acceptPassApproval(id, user);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	@PatchMapping(value = "reject/{id}")
+	public ResponseEntity<Void> rejectPassApprovalAPI(@PathVariable(value = "id") Long id,
+														  @AuthenticationPrincipal User user) {
+		passApprovalResultService.rejectPassApproval(id, user);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 }
