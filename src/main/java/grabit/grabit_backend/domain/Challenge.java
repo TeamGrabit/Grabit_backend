@@ -36,11 +36,11 @@ public class Challenge extends BaseEntity {
 	@Column(name = "IS_PRIVATE")
 	private Boolean isPrivate;
 
-	@OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	private List<UserChallenge> userChallengeList;
 
-	@ManyToOne(optional = false)
+	@ManyToOne
 	@JoinColumn(name="LEADER_ID")
 	private User leader;
 
