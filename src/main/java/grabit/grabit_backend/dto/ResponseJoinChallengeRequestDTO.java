@@ -14,6 +14,9 @@ public class ResponseJoinChallengeRequestDTO {
     private final ResponseChallengeDTO challenge;
 
     public static ResponseJoinChallengeRequestDTO convertDTO(JoinChallengeRequest joinChallengeRequest) {
+        if (joinChallengeRequest == null) {
+            return null;
+        }
         return new ResponseJoinChallengeRequestDTO(
                 joinChallengeRequest.getId(),
                 ResponseUserDTO.convertDTO(joinChallengeRequest.getUser()),

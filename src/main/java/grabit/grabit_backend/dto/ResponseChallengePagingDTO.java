@@ -16,6 +16,9 @@ public class ResponseChallengePagingDTO extends ResponsePagingDTO {
     public List<ResponseChallengeDTO> content;
 
     public static ResponseChallengePagingDTO convertDTO(Page<Challenge> challengePage){
+        if (challengePage == null) {
+            return null;
+        }
         List<ResponseChallengeDTO> challengeDTOList = new ArrayList<>();
         challengePage.getContent().forEach(x -> challengeDTOList.add(ResponseChallengeDTO.convertDTO(x)));
 

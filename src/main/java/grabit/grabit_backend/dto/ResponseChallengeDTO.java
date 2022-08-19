@@ -20,6 +20,9 @@ public class ResponseChallengeDTO {
 	private final List<String> member;
 
 	public static ResponseChallengeDTO convertDTO(Challenge challenge){
+		if (challenge == null) {
+			return null;
+		}
 		// 순환 참조를 방지하기 위해 데이터를 담아서 보냄.
 		List<String> members = new ArrayList<>();
 		challenge.getUserChallengeList().forEach(x -> members.add(x.getUser().getUserId()));

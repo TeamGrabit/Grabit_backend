@@ -15,6 +15,9 @@ public class ResponseJoinChallengeRequestPagingDTO extends ResponsePagingDTO{
     public List<ResponseJoinChallengeRequestDTO> content;
 
     public static ResponseJoinChallengeRequestPagingDTO convertDTO(Page<JoinChallengeRequest> joinChallengeRequestPage) {
+        if (joinChallengeRequestPage == null) {
+            return null;
+        }
         List<ResponseJoinChallengeRequestDTO> joinChallengeRequestDTOList = new ArrayList<>();
         joinChallengeRequestPage.getContent().forEach(x -> joinChallengeRequestDTOList.add(ResponseJoinChallengeRequestDTO.convertDTO(x)));
 

@@ -15,6 +15,9 @@ public class ResponsePassApprovalDTO {
 	private String content;
 
 	public static ResponsePassApprovalDTO convertDTO(PassApproval passApproval) {
+		if (passApproval == null) {
+			return null;
+		}
 		return ResponsePassApprovalDTO.builder()
 				.id(passApproval.getId())
 				.targetDate(passApproval.getTargetDate())

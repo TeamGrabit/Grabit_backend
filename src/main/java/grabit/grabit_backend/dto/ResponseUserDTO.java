@@ -28,6 +28,9 @@ public class ResponseUserDTO {
     }
 
     public static ResponseUserDTO convertDTO(User user) {
+        if (user == null) {
+            return null;
+        }
         return new ResponseUserDTO(
                 user.getId(),
                 user.getUserId(),
