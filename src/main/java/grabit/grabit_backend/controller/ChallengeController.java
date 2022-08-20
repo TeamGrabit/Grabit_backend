@@ -46,9 +46,10 @@ public class ChallengeController {
     @GetMapping(value = "")
     public ResponseEntity<ResponsePagingDTO> findAllChallengesWithPageAPI(@RequestParam(defaultValue = "1") Integer page,
                                                                           @RequestParam(defaultValue = "5") Integer size,
-                                                                          @Valid @RequestBody SearchChallengeDTO searchChallengeDTO) {
+                                                                          @RequestParam(defaultValue = "title") String type,
+                                                                          @RequestParam(defaultValue = "") String content) {
         page = page - 1;
-        Page<Challenge> findChallengesWithPage = challengeService.findChallengeBySearchWithPage(searchChallengeDTO, page, size);
+        Page<Challenge> findChallengesWithPage = challengeService.findChallengeBySearchWithPage(type, content, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengePagingDTO.convertDTO(findChallengesWithPage));
     }
 
