@@ -152,10 +152,10 @@ public class ChallengeService {
 	 * @return
 	 */
 	@Transactional
-	public Page<Challenge> findChallengeBySearchWithPage(SearchChallengeDTO searchChallengeDTO, Integer page, Integer size){
+	public Page<Challenge> findChallengeBySearchWithPage(String type, String content, Integer page, Integer size){
 		PageRequest pageRequest = PageRequest.of(page, size);
 		ChallengeSearchRepository challengeSearchRepository = null;
-		SearchType searchType = SearchType.valueOf(searchChallengeDTO.getType());
+		SearchType searchType = SearchType.valueOf(type);
 
 		if (searchType.equals(SearchType.title)) {
 			challengeSearchRepository = challengeSearchWithTitle;
@@ -169,7 +169,7 @@ public class ChallengeService {
 			throw new IllegalStateException("잘못된 SearchType 입니다.");
 		}
 
-		return challengeSearchRepository.findChallengeWithPaing(pageRequest, searchChallengeDTO.getContent());
+		return challengeSearchRepository.findChallengeWithPaing(pageRequest, content);
 	}
 
 	/**
