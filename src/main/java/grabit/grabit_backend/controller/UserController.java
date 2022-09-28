@@ -48,4 +48,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengePagingDTO.convertDTO(challenges));
     }
 
+    @GetMapping("commits")
+    public ResponseEntity<String> getUserCommits(User user) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getCommitData(user));
+    }
+
 }
