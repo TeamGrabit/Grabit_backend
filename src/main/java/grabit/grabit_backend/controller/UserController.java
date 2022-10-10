@@ -2,6 +2,7 @@ package grabit.grabit_backend.controller;
 
 import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.domain.User;
+import grabit.grabit_backend.domain.UserCommit;
 import grabit.grabit_backend.dto.ResponseChallengePagingDTO;
 import grabit.grabit_backend.dto.ResponseUserDTO;
 import grabit.grabit_backend.dto.UpdateUserDTO;
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("commits")
-    public ResponseEntity<Optional<List>> getUserCommits(User user) {
+    public ResponseEntity<List<UserCommit>> getUserCommits(@AuthenticationPrincipal User user) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getCommitData(user));
     }
 

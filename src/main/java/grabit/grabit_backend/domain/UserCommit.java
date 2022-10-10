@@ -13,5 +13,5 @@ import lombok.Setter;
 public class UserCommit {
 
 	private String Date;
-	private Integer count;
+	private String count;
 }
