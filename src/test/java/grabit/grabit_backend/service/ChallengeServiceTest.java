@@ -1,5 +1,6 @@
 package grabit.grabit_backend.service;
 
+import grabit.grabit_backend.GrabitBackendApplication;
 import grabit.grabit_backend.auth.CustomUserDetailService;
 import grabit.grabit_backend.auth.JwtProvider;
 import grabit.grabit_backend.domain.Challenge;
@@ -9,15 +10,18 @@ import grabit.grabit_backend.dto.CreateChallengeDTO;
 import grabit.grabit_backend.repository.ChallengeRepository;
 import grabit.grabit_backend.repository.UserChallengeRepository;
 import grabit.grabit_backend.repository.UserRepository;
+import io.lettuce.core.api.sync.RedisCommands;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.security.core.userdetails.UserDetails;
 
