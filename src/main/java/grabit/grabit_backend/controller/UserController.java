@@ -2,11 +2,10 @@ package grabit.grabit_backend.controller;
 
 import grabit.grabit_backend.domain.Challenge;
 import grabit.grabit_backend.domain.User;
-import grabit.grabit_backend.dto.ResponseChallengeDTO;
+import grabit.grabit_backend.domain.UserCommit;
 import grabit.grabit_backend.dto.ResponseChallengePagingDTO;
 import grabit.grabit_backend.dto.ResponseUserDTO;
 import grabit.grabit_backend.dto.UpdateUserDTO;
-import grabit.grabit_backend.service.ChallengeService;
 import grabit.grabit_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
@@ -46,6 +47,11 @@ public class UserController {
         page = page - 1;
         Page<Challenge> challenges = userService.findUserJoinedChallenges(user, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseChallengePagingDTO.convertDTO(challenges));
+    }
+
+    @GetMapping("commits")
+    public ResponseEntity<List<UserCommit>> getUserCommits(@AuthenticationPrincipal User user) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getCommitData(user));
     }
 
 }
